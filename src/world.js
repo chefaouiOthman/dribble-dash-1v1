@@ -305,27 +305,38 @@ function addCrowd(scene) {
   const rowCount = 2 * STAND_DEFS.length * 3;
   const perRow = Math.floor((CROWD_Z_MAX - CROWD_Z_MIN) / CROWD_SPACING);
   const count = rowCount * perRow;
+
+  // More realistic proportions: taller torso (shoulders/chest), distinct head on neck.
   const bodies = new THREE.InstancedMesh(
-    new THREE.BoxGeometry(0.5, 0.7, 0.45), new THREE.MeshStandardMaterial({ roughness: 0.9 }), count
+    new THREE.BoxGeometry(0.52, 0.76, 0.38), new THREE.MeshStandardMaterial({ roughness: 0.85 }), count
   );
   const heads = new THREE.InstancedMesh(
-    new THREE.SphereGeometry(0.17, 8, 6), new THREE.MeshStandardMaterial({ roughness: 0.9 }), count
+    new THREE.SphereGeometry(0.19, 10, 7), new THREE.MeshStandardMaterial({ roughness: 0.75 }), count
   );
-  // Raised arms make the stands read as a crowd at a glance, still one draw call.
+  // Arms: each spectator gets a left and right arm via two transforms in one mesh.
+  // We use a single arm InstancedMesh with count instances — the direction is chosen
+  // at build time per spectator so nearby ones look varied.
   const arms = new THREE.InstancedMesh(
-    new THREE.BoxGeometry(0.12, 0.42, 0.12), new THREE.MeshStandardMaterial({ roughness: 0.9 }), count
+    new THREE.BoxGeometry(0.13, 0.46, 0.13), new THREE.MeshStandardMaterial({ roughness: 0.85 }), count
   );
-  [bodies, heads, arms].forEach((mesh) => {
-    mesh.frustumCulled = false;
-    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  // Scarves: a thin coloured strip across the torso — same count, one draw call.
+  const scarves = new THREE.InstancedMesh(
+    new THREE.BoxGeometry(0.56, 0.08, 0.14), new THREE.MeshStandardMaterial({ roughness: 0.9 }), count
+  );
+  [bodies, heads, arms, scarves].forEach((m) => {
+    m.frustumCulled = false;
+    m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   });
 
   const baseX = new Float32Array(count);
   const baseY = new Float32Array(count);
   const baseZ = new Float32Array(count);
   const phase = new Float32Array(count);
-  const shirtColors = [0xe53935, 0x1e88e5, 0xffffff, 0xfdd835, 0x43a047, 0xfb8c00, 0x8e24aa];
+  // poseType: 0 = seated-ish, 1 = standing, 2 = arms-always-up
+  const poseType = new Uint8Array(count);
+  const shirtColors = [0xe53935, 0x1e88e5, 0xffffff, 0xfdd835, 0x43a047, 0xfb8c00, 0x8e24aa, 0xe91e63];
   const skinColors = [0xf1c27d, 0xc68642, 0x8d5524, 0xffdbac];
+  const scarfColors = [0xff6f00, 0xffd600, 0x0d47a1, 0x1b5e20, 0xb71c1c, 0x4a148c, 0xffffff];
   const color = new THREE.Color();
 
   let index = 0;
@@ -335,12 +346,15 @@ function addCrowd(scene) {
         const x = getStepX(side, stand, step);
         const y = getStepHeight(stand, step);
         for (let i = 0; i < perRow; i++) {
-          baseX[index] = x + (Math.random() - 0.5) * 0.4;
+          baseX[index] = x + (Math.random() - 0.5) * 0.42;
           baseY[index] = y;
-          baseZ[index] = CROWD_Z_MIN + i * CROWD_SPACING + (Math.random() - 0.5) * 0.4;
+          baseZ[index] = CROWD_Z_MIN + i * CROWD_SPACING + (Math.random() - 0.5) * 0.38;
           phase[index] = Math.random() * 6.28;
+          poseType[index] = Math.random() < 0.25 ? 2 : (Math.random() < 0.4 ? 0 : 1);
           color.setHex(shirtColors[Math.floor(Math.random() * shirtColors.length)]);
           bodies.setColorAt(index, color);
+          color.setHex(scarfColors[Math.floor(Math.random() * scarfColors.length)]);
+          scarves.setColorAt(index, color);
           color.setHex(skinColors[Math.floor(Math.random() * skinColors.length)]);
           heads.setColorAt(index, color);
           arms.setColorAt(index, color);
@@ -352,9 +366,10 @@ function addCrowd(scene) {
   bodies.instanceColor.needsUpdate = true;
   heads.instanceColor.needsUpdate = true;
   arms.instanceColor.needsUpdate = true;
-  scene.add(bodies, heads, arms);
+  scarves.instanceColor.needsUpdate = true;
+  scene.add(bodies, heads, arms, scarves);
   crowd = {
-    bodies, heads, arms, count, baseX, baseY, baseZ, phase,
+    bodies, heads, arms, scarves, count, baseX, baseY, baseZ, phase, poseType,
     slice: 0, slices: 3
   };
 }
@@ -362,29 +377,49 @@ function addCrowd(scene) {
 // The crowd is updated in slices (1/3 of the stands per frame). A full refresh
 // of ~1100 instances every frame is unnecessary: nobody can see the difference
 // and the saved CPU time goes into the gameplay loop.
+// poseType: 0 = seated sway, 1 = standing bob, 2 = arms perpetually raised.
 function updateCrowd(delta, speed) {
   crowdScroll += speed * delta;
   const range = CROWD_Z_MAX - CROWD_Z_MIN;
-  const amplitude = 0.04 + crowdExcitement * 0.55;
+  const excitement = crowdExcitement;
   const slice = crowd.slice;
   for (let i = slice; i < crowd.count; i += crowd.slices) {
     const wrapped = (((crowd.baseZ[i] - CROWD_Z_MIN + crowdScroll) % range) + range) % range;
     const z = CROWD_Z_MIN + wrapped;
-    const wave = Math.abs(Math.sin(worldTime * 7 + crowd.phase[i]));
-    const y = crowd.baseY[i] + wave * amplitude;
-    dummy.position.set(crowd.baseX[i], y + 0.35, z);
+    const t = worldTime * 6.5 + crowd.phase[i];
+    const wave = Math.abs(Math.sin(t));
+    const pose = crowd.poseType[i];
+
+    // Body vertical offset: seated are lower, excited spectators bob more.
+    const ampBody = pose === 0 ? 0.03 + excitement * 0.22 : 0.05 + excitement * 0.5;
+    const yBody = crowd.baseY[i] + wave * ampBody;
+
+    dummy.position.set(crowd.baseX[i], yBody + 0.38, z);
     dummy.updateMatrix();
     crowd.bodies.setMatrixAt(i, dummy.matrix);
-    dummy.position.set(crowd.baseX[i], y + 0.87, z);
+
+    dummy.position.set(crowd.baseX[i], yBody + 0.98, z);
     dummy.updateMatrix();
     crowd.heads.setMatrixAt(i, dummy.matrix);
-    dummy.position.set(crowd.baseX[i], y + 1.02 + wave * 0.12, z);
+
+    // Scarf: across the chest, slightly below the head.
+    dummy.position.set(crowd.baseX[i], yBody + 0.62, z);
+    dummy.updateMatrix();
+    crowd.scarves.setMatrixAt(i, dummy.matrix);
+
+    // Arms: raised when poseType===2 or when excitement is high and wave peaks.
+    const raiseArm = pose === 2 || (excitement > 0.35 && wave > 0.65);
+    const armY = raiseArm
+      ? yBody + 1.18 + wave * 0.18 * excitement
+      : yBody + 0.68;
+    dummy.position.set(crowd.baseX[i], armY, z);
     dummy.updateMatrix();
     crowd.arms.setMatrixAt(i, dummy.matrix);
   }
   crowd.bodies.instanceMatrix.needsUpdate = true;
   crowd.heads.instanceMatrix.needsUpdate = true;
   crowd.arms.instanceMatrix.needsUpdate = true;
+  crowd.scarves.instanceMatrix.needsUpdate = true;
   crowd.slice = (slice + 1) % crowd.slices;
 }
 
