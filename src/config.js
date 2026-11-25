@@ -61,16 +61,56 @@ export const GOAL_DEPTH = 2.0;
 export const GOAL_DISTANCE = 22;        // goal line z when shooting = -GOAL_DISTANCE
 export const GOAL_SPAWN_Z = -140;
 
+// ----- Ball and goal frame (shared by rendering and collision) -----
+// The visible frame and the scoring opening use the SAME radii: one single
+// goal-boundary function (goalMath.js) is used by the reticle and by planShot.
+export const BALL_RADIUS = 0.22;
+export const BALL_GRAVITY = 9.8;
+export const POST_RADIUS = 0.06;
+export const CROSSBAR_RADIUS = 0.06;
+
 // ----- Shooting and keeper -----
 export const SHOT_SPEED = 30;
 export const KICK_DELAY = 0.22;
 export const AIM_TIME_LIMIT = 4.5;
-export const RETICLE_X_RANGE = 4.8;
-export const POST_TOLERANCE = 0.14;
-export const KEEPER_DIVE_SPEED = 8;
+export const RETICLE_X_RANGE = 4.4;
+export const RETICLE_SIZE = 1.0;            // constant, never shrinks with the level
+export const RETICLE_SPEED_BASE = 1.9;      // rad/s of the aiming pattern
+export const RETICLE_SPEED_PER_LEVEL = 0.11;
+export const RETICLE_SPEED_MAX = 3.4;
+export const RETICLE_CENTER_Y = 1.22;
+export const RETICLE_Y_AMPLITUDE = 0.95;    // keeps the reticle above the grass
+
 export const KEEPER_BASE_Y = 1.0;
-export const KEEPER_SAVE_RADIUS = 1.1;
 export const KEEPER_Z_OFFSET = 0.9;
+export const KEEPER_REACTION_BASE = 0.34;   // seconds before the keeper reacts
+export const KEEPER_REACTION_PER_LEVEL = 0.015;
+export const KEEPER_REACTION_MIN = 0.20;
+export const KEEPER_DIVE_SPEED = 3.2;       // lateral metres per second
+export const KEEPER_DIVE_SPEED_PER_LEVEL = 0.20;
+export const KEEPER_DIVE_SPEED_MAX = 5.0;
+export const KEEPER_VERTICAL_SPEED = 2.0;
+export const KEEPER_SAVE_RADIUS = 0.50;
+export const KEEPER_CENTRAL_RADIUS = 0.65;  // inside this radius: no lateral dive
+export const KEEPER_READ_ERROR_MAX = 0.35;  // low level: small, never side-swapping
+export const KEEPER_READ_ERROR_PER_LEVEL = 0.03;
+export const KEEPER_DIVE_MARGIN = 0.25;
+export const KEEPER_MAX_X = GOAL_WIDTH / 2 - 0.3;
+export const KEEPER_MAX_Y = GOAL_HEIGHT - 0.25;
+export const KEEPER_MIN_Y = 0.35;
+
+// ----- Environment (pre-match selection, fixed for the whole match) -----
+export const ENVIRONMENT_COUNT = 3;
+export const DEFAULT_ENVIRONMENT = 0;
+
+// ----- Animation / interaction feel -----
+export const ANIMATION_CROSSFADE = 0.18;
+export const SIDE_STEP_TIME = 0.55;
+export const PLAYER_DRIBBLE_FOLLOW = 14;
+export const PLAYER_FALL_DISPLACEMENT = 0.65;
+export const DEFENDER_CONTACT_TIME = 0.45;
+export const BALL_SAVE_DEFLECTION = 0.55;
+export const NET_IMPACT_RADIUS = 2.6;
 
 // ----- Scoring and game feel -----
 export const SCORE_PER_DUEL = 100;

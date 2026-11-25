@@ -19,7 +19,8 @@ const STAND_DEFS = [
   { offset: 11.5, topHeight: 6.2 }
 ];
 
-// Visual themes: the match goes from day to sunset to night.
+// Visual themes: the player picks one BEFORE kick-off and it stays fixed for
+// the whole match (no automatic cycling mid-game).
 const THEMES = [
   {
     name: 'JOUR', top: 0x2e7fe6, horizon: 0xbfe0ff, fog: 0xb5d5f0, hemiSky: 0xcfe6ff,
@@ -30,14 +31,14 @@ const THEMES = [
   {
     name: 'COUCHER DE SOLEIL', top: 0x3a4a9e, horizon: 0xff8a4a, fog: 0xe89a70, hemiSky: 0xffc79a,
     hemiGround: 0x3a3a2a, light: 0xffb070, sunColor: 0xffa040, cloudColor: 0xffb88a,
-    hemi: 1.1, lightI: 2.6, stars: 0.1, cloud: 0.9, lamp: 1.5, beams: 0.05, exposure: 1.0,
-    bloom: 0.55, board: 0.9, lightPos: [16, 8, 10], sunDir: [0.15, 0.07, -0.99]
+    hemi: 1.1, lightI: 2.6, stars: 0.1, cloud: 0.9, lamp: 1.0, beams: 0.016, exposure: 1.0,
+    bloom: 0.45, board: 0.9, lightPos: [16, 8, 10], sunDir: [0.15, 0.07, -0.99]
   },
   {
     name: 'NUIT', top: 0x03071a, horizon: 0x1a2a55, fog: 0x101a3a, hemiSky: 0x3a4a8a,
     hemiGround: 0x101a10, light: 0xa8bfff, sunColor: 0xcfd8ff, cloudColor: 0x2a3560,
-    hemi: 0.8, lightI: 1.6, stars: 1, cloud: 0.25, lamp: 5.0, beams: 0.16, exposure: 1.15,
-    bloom: 0.9, board: 0.7, lightPos: [-9, 22, 10], sunDir: [-0.35, 0.4, -0.85]
+    hemi: 0.8, lightI: 1.6, stars: 1, cloud: 0.25, lamp: 2.2, beams: 0.045, exposure: 1.15,
+    bloom: 0.6, board: 0.7, lightPos: [-9, 22, 10], sunDir: [-0.35, 0.4, -0.85]
   }
 ];
 const COLOR_KEYS = ['top', 'horizon', 'fog', 'hemiSky', 'hemiGround', 'light', 'sunColor', 'cloudColor'];
@@ -238,13 +239,13 @@ function addLights(scene) {
   sunLight.position.copy(atmosphere.lightPos);
   sunLight.target.position.set(0, 0, -15);
   sunLight.castShadow = true;
-  sunLight.shadow.mapSize.set(2048, 2048);
-  sunLight.shadow.camera.left = -35;
-  sunLight.shadow.camera.right = 35;
-  sunLight.shadow.camera.top = 35;
-  sunLight.shadow.camera.bottom = -35;
+  sunLight.shadow.mapSize.set(1536, 1536);
+  sunLight.shadow.camera.left = -24;
+  sunLight.shadow.camera.right = 24;
+  sunLight.shadow.camera.top = 24;
+  sunLight.shadow.camera.bottom = -24;
   sunLight.shadow.camera.near = 1;
-  sunLight.shadow.camera.far = 110;
+  sunLight.shadow.camera.far = 90;
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
   scene.add(sunLight.target);
@@ -308,12 +309,16 @@ function addCrowd(scene) {
     new THREE.BoxGeometry(0.5, 0.7, 0.45), new THREE.MeshStandardMaterial({ roughness: 0.9 }), count
   );
   const heads = new THREE.InstancedMesh(
-    new THREE.SphereGeometry(0.17, 10, 8), new THREE.MeshStandardMaterial({ roughness: 0.9 }), count
+    new THREE.SphereGeometry(0.17, 8, 6), new THREE.MeshStandardMaterial({ roughness: 0.9 }), count
   );
-  bodies.frustumCulled = false;
-  heads.frustumCulled = false;
-  bodies.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  heads.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  // Raised arms make the stands read as a crowd at a glance, still one draw call.
+  const arms = new THREE.InstancedMesh(
+    new THREE.BoxGeometry(0.12, 0.42, 0.12), new THREE.MeshStandardMaterial({ roughness: 0.9 }), count
+  );
+  [bodies, heads, arms].forEach((mesh) => {
+    mesh.frustumCulled = false;
+    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  });
 
   const baseX = new Float32Array(count);
   const baseY = new Float32Array(count);
@@ -338,6 +343,7 @@ function addCrowd(scene) {
           bodies.setColorAt(index, color);
           color.setHex(skinColors[Math.floor(Math.random() * skinColors.length)]);
           heads.setColorAt(index, color);
+          arms.setColorAt(index, color);
           index += 1;
         }
       }
@@ -345,27 +351,41 @@ function addCrowd(scene) {
   });
   bodies.instanceColor.needsUpdate = true;
   heads.instanceColor.needsUpdate = true;
-  scene.add(bodies, heads);
-  crowd = { bodies, heads, count, baseX, baseY, baseZ, phase };
+  arms.instanceColor.needsUpdate = true;
+  scene.add(bodies, heads, arms);
+  crowd = {
+    bodies, heads, arms, count, baseX, baseY, baseZ, phase,
+    slice: 0, slices: 3
+  };
 }
 
+// The crowd is updated in slices (1/3 of the stands per frame). A full refresh
+// of ~1100 instances every frame is unnecessary: nobody can see the difference
+// and the saved CPU time goes into the gameplay loop.
 function updateCrowd(delta, speed) {
   crowdScroll += speed * delta;
   const range = CROWD_Z_MAX - CROWD_Z_MIN;
-  const amplitude = 0.04 + crowdExcitement * 0.4;
-  for (let i = 0; i < crowd.count; i++) {
+  const amplitude = 0.04 + crowdExcitement * 0.55;
+  const slice = crowd.slice;
+  for (let i = slice; i < crowd.count; i += crowd.slices) {
     const wrapped = (((crowd.baseZ[i] - CROWD_Z_MIN + crowdScroll) % range) + range) % range;
     const z = CROWD_Z_MIN + wrapped;
-    const y = crowd.baseY[i] + Math.abs(Math.sin(worldTime * 7 + crowd.phase[i])) * amplitude;
+    const wave = Math.abs(Math.sin(worldTime * 7 + crowd.phase[i]));
+    const y = crowd.baseY[i] + wave * amplitude;
     dummy.position.set(crowd.baseX[i], y + 0.35, z);
     dummy.updateMatrix();
     crowd.bodies.setMatrixAt(i, dummy.matrix);
     dummy.position.set(crowd.baseX[i], y + 0.87, z);
     dummy.updateMatrix();
     crowd.heads.setMatrixAt(i, dummy.matrix);
+    dummy.position.set(crowd.baseX[i], y + 1.02 + wave * 0.12, z);
+    dummy.updateMatrix();
+    crowd.arms.setMatrixAt(i, dummy.matrix);
   }
   crowd.bodies.instanceMatrix.needsUpdate = true;
   crowd.heads.instanceMatrix.needsUpdate = true;
+  crowd.arms.instanceMatrix.needsUpdate = true;
+  crowd.slice = (slice + 1) % crowd.slices;
 }
 
 // ---------- Boards and floodlights ----------
@@ -415,8 +435,8 @@ function addPoles(scene) {
   const poleMaterial = new THREE.MeshStandardMaterial({ color: 0x9e9e9e, roughness: 0.5, metalness: 0.4 });
   const poleGeometry = new THREE.CylinderGeometry(0.2, 0.3, 10, 8);
   const lampGeometry = new THREE.BoxGeometry(3, 1.2, 0.4);
-  const beamGeometry = new THREE.ConeGeometry(4.2, 16, 24, 1, true);
-  beamGeometry.translate(0, -8, 0);
+  const beamGeometry = new THREE.ConeGeometry(3.4, 14, 20, 1, true);
+  beamGeometry.translate(0, -7, 0);
 
   [-1, 1].forEach((side) => {
     for (let i = 0; i < POLE_COUNT; i++) {
@@ -430,7 +450,7 @@ function addPoles(scene) {
       beamMesh.rotation.z = -side * 0.85;
       const glowSprite = new THREE.Sprite(glowMaterial);
       glowSprite.position.y = 10.2;
-      glowSprite.scale.set(9, 9, 1);
+      glowSprite.scale.set(4.5, 4.5, 1);
       poleGroup.add(poleMesh, lampMesh, beamMesh, glowSprite);
       poleGroup.position.set(side * (FIELD_WIDTH / 2 + 2.5), 0, SCROLL_START_Z - i * POLE_SPACING - 5);
       scene.add(poleGroup);
@@ -569,7 +589,7 @@ function updateTheme(delta) {
   sunLight.position.copy(atmosphere.lightPos);
   lampMaterial.emissiveIntensity = numbers.lamp;
   beamMaterial.opacity = numbers.beams;
-  glowMaterial.opacity = 0.15 + numbers.beams * 2.5;
+  glowMaterial.opacity = 0.1 + numbers.beams * 1.2;
   boardMaterials.forEach((material) => material.color.setScalar(numbers.board));
   worldRenderer.toneMappingExposure = numbers.exposure;
 
@@ -611,7 +631,8 @@ export function createWorld() {
   confetti = createBurst(scene, 160, 0.3, false);
   sparks = createBurst(scene, 80, 0.2, true);
   fireworks = [0, 1, 2].map(() => createBurst(scene, 90, 0.9, true));
-  updateCrowd(0, 0);
+  // The crowd is updated in slices: fill every slice once before the first frame.
+  for (let i = 0; i < crowd.slices; i++) updateCrowd(0, 0);
   updateTheme(10);
 
   window.addEventListener('resize', () => {
@@ -675,13 +696,28 @@ export function playHitEffect(x, y, z) {
 }
 
 // 0 = day, 1 = sunset, 2 = night. Returns the name of the theme.
-export function setTheme(index) {
+// `immediate` snaps the atmosphere instead of blending (used at kick-off and
+// when the player picks an environment in the menu).
+export function setTheme(index, immediate) {
   themeIndex = ((index % THEMES.length) + THEMES.length) % THEMES.length;
+  if (immediate) {
+    const theme = THEMES[themeIndex];
+    COLOR_KEYS.forEach((key) => atmosphere.colors[key].set(theme[key]));
+    NUMBER_KEYS.forEach((key) => { atmosphere.numbers[key] = theme[key]; });
+    atmosphere.lightPos.set(...theme.lightPos);
+    atmosphere.sunDir.set(...theme.sunDir);
+    updateTheme(10);
+  }
   return THEMES[themeIndex].name;
 }
 
 export function getThemeName(index) {
   return THEMES[((index % THEMES.length) + THEMES.length) % THEMES.length].name;
+}
+
+// Names shown by the pre-match environment selector.
+export function getEnvironmentNames() {
+  return THEMES.map((theme) => theme.name);
 }
 
 // Current bloom strength wanted by the atmosphere (read by main.js).

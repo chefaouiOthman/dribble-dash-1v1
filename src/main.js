@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {
   createWorld, updateWorld, playWinEffect, playGoalEffect, playHitEffect,
-  setTheme, getThemeName, getBloomTarget
+  setTheme, getThemeName, getBloomTarget, getEnvironmentNames
 } from './world.js';
 import { createPostProcessing, updatePostProcessing } from './postfx.js';
 import {
@@ -17,13 +17,17 @@ import {
 } from './goal.js';
 import {
   createDefender, updateDefender, checkCollision, isDefenderOffscreen,
-  nextDefender, resetDefender, consumeDefenderEvents
+  nextDefender, resetDefender, consumeDefenderEvents, markDefenderContact,
+  getDefenderContactPoint
 } from './defender.js';
 import {
   createUI, updateHUD, showPopup, showBanner, flashScreen, setAimHint,
-  hideOverlay, showPause, showGameOver, setMuteIndicator
+  hideOverlay, showPause, showGameOver, setMuteIndicator, setEnvironment,
+  setLoadingProgress
 } from './ui.js';
 import { playSound, toggleMute, isMuted } from './audio.js';
+import { loadCharacterAssets } from './assets.js';
+import { attachRig, isRigReady } from './actor.js';
 import {
   GAME_STATE, PLAYER_Z, PLAYER_WIDTH, DEFENDER_WIDTH, TACKLE_HEIGHT,
   WORLD_SCROLL_SPEED, MENU_SCROLL_SPEED, SCROLL_SPEED_PER_LEVEL, MAX_SCROLL_SPEED,
@@ -31,9 +35,11 @@ import {
   SCORE_PER_DUEL, BONUS_CLOSE_CALL, BONUS_JUMP, GOAL_POINTS, COMBO_STEP, MAX_COMBO_STEPS,
   CLOSE_CALL_GAP, SLOW_MO_DURATION, SLOW_MO_SCALE, GAME_OVER_DELAY,
   MATCH_SECONDS, MATCH_MINUTES, MAX_CONCEDED, DUELS_PER_ATTACK,
-  KICK_DELAY, AIM_TIME_LIMIT, GOAL_DISTANCE
+  KICK_DELAY, AIM_TIME_LIMIT, GOAL_DISTANCE, DEFAULT_ENVIRONMENT
 } from './config.js';
 
+const DEV_STATS = new URLSearchParams(window.location.search).get('stats') === '1';
+const DEV_VIEWER = new URLSearchParams(window.location.search).get('dev') === 'viewer';
 const { scene, camera, renderer } = createWorld();
 const fx = createPostProcessing(renderer, scene, camera);
 const player = createPlayer(scene);
@@ -41,6 +47,13 @@ const ball = createBall(scene);
 const defender = createDefender(scene);
 const goal = createGoal(scene);
 defender.group.visible = false;
+
+// Dev-only handles for profiling and clip inspection (never exposed in normal play).
+if (DEV_STATS) {
+  window.__ddDebug = {
+    renderer, scene, camera, fx, player, ball, defender, goal
+  };
+}
 
 window.addEventListener('resize', () => {
   fx.composer.setSize(window.innerWidth, window.innerHeight);
@@ -86,11 +99,14 @@ let launchTimer = 0;
 let gameOverTimer = 0;
 let lastDodge = null;
 let shot = null;
-let themeIndex = 0;
 let lastHudMinute = -1;
 let finalReason = 'time';
 let elapsed = 0;
+let selectedEnvironment = DEFAULT_ENVIRONMENT;
+let matchEnvironment = DEFAULT_ENVIRONMENT;
+let gameAssets = null;
 const cameraLookTarget = new THREE.Vector3(CAMERA_LOOK_AT.x, CAMERA_LOOK_AT.y, CAMERA_LOOK_AT.z);
+const contactPoint = new THREE.Vector3();
 
 function getMultiplier() {
   return 1 + COMBO_STEP * Math.min(combo, MAX_COMBO_STEPS);
@@ -100,20 +116,19 @@ function getMinute() {
   return Math.min(MATCH_MINUTES, Math.floor((matchTime / MATCH_SECONDS) * MATCH_MINUTES));
 }
 
-function themeForMinute(minute) {
-  if (minute < 30) return 0;
-  if (minute < 60) return 1;
-  return 2;
-}
-
 function refreshHUD() {
   const minute = getMinute();
   lastHudMinute = minute;
+  // In the menu the HUD previews the environment that is about to be played;
+  // during and after a match it shows the fixed theme chosen at kick-off.
+  const isLive = gameState === GAME_STATE.PLAYING
+    || gameState === GAME_STATE.PAUSED
+    || gameState === GAME_STATE.GAME_OVER;
   updateHUD({
     score, goals, conceded, minute, combo,
     multiplier: getMultiplier(),
     level,
-    themeName: getThemeName(themeForMinute(minute))
+    themeName: getThemeName(isLive ? matchEnvironment : selectedEnvironment)
   });
 }
 
@@ -139,8 +154,9 @@ function startGame() {
   slowMoTimer = 0;
   shakeAmount = 0;
   hitFx = 0;
-  themeIndex = 0;
-  setTheme(0);
+  // The environment is chosen BEFORE the match and stays fixed for 90 minutes.
+  matchEnvironment = selectedEnvironment;
+  setTheme(matchEnvironment, true);
   setAimHint(false, 0, '');
   refreshHUD();
   hideOverlay();
@@ -194,8 +210,12 @@ function concede() {
   hitFx = 1;
   shakeAmount = 0.9;
   knockDownPlayer(player);
-  releaseBall(ball, (Math.random() - 0.5) * 4, 1.5, -5);
-  playHitEffect(player.group.position.x, 1, PLAYER_Z);
+  // Real contact point: the ball leaves the defender's foot/body, not the void.
+  markDefenderContact(defender);
+  getDefenderContactPoint(defender, contactPoint);
+  const pushDirection = Math.sign(ball.mesh.position.x - defender.group.position.x) || 1;
+  releaseBall(ball, pushDirection * 3.2, 1.6, 4.2);
+  playHitEffect(contactPoint.x, contactPoint.y, contactPoint.z);
   playSound('hit');
   flashScreen('hit');
   showBanner('BALLE PERDUE !', 'danger');
@@ -235,6 +255,7 @@ function awardDuel() {
     combo = 0;
   }
 
+  const previousLevel = level;
   const points = Math.round((SCORE_PER_DUEL + bonus) * getMultiplier());
   score += points;
   duels += 1;
@@ -242,6 +263,7 @@ function awardDuel() {
   level = duels + 1;
 
   showPopup(label + ' +' + points, kind);
+  if (level > previousLevel) showPopup('NIVEAU ' + level + ' · DÉFENSEURS PLUS RAPIDES', 'level');
   playSound(dodge === 'clean' ? 'win' : 'perfect');
   playWinEffect();
   if (dodge !== 'clean') {
@@ -290,7 +312,8 @@ function resolveShot(outcome) {
     goals += 1;
     const points = Math.round(GOAL_POINTS * getMultiplier());
     score += points;
-    triggerNetImpact(goal, shot.targetLocal.x, shot.targetLocal.y);
+    triggerNetImpact(goal, shot.targetLocal.x, shot.targetLocal.y, 1.15);
+    playSound('net');
     playSound('goal');
     playGoalEffect();
     flashScreen('win');
@@ -303,13 +326,21 @@ function resolveShot(outcome) {
   } else if (outcome === 'SAVE') {
     combo = 0;
     playSound('save');
-    showBanner('ARRÊT DU GARDIEN !', 'save');
+    const caught = shot.keeper && shot.keeper.mode === 'CATCH';
+    showBanner(caught ? 'CAPTURE DU GARDIEN !' : 'ARRÊT DU GARDIEN !', 'save');
     setPlayerMode(player, 'IDLE');
     phaseTimer = 2.0;
   } else if (outcome === 'POST') {
     combo = 0;
     playSound('post');
     showBanner('POTEAU !', 'save');
+    shakeAmount = 0.25;
+    setPlayerMode(player, 'IDLE');
+    phaseTimer = 2.0;
+  } else if (outcome === 'BAR') {
+    combo = 0;
+    playSound('post');
+    showBanner('BARRE TRANSVERSALE !', 'save');
     shakeAmount = 0.25;
     setPlayerMode(player, 'IDLE');
     phaseTimer = 2.0;
@@ -342,11 +373,6 @@ function updateMenu(delta) {
 function updatePlaying(delta, realDelta) {
   matchTime += delta;
   const minute = getMinute();
-  const wantedTheme = themeForMinute(minute);
-  if (wantedTheme !== themeIndex) {
-    themeIndex = wantedTheme;
-    showPopup('NOUVEAU DÉCOR : ' + setTheme(wantedTheme), 'level');
-  }
   if (minute !== lastHudMinute) refreshHUD();
 
   const baseScroll = Math.min(WORLD_SCROLL_SPEED + (level - 1) * SCROLL_SPEED_PER_LEVEL, MAX_SCROLL_SPEED);
@@ -510,9 +536,44 @@ function updateCamera(realDelta) {
 }
 
 // ---------- Setup ----------
-createUI({ onStart: startGame, onResume: resumeGame });
+createUI({
+  onStart: startGame,
+  onResume: resumeGame,
+  onEnvironmentSelect: (index) => {
+    selectedEnvironment = index;
+    setTheme(index);
+    setEnvironment(index, getEnvironmentNames());
+    refreshHUD();
+  }
+});
+setEnvironment(selectedEnvironment, getEnvironmentNames());
+setTheme(selectedEnvironment, true);
 refreshHUD();
 setMuteIndicator(isMuted());
+
+// Assets load in the background: the game is playable immediately with the
+// procedural bodies, then swaps to the rigged Mixamo characters when ready.
+loadCharacterAssets((progress) => {
+  setLoadingProgress(progress.loaded / progress.total, progress.error ? 'Assets manquants' : 'Chargement des joueurs');
+}).then((assets) => {
+  gameAssets = assets;
+  if (assets.ready) {
+    attachRig(player.actor, assets);
+    attachRig(defender.actor, assets);
+    attachRig(goal.keeper, assets);
+    setLoadingProgress(1, 'Joueurs prêts');
+    console.info('[assets] Rigged characters ready', {
+      heightCm: assets.heightCm,
+      scale: assets.scale,
+      clips: assets.clipInfo.length,
+      missing: assets.missing
+    });
+  } else {
+    setLoadingProgress(1, 'Mode procédural');
+    console.warn('[assets] Procedural fallback active. Missing:', assets.missing);
+  }
+  window.setTimeout(() => setLoadingProgress(null, ''), 1600);
+});
 
 window.addEventListener('keydown', (event) => {
   const key = event.key.toLowerCase();
@@ -528,10 +589,30 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) pauseGame();
 });
 
+// ---------- Dev diagnostics (URL params only) ----------
+const statsElement = DEV_STATS ? document.createElement('div') : null;
+if (statsElement) {
+  renderer.info.autoReset = false;
+  statsElement.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:9999;font:11px monospace;'
+    + 'color:#0f0;background:rgba(0,0,0,.65);padding:6px 8px;border-radius:6px;pointer-events:none;white-space:pre';
+  document.body.appendChild(statsElement);
+}
+let statsTimer = 0;
+let frames = 0;
+let fps = 0;
+
+if (DEV_VIEWER) {
+  const uiRoot = document.getElementById('dd-root');
+  if (uiRoot) uiRoot.style.display = 'none';
+  renderer.domElement.style.display = 'none';
+  import('./devViewer.js').then((module) => module.startDevViewer());
+}
+
 // ---------- Main loop ----------
 const clock = new THREE.Clock();
 
 function animate() {
+  if (DEV_VIEWER) return;
   requestAnimationFrame(animate);
   const realDelta = Math.min(clock.getDelta(), 0.05);
   elapsed += realDelta;
@@ -555,6 +636,22 @@ function animate() {
   fx.targets.saturation = 1.08 - hitFx * 0.5;
   fx.targets.bloom = getBloomTarget() + (isSlow ? 0.2 : 0);
   updatePostProcessing(fx, realDelta);
+  if (statsElement) renderer.info.reset();
   fx.composer.render(realDelta);
+
+  if (statsElement) {
+    frames += 1;
+    statsTimer += realDelta;
+    if (statsTimer >= 0.5) {
+      fps = Math.round(frames / statsTimer);
+      frames = 0;
+      statsTimer = 0;
+      const info = renderer.info;
+      statsElement.textContent = 'FPS ' + fps
+        + ' | appels ' + info.render.calls
+        + ' | triangles ' + info.render.triangles
+        + ' | rig ' + (isRigReady(player.actor) ? 'FBX' : 'procédural');
+    }
+  }
 }
 animate();

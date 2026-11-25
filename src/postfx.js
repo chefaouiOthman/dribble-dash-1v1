@@ -53,18 +53,24 @@ export function createPostProcessing(renderer, scene, camera) {
   const size = new THREE.Vector2();
   renderer.getSize(size);
   const pixelRatio = renderer.getPixelRatio();
+  // The 3D scene is rendered at full canvas resolution; the effect chain runs
+  // at a slightly lower internal resolution (bloom/grade are low-frequency and
+  // the upscale is invisible, while the GPU cost drops sharply on iGPUs).
+  const effectRatio = Math.min(pixelRatio, 1);
   const maxSamples = renderer.capabilities.maxSamples || 0;
 
-  const renderTarget = new THREE.WebGLRenderTarget(size.x * pixelRatio, size.y * pixelRatio, {
+  const renderTarget = new THREE.WebGLRenderTarget(size.x * effectRatio, size.y * effectRatio, {
     type: THREE.HalfFloatType,
-    samples: Math.min(4, maxSamples)
+    samples: Math.min(2, maxSamples)
   });
   const composer = new EffectComposer(renderer, renderTarget);
-  composer.setPixelRatio(pixelRatio);
+  composer.setPixelRatio(effectRatio);
   composer.setSize(size.x, size.y);
 
   composer.addPass(new RenderPass(scene, camera));
-  const bloomPass = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.4, 0.6, 0.85);
+  const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(size.x * effectRatio, size.y * effectRatio), 0.4, 0.6, 0.85
+  );
   composer.addPass(bloomPass);
   const gradePass = new ShaderPass(GradeShader);
   composer.addPass(gradePass);

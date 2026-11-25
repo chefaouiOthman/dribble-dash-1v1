@@ -5,11 +5,9 @@ import {
   SPAWN_DISTANCE, TRACK_START_DISTANCE, FEINT_DISTANCE, ATTACK_DISTANCE, TRACK_LANE_SPEED,
   BASE_DEFENDER_SPEED, SPEED_PER_LEVEL, MAX_DEFENDER_SPEED, SLIDE_SPEED_FACTOR, BLOCK_SPEED_FACTOR,
   BASE_REACTION_TIME, REACTION_DECREASE_PER_LEVEL, MIN_REACTION_TIME,
-  BASE_WINDUP_TIME, MIN_WINDUP_TIME
+  BASE_WINDUP_TIME, MIN_WINDUP_TIME, DEFENDER_CONTACT_TIME
 } from './config.js';
-import {
-  createHumanoid, applyKit, animateRun, poseSlide, poseWindup, poseBlock
-} from './characters.js';
+import { createActor, setActorState, setActorKit, updateActor } from './actor.js';
 
 // States: APPROACH -> TRACK -> WINDUP (telegraph) -> ATTACK -> PASSED
 // Attack types: SLIDE (tackle on the ground: jump or dodge) and BLOCK (stands: dodge only).
@@ -17,13 +15,29 @@ const PASS_OFFSET_Z = 2.5;
 const OFFSCREEN_Z = 10;
 
 const KINDS = [
-  { jerseyColor: 0x1e88e5, accentColor: 0x0d47a1, pattern: 'hoops', shortsColor: 0x0d47a1, sockColor: 0x1e88e5, speedFactor: 1.0, reactionFactor: 1.0, scale: 1.1 },
-  { jerseyColor: 0xfb8c00, accentColor: 0xe65100, pattern: 'stripes', shortsColor: 0x4e342e, sockColor: 0xfb8c00, speedFactor: 1.1, reactionFactor: 0.85, scale: 1.05 },
-  { jerseyColor: 0x37474f, accentColor: 0x263238, pattern: 'plain', shortsColor: 0x000000, sockColor: 0x90a4ae, speedFactor: 0.95, reactionFactor: 0.7, scale: 1.2 }
+  {
+    jerseyColor: 0x1e88e5, accentColor: 0x0d47a1, pattern: 'hoops',
+    shortsColor: 0x0d47a1, sockColor: 0x1e88e5, skinColor: 0xc68642,
+    hairColor: 0x111111, bootColor: 0x00bcd4,
+    speedFactor: 1.0, reactionFactor: 1.0, scale: 1.1
+  },
+  {
+    jerseyColor: 0xfb8c00, accentColor: 0xe65100, pattern: 'stripes',
+    shortsColor: 0x4e342e, sockColor: 0xfb8c00, skinColor: 0x8d5524,
+    hairColor: 0x1b1b1b, bootColor: 0xffffff,
+    speedFactor: 1.1, reactionFactor: 0.85, scale: 1.05
+  },
+  {
+    jerseyColor: 0x37474f, accentColor: 0x263238, pattern: 'plain',
+    shortsColor: 0x000000, sockColor: 0x90a4ae, skinColor: 0xffdbac,
+    hairColor: 0x3e2723, bootColor: 0xffd600,
+    speedFactor: 0.95, reactionFactor: 0.7, scale: 1.2
+  }
 ];
 
 // The defender remembers which side the player usually escapes to.
 const memory = { bias: 0 };
+const sweptBox = new THREE.Box3();
 
 function getSpeed(defender) {
   const base = Math.min(BASE_DEFENDER_SPEED + (defender.level - 1) * SPEED_PER_LEVEL, MAX_DEFENDER_SPEED);
@@ -53,7 +67,7 @@ function spawn(defender, level) {
   const kind = KINDS[(level - 1) % KINDS.length];
   defender.level = level;
   defender.kind = kind;
-  applyKit(defender.humanoid, kind);
+  setActorKit(defender.actor, kind);
   defender.attackType = level >= 3 && Math.random() < 0.4 ? 'BLOCK' : 'SLIDE';
 
   const laneIndex = Math.floor(Math.random() * LANE_COUNT);
@@ -67,6 +81,7 @@ function spawn(defender, level) {
   defender.lastPlayerLane = -1;
   defender.time = 0;
   defender.runTime = 0;
+  defender.contactTimer = 0;
   defender.events.attackStarted = false;
   defender.events.passed = false;
 
@@ -74,15 +89,18 @@ function spawn(defender, level) {
   defender.group.scale.setScalar(kind.scale);
   defender.group.rotation.set(0, 0, 0);
   defender.group.position.set(LANE_POSITIONS[laneIndex], GROUND_Y, -SPAWN_DISTANCE);
+  defender.prevZ = defender.group.position.z;
   defender.warningStrip.visible = false;
+  setActorState(defender.actor, 'run', { fade: 0.15, force: true });
   updateBox(defender);
 }
 
 export function createDefender(scene) {
-  const humanoid = createHumanoid({
-    ...KINDS[0], skinColor: 0xc68642, hairColor: 0x111111, bootColor: 0x00bcd4, facing: 1
+  const actor = createActor({
+    kit: KINDS[0],
+    facing: 1
   });
-  scene.add(humanoid.group);
+  scene.add(actor.group);
 
   const warningStrip = new THREE.Mesh(
     new THREE.PlaneGeometry(2.4, 1),
@@ -93,10 +111,11 @@ export function createDefender(scene) {
   scene.add(warningStrip);
 
   const defender = {
-    humanoid, group: humanoid.group, warningStrip,
+    actor, group: actor.group, warningStrip,
     state: 'APPROACH', attackType: 'SLIDE', level: 1, kind: KINDS[0],
     targetLaneIndex: 1, reactionTimer: 0, willFeint: false, feintDone: false,
     windupTimer: 0, lockDistance: 0, lastPlayerLane: -1, time: 0, runTime: 0,
+    prevZ: 0, contactTimer: 0,
     box: new THREE.Box3(),
     events: { attackStarted: false, passed: false }
   };
@@ -141,7 +160,9 @@ function beginWindup(defender) {
 function beginAttack(defender) {
   defender.state = 'ATTACK';
   defender.reactionTimer = getReactionTime(defender) * 0.6;
-  if (defender.attackType === 'SLIDE') {
+  if (defender.attackType === 'SLIDE' && !defender.actor.rig) {
+    // The FBX slide clip handles the body; only the procedural fallback needs
+    // a manual root rotation.
     defender.group.rotation.x = -1.25;
     defender.group.position.y = GROUND_Y + 0.12;
   }
@@ -165,6 +186,7 @@ function updateWarningStrip(defender) {
 export function updateDefender(defender, delta, playerLaneIndex) {
   const group = defender.group;
   defender.time += delta;
+  defender.prevZ = group.position.z;
 
   let speed = getSpeed(defender);
   if (defender.state === 'WINDUP') speed *= 0.7;
@@ -172,6 +194,11 @@ export function updateDefender(defender, delta, playerLaneIndex) {
     speed *= defender.attackType === 'SLIDE' ? SLIDE_SPEED_FACTOR : BLOCK_SPEED_FACTOR;
   }
   if (defender.state === 'PASSED') speed = 12;
+  // Contact freezes the defender instead of letting him slide through the player.
+  if (defender.contactTimer > 0) {
+    defender.contactTimer -= delta;
+    speed = 0;
+  }
   group.position.z += speed * delta;
 
   const distance = PLAYER_Z - group.position.z;
@@ -213,31 +240,59 @@ export function updateDefender(defender, delta, playerLaneIndex) {
   const isSlide = defender.attackType === 'SLIDE';
   if (defender.state === 'APPROACH' || defender.state === 'TRACK') {
     defender.runTime += delta * 10;
-    animateRun(defender.humanoid, defender.runTime, 1);
-    group.rotation.z = Math.max(-0.3, Math.min(0.3, -lateral * 0.1));
+    setActorState(defender.actor, 'run', { fade: 0.16 });
+    if (!defender.actor.rig) {
+      group.rotation.z = Math.max(-0.3, Math.min(0.3, -lateral * 0.1));
+    }
   } else {
     group.rotation.z = 0;
     if (defender.state === 'WINDUP') {
-      if (isSlide) poseWindup(defender.humanoid);
-      else poseBlock(defender.humanoid, defender.time);
+      // Both attack types stay on their feet during the telegraph.
+      setActorState(defender.actor, isSlide ? 'run' : 'idle', { fade: 0.12, speed: 0.55 });
+    } else if (defender.state === 'PASSED') {
+      setActorState(defender.actor, 'run', { fade: 0.2 });
     } else if (isSlide) {
-      poseSlide(defender.humanoid);
+      setActorState(defender.actor, 'slide', { fade: 0.08 });
     } else {
-      poseBlock(defender.humanoid, defender.time);
+      // Standing block: low body-block stance, feet on the ground (the clip is
+      // trimmed before the body-block animation drops to the turf).
+      setActorState(defender.actor, 'block', { fade: 0.06 });
     }
   }
 
+  updateActor(defender.actor, delta);
   updateBox(defender);
   updateWarningStrip(defender);
 }
 
+// Swept Z test: at high levels a defender can move further than his own depth
+// in one frame, so the box is extended back to its previous position.
 export function checkCollision(defender, playerBox) {
   if (defender.state === 'PASSED') return false;
-  return defender.box.intersectsBox(playerBox);
+  sweptBox.copy(defender.box);
+  const travel = defender.group.position.z - defender.prevZ;
+  if (travel > 0) sweptBox.min.z -= travel;
+  else if (travel < 0) sweptBox.max.z -= travel;
+  return sweptBox.intersectsBox(playerBox);
+}
+
+// Visual contact feedback: the defender stops on the contact instead of
+// teleporting through the player.
+export function markDefenderContact(defender) {
+  defender.contactTimer = DEFENDER_CONTACT_TIME;
 }
 
 export function isDefenderOffscreen(defender) {
   return defender.group.position.z > OFFSCREEN_Z;
+}
+
+// True once the ball has actually travelled past the defender (used for contact).
+export function getDefenderContactPoint(defender, out) {
+  return out.set(
+    defender.group.position.x,
+    defender.attackType === 'SLIDE' ? 0.35 : 0.9,
+    defender.group.position.z + 0.4
+  );
 }
 
 export function nextDefender(defender, level) {

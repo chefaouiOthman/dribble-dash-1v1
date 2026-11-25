@@ -1,0 +1,5207 @@
+{
+  "Side Step.fbx": {
+    "duration": 1.4666666984558105,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          -0.4,
+          83.5,
+          0.4
+        ],
+        "mixamorigLeftFoot": [
+          40.2,
+          11.4,
+          -5.4
+        ],
+        "mixamorigRightFoot": [
+          -50.8,
+          11.9,
+          2.9
+        ],
+        "mixamorigLeftToeBase": [
+          48.7,
+          4.3,
+          5.7
+        ],
+        "mixamorigRightToeBase": [
+          -66,
+          8.2,
+          4.6
+        ],
+        "mixamorigLeftHand": [
+          44.1,
+          73.2,
+          -6.8
+        ],
+        "mixamorigRightHand": [
+          -50,
+          93,
+          -13.3
+        ]
+      },
+      {
+        "t": 0.18,
+        "mixamorigHips": [
+          -11.1,
+          90,
+          0.6
+        ],
+        "mixamorigLeftFoot": [
+          32.6,
+          13.6,
+          0.8
+        ],
+        "mixamorigRightFoot": [
+          -43.2,
+          10.7,
+          3.3
+        ],
+        "mixamorigLeftToeBase": [
+          44.5,
+          5,
+          6.4
+        ],
+        "mixamorigRightToeBase": [
+          -57.3,
+          4,
+          5.1
+        ],
+        "mixamorigLeftHand": [
+          34.8,
+          85.2,
+          -6.1
+        ],
+        "mixamorigRightHand": [
+          -59.1,
+          92.1,
+          -12.3
+        ]
+      },
+      {
+        "t": 0.37,
+        "mixamorigHips": [
+          -12.4,
+          93.7,
+          1
+        ],
+        "mixamorigLeftFoot": [
+          3.5,
+          12.2,
+          -1.7
+        ],
+        "mixamorigRightFoot": [
+          -33.4,
+          10.5,
+          3.1
+        ],
+        "mixamorigLeftToeBase": [
+          13.8,
+          3.7,
+          6.6
+        ],
+        "mixamorigRightToeBase": [
+          -47.2,
+          3.3,
+          5.3
+        ],
+        "mixamorigLeftHand": [
+          26,
+          89.3,
+          -3
+        ],
+        "mixamorigRightHand": [
+          -55.6,
+          89,
+          -8.7
+        ]
+      },
+      {
+        "t": 0.55,
+        "mixamorigHips": [
+          -8.5,
+          93.8,
+          2.2
+        ],
+        "mixamorigLeftFoot": [
+          -8.5,
+          11.5,
+          -3.3
+        ],
+        "mixamorigRightFoot": [
+          -23.1,
+          10.6,
+          2.7
+        ],
+        "mixamorigLeftToeBase": [
+          -0.6,
+          3.7,
+          7.8
+        ],
+        "mixamorigRightToeBase": [
+          -36.6,
+          3.4,
+          6.4
+        ],
+        "mixamorigLeftHand": [
+          24.4,
+          86.6,
+          0.3
+        ],
+        "mixamorigRightHand": [
+          -49.2,
+          89.5,
+          -8.2
+        ]
+      },
+      {
+        "t": 0.73,
+        "mixamorigHips": [
+          -2.6,
+          89.9,
+          2
+        ],
+        "mixamorigLeftFoot": [
+          0.2,
+          10.5,
+          -4.3
+        ],
+        "mixamorigRightFoot": [
+          -23,
+          19.1,
+          4.8
+        ],
+        "mixamorigLeftToeBase": [
+          8.8,
+          3.3,
+          6.7
+        ],
+        "mixamorigRightToeBase": [
+          -33.1,
+          7.2,
+          7
+        ],
+        "mixamorigLeftHand": [
+          36.6,
+          78.8,
+          4
+        ],
+        "mixamorigRightHand": [
+          -41.6,
+          91.1,
+          -11.1
+        ]
+      },
+      {
+        "t": 0.92,
+        "mixamorigHips": [
+          3.8,
+          86.4,
+          1.8
+        ],
+        "mixamorigLeftFoot": [
+          10.5,
+          10.5,
+          -4.3
+        ],
+        "mixamorigRightFoot": [
+          -43.1,
+          13.8,
+          6.6
+        ],
+        "mixamorigLeftToeBase": [
+          18.9,
+          3.3,
+          6.9
+        ],
+        "mixamorigRightToeBase": [
+          -58.5,
+          12,
+          9.1
+        ],
+        "mixamorigLeftHand": [
+          58.6,
+          75.1,
+          4
+        ],
+        "mixamorigRightHand": [
+          -36.4,
+          94.4,
+          -11
+        ]
+      },
+      {
+        "t": 1.1,
+        "mixamorigHips": [
+          7.7,
+          82.1,
+          2.3
+        ],
+        "mixamorigLeftFoot": [
+          20.7,
+          10.5,
+          -4.2
+        ],
+        "mixamorigRightFoot": [
+          -56,
+          15.8,
+          6.3
+        ],
+        "mixamorigLeftToeBase": [
+          28.9,
+          3.3,
+          7.1
+        ],
+        "mixamorigRightToeBase": [
+          -69.7,
+          20.9,
+          12
+        ],
+        "mixamorigLeftHand": [
+          72.1,
+          71.4,
+          -1.2
+        ],
+        "mixamorigRightHand": [
+          -34,
+          94.7,
+          -5.4
+        ]
+      },
+      {
+        "t": 1.28,
+        "mixamorigHips": [
+          7.1,
+          80,
+          2.7
+        ],
+        "mixamorigLeftFoot": [
+          31,
+          10.5,
+          -4.3
+        ],
+        "mixamorigRightFoot": [
+          -54.5,
+          12.6,
+          6.8
+        ],
+        "mixamorigLeftToeBase": [
+          39,
+          3.3,
+          7.2
+        ],
+        "mixamorigRightToeBase": [
+          -69.7,
+          14,
+          10.4
+        ],
+        "mixamorigLeftHand": [
+          61,
+          66.3,
+          -4.4
+        ],
+        "mixamorigRightHand": [
+          -39,
+          93.1,
+          -4.8
+        ]
+      },
+      {
+        "t": 1.47,
+        "mixamorigHips": [
+          -0.4,
+          83.5,
+          0.4
+        ],
+        "mixamorigLeftFoot": [
+          40.2,
+          11.4,
+          -5.4
+        ],
+        "mixamorigRightFoot": [
+          -50.8,
+          11.9,
+          2.9
+        ],
+        "mixamorigLeftToeBase": [
+          48.7,
+          4.3,
+          5.7
+        ],
+        "mixamorigRightToeBase": [
+          -66,
+          8.2,
+          4.6
+        ],
+        "mixamorigLeftHand": [
+          44.1,
+          73.2,
+          -6.8
+        ],
+        "mixamorigRightHand": [
+          -50,
+          93,
+          -13.3
+        ]
+      }
+    ]
+  },
+  "Goalkeeper Sidestep.fbx": {
+    "duration": 0.5,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0,
+          79.1,
+          1.6
+        ],
+        "mixamorigLeftFoot": [
+          52.4,
+          11.6,
+          -1.2
+        ],
+        "mixamorigRightFoot": [
+          -50.9,
+          11.6,
+          8
+        ],
+        "mixamorigLeftToeBase": [
+          56.3,
+          4.6,
+          12.3
+        ],
+        "mixamorigRightToeBase": [
+          -59.1,
+          4.5,
+          19.4
+        ],
+        "mixamorigLeftHand": [
+          55.6,
+          84.9,
+          6.5
+        ],
+        "mixamorigRightHand": [
+          -64.5,
+          82.9,
+          13.1
+        ]
+      },
+      {
+        "t": 0.06,
+        "mixamorigHips": [
+          -9.6,
+          79.5,
+          3
+        ],
+        "mixamorigLeftFoot": [
+          50.4,
+          13.9,
+          0.8
+        ],
+        "mixamorigRightFoot": [
+          -51,
+          11.5,
+          8.3
+        ],
+        "mixamorigLeftToeBase": [
+          56,
+          5.5,
+          12.9
+        ],
+        "mixamorigRightToeBase": [
+          -59.1,
+          4.4,
+          19.7
+        ],
+        "mixamorigLeftHand": [
+          45.9,
+          86.4,
+          4.9
+        ],
+        "mixamorigRightHand": [
+          -73.9,
+          84.3,
+          15.2
+        ]
+      },
+      {
+        "t": 0.13,
+        "mixamorigHips": [
+          -28.1,
+          81.7,
+          2.9
+        ],
+        "mixamorigLeftFoot": [
+          34.1,
+          16.6,
+          3.4
+        ],
+        "mixamorigRightFoot": [
+          -53.6,
+          12.7,
+          9.5
+        ],
+        "mixamorigLeftToeBase": [
+          42.7,
+          8.5,
+          13.9
+        ],
+        "mixamorigRightToeBase": [
+          -59.8,
+          3.3,
+          20.5
+        ],
+        "mixamorigLeftHand": [
+          29.3,
+          88.1,
+          2.9
+        ],
+        "mixamorigRightHand": [
+          -91.4,
+          89.3,
+          16.3
+        ]
+      },
+      {
+        "t": 0.19,
+        "mixamorigHips": [
+          -48.6,
+          85,
+          0.7
+        ],
+        "mixamorigLeftFoot": [
+          -4.3,
+          17.7,
+          1.6
+        ],
+        "mixamorigRightFoot": [
+          -55,
+          13.4,
+          10.3
+        ],
+        "mixamorigLeftToeBase": [
+          0.8,
+          7.9,
+          12.8
+        ],
+        "mixamorigRightToeBase": [
+          -59.7,
+          3,
+          21.1
+        ],
+        "mixamorigLeftHand": [
+          11.6,
+          89,
+          4
+        ],
+        "mixamorigRightHand": [
+          -110.6,
+          93.1,
+          16.7
+        ]
+      },
+      {
+        "t": 0.25,
+        "mixamorigHips": [
+          -69.6,
+          86.1,
+          -0.4
+        ],
+        "mixamorigLeftFoot": [
+          -49.8,
+          19.6,
+          1
+        ],
+        "mixamorigRightFoot": [
+          -68.7,
+          14.6,
+          6
+        ],
+        "mixamorigLeftToeBase": [
+          -50.1,
+          8.8,
+          12.4
+        ],
+        "mixamorigRightToeBase": [
+          -70.3,
+          3.6,
+          17.2
+        ],
+        "mixamorigLeftHand": [
+          -7.8,
+          90,
+          7.1
+        ],
+        "mixamorigRightHand": [
+          -132,
+          92.7,
+          17.7
+        ]
+      },
+      {
+        "t": 0.31,
+        "mixamorigHips": [
+          -90.9,
+          84.3,
+          -0.6
+        ],
+        "mixamorigLeftFoot": [
+          -81.4,
+          17.9,
+          3.1
+        ],
+        "mixamorigRightFoot": [
+          -107.5,
+          20,
+          -0.3
+        ],
+        "mixamorigLeftToeBase": [
+          -80.3,
+          5,
+          12.1
+        ],
+        "mixamorigRightToeBase": [
+          -109.3,
+          7.1,
+          8.5
+        ],
+        "mixamorigLeftHand": [
+          -29.5,
+          90.9,
+          8.1
+        ],
+        "mixamorigRightHand": [
+          -155.5,
+          90.5,
+          17.2
+        ]
+      },
+      {
+        "t": 0.38,
+        "mixamorigHips": [
+          -113.8,
+          81,
+          -0.6
+        ],
+        "mixamorigLeftFoot": [
+          -95.5,
+          13,
+          0.7
+        ],
+        "mixamorigRightFoot": [
+          -146.6,
+          17.3,
+          5.5
+        ],
+        "mixamorigLeftToeBase": [
+          -93.5,
+          3.3,
+          12.9
+        ],
+        "mixamorigRightToeBase": [
+          -155.5,
+          7.6,
+          14.2
+        ],
+        "mixamorigLeftHand": [
+          -55,
+          88.2,
+          7.3
+        ],
+        "mixamorigRightHand": [
+          -180.2,
+          86.3,
+          14.9
+        ]
+      },
+      {
+        "t": 0.44,
+        "mixamorigHips": [
+          -134.5,
+          78.8,
+          0.2
+        ],
+        "mixamorigLeftFoot": [
+          -96.8,
+          11.6,
+          -1.4
+        ],
+        "mixamorigRightFoot": [
+          -186.4,
+          13.5,
+          11.8
+        ],
+        "mixamorigLeftToeBase": [
+          -94,
+          4.1,
+          12.1
+        ],
+        "mixamorigRightToeBase": [
+          -196.3,
+          5.8,
+          21.4
+        ],
+        "mixamorigLeftHand": [
+          -78.5,
+          85.4,
+          6
+        ],
+        "mixamorigRightHand": [
+          -200.7,
+          82.1,
+          12.8
+        ]
+      },
+      {
+        "t": 0.5,
+        "mixamorigHips": [
+          0,
+          79.1,
+          1.6
+        ],
+        "mixamorigLeftFoot": [
+          52.4,
+          11.6,
+          -1.2
+        ],
+        "mixamorigRightFoot": [
+          -50.9,
+          11.6,
+          8
+        ],
+        "mixamorigLeftToeBase": [
+          56.3,
+          4.6,
+          12.3
+        ],
+        "mixamorigRightToeBase": [
+          -59.1,
+          4.5,
+          19.4
+        ],
+        "mixamorigLeftHand": [
+          55.6,
+          84.9,
+          6.5
+        ],
+        "mixamorigRightHand": [
+          -64.5,
+          82.9,
+          13.1
+        ]
+      }
+    ]
+  },
+  "Goalkeeper Diving Save.fbx": {
+    "duration": 3.2333333492279053,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0,
+          92.4,
+          1.1
+        ],
+        "mixamorigLeftFoot": [
+          32.6,
+          10.9,
+          5.6
+        ],
+        "mixamorigRightFoot": [
+          -29,
+          10.7,
+          1.5
+        ],
+        "mixamorigLeftToeBase": [
+          32.5,
+          3.3,
+          19.4
+        ],
+        "mixamorigRightToeBase": [
+          -32.8,
+          3.3,
+          14.8
+        ],
+        "mixamorigLeftHand": [
+          28.4,
+          82,
+          40.4
+        ],
+        "mixamorigRightHand": [
+          -31.4,
+          86,
+          41.3
+        ]
+      },
+      {
+        "t": 0.4,
+        "mixamorigHips": [
+          -23.5,
+          78.7,
+          12.3
+        ],
+        "mixamorigLeftFoot": [
+          19.5,
+          11.3,
+          1.4
+        ],
+        "mixamorigRightFoot": [
+          -62,
+          12.9,
+          44
+        ],
+        "mixamorigLeftToeBase": [
+          23.2,
+          4.2,
+          14.9
+        ],
+        "mixamorigRightToeBase": [
+          -70.9,
+          10,
+          56.6
+        ],
+        "mixamorigLeftHand": [
+          -18.7,
+          56.5,
+          52.3
+        ],
+        "mixamorigRightHand": [
+          -55.6,
+          57.6,
+          38.7
+        ]
+      },
+      {
+        "t": 0.81,
+        "mixamorigHips": [
+          -119.3,
+          95.3,
+          58.1
+        ],
+        "mixamorigLeftFoot": [
+          -45.7,
+          104.6,
+          39.9
+        ],
+        "mixamorigRightFoot": [
+          -81,
+          26.2,
+          41.7
+        ],
+        "mixamorigLeftToeBase": [
+          -32.4,
+          102.8,
+          31.9
+        ],
+        "mixamorigRightToeBase": [
+          -78,
+          12.7,
+          49.1
+        ],
+        "mixamorigLeftHand": [
+          -180.9,
+          146.1,
+          120.2
+        ],
+        "mixamorigRightHand": [
+          -217.2,
+          123.4,
+          92.3
+        ]
+      },
+      {
+        "t": 1.21,
+        "mixamorigHips": [
+          -237.1,
+          59.5,
+          90.8
+        ],
+        "mixamorigLeftFoot": [
+          -159.9,
+          101.4,
+          83.3
+        ],
+        "mixamorigRightFoot": [
+          -173.6,
+          51.7,
+          80.3
+        ],
+        "mixamorigLeftToeBase": [
+          -144.8,
+          103.3,
+          87.3
+        ],
+        "mixamorigRightToeBase": [
+          -158.4,
+          54.6,
+          83.1
+        ],
+        "mixamorigLeftHand": [
+          -289.9,
+          60.7,
+          165.9
+        ],
+        "mixamorigRightHand": [
+          -313.4,
+          48.4,
+          157.6
+        ]
+      },
+      {
+        "t": 1.62,
+        "mixamorigHips": [
+          -321.4,
+          17.1,
+          85.6
+        ],
+        "mixamorigLeftFoot": [
+          -259.1,
+          24,
+          112.1
+        ],
+        "mixamorigRightFoot": [
+          -264.8,
+          6.6,
+          123.4
+        ],
+        "mixamorigLeftToeBase": [
+          -246.9,
+          18.2,
+          120.1
+        ],
+        "mixamorigRightToeBase": [
+          -258.2,
+          10.7,
+          137.1
+        ],
+        "mixamorigLeftHand": [
+          -343.3,
+          42.4,
+          117.2
+        ],
+        "mixamorigRightHand": [
+          -341,
+          21.2,
+          125.3
+        ]
+      },
+      {
+        "t": 2.02,
+        "mixamorigHips": [
+          -328.5,
+          18.5,
+          85.8
+        ],
+        "mixamorigLeftFoot": [
+          -272.2,
+          42.4,
+          98.1
+        ],
+        "mixamorigRightFoot": [
+          -283.4,
+          7.4,
+          97.5
+        ],
+        "mixamorigLeftToeBase": [
+          -257,
+          46,
+          99.9
+        ],
+        "mixamorigRightToeBase": [
+          -270,
+          12,
+          104.5
+        ],
+        "mixamorigLeftHand": [
+          -334.8,
+          46.6,
+          113.4
+        ],
+        "mixamorigRightHand": [
+          -347.5,
+          24.2,
+          122.2
+        ]
+      },
+      {
+        "t": 2.43,
+        "mixamorigHips": [
+          -294.5,
+          45.7,
+          90.2
+        ],
+        "mixamorigLeftFoot": [
+          -238,
+          12.2,
+          88.5
+        ],
+        "mixamorigRightFoot": [
+          -289.4,
+          11.5,
+          79.3
+        ],
+        "mixamorigLeftToeBase": [
+          -227.6,
+          7.8,
+          99.5
+        ],
+        "mixamorigRightToeBase": [
+          -275.8,
+          4.3,
+          76.2
+        ],
+        "mixamorigLeftHand": [
+          -305.7,
+          17,
+          133
+        ],
+        "mixamorigRightHand": [
+          -330.6,
+          6.8,
+          127.8
+        ]
+      },
+      {
+        "t": 2.83,
+        "mixamorigHips": [
+          -276.6,
+          63.7,
+          102.8
+        ],
+        "mixamorigLeftFoot": [
+          -239.6,
+          10.6,
+          100.6
+        ],
+        "mixamorigRightFoot": [
+          -290.2,
+          17.1,
+          83.1
+        ],
+        "mixamorigLeftToeBase": [
+          -239.6,
+          3.3,
+          114.6
+        ],
+        "mixamorigRightToeBase": [
+          -286.5,
+          3.5,
+          76.1
+        ],
+        "mixamorigLeftHand": [
+          -273.5,
+          72.3,
+          152.7
+        ],
+        "mixamorigRightHand": [
+          -297.7,
+          74.2,
+          144.1
+        ]
+      },
+      {
+        "t": 3.23,
+        "mixamorigHips": [
+          0,
+          92.4,
+          1.1
+        ],
+        "mixamorigLeftFoot": [
+          32.6,
+          10.9,
+          5.6
+        ],
+        "mixamorigRightFoot": [
+          -29,
+          10.7,
+          1.5
+        ],
+        "mixamorigLeftToeBase": [
+          32.5,
+          3.3,
+          19.4
+        ],
+        "mixamorigRightToeBase": [
+          -32.8,
+          3.3,
+          14.8
+        ],
+        "mixamorigLeftHand": [
+          28.4,
+          82,
+          40.4
+        ],
+        "mixamorigRightHand": [
+          -31.4,
+          86,
+          41.3
+        ]
+      }
+    ]
+  },
+  "Goalkeeper Body Block.fbx": {
+    "duration": 2.633333444595337,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0,
+          92.4,
+          1.1
+        ],
+        "mixamorigLeftFoot": [
+          32.7,
+          10.9,
+          5
+        ],
+        "mixamorigRightFoot": [
+          -29,
+          10.8,
+          1.9
+        ],
+        "mixamorigLeftToeBase": [
+          32.9,
+          3.3,
+          18.8
+        ],
+        "mixamorigRightToeBase": [
+          -32.6,
+          3.3,
+          15.3
+        ],
+        "mixamorigLeftHand": [
+          29,
+          82,
+          39.9
+        ],
+        "mixamorigRightHand": [
+          -30.7,
+          86,
+          41.8
+        ]
+      },
+      {
+        "t": 0.33,
+        "mixamorigHips": [
+          11.8,
+          87.4,
+          8.8
+        ],
+        "mixamorigLeftFoot": [
+          33.4,
+          16.3,
+          12
+        ],
+        "mixamorigRightFoot": [
+          -29,
+          10.7,
+          1.9
+        ],
+        "mixamorigLeftToeBase": [
+          34.1,
+          5.1,
+          22.9
+        ],
+        "mixamorigRightToeBase": [
+          -32.6,
+          3.3,
+          15.3
+        ],
+        "mixamorigLeftHand": [
+          46.7,
+          66.5,
+          39.3
+        ],
+        "mixamorigRightHand": [
+          -11.9,
+          76.7,
+          50.6
+        ]
+      },
+      {
+        "t": 0.66,
+        "mixamorigHips": [
+          48.4,
+          50.1,
+          29.8
+        ],
+        "mixamorigLeftFoot": [
+          22,
+          15,
+          46.3
+        ],
+        "mixamorigRightFoot": [
+          -25.9,
+          14.4,
+          9.5
+        ],
+        "mixamorigLeftToeBase": [
+          23.7,
+          5.2,
+          58.5
+        ],
+        "mixamorigRightToeBase": [
+          -38,
+          7.4,
+          16.8
+        ],
+        "mixamorigLeftHand": [
+          104.6,
+          23.3,
+          70
+        ],
+        "mixamorigRightHand": [
+          54.3,
+          37.3,
+          91
+        ]
+      },
+      {
+        "t": 0.99,
+        "mixamorigHips": [
+          107.8,
+          17,
+          45.2
+        ],
+        "mixamorigLeftFoot": [
+          35.3,
+          15.7,
+          51.4
+        ],
+        "mixamorigRightFoot": [
+          53.7,
+          47.5,
+          40.9
+        ],
+        "mixamorigLeftToeBase": [
+          25.3,
+          23.8,
+          60.4
+        ],
+        "mixamorigRightToeBase": [
+          42.9,
+          58.9,
+          42.3
+        ],
+        "mixamorigLeftHand": [
+          182.3,
+          17.6,
+          93.7
+        ],
+        "mixamorigRightHand": [
+          168.8,
+          45.6,
+          88.7
+        ]
+      },
+      {
+        "t": 1.32,
+        "mixamorigHips": [
+          123.6,
+          15.6,
+          45.3
+        ],
+        "mixamorigLeftFoot": [
+          45.2,
+          4.8,
+          50.6
+        ],
+        "mixamorigRightFoot": [
+          85.7,
+          56.9,
+          37.7
+        ],
+        "mixamorigLeftToeBase": [
+          32.3,
+          5.7,
+          59.5
+        ],
+        "mixamorigRightToeBase": [
+          76.5,
+          69.4,
+          35.2
+        ],
+        "mixamorigLeftHand": [
+          162.9,
+          24,
+          92.1
+        ],
+        "mixamorigRightHand": [
+          159.9,
+          52.7,
+          85.2
+        ]
+      },
+      {
+        "t": 1.65,
+        "mixamorigHips": [
+          119.3,
+          19,
+          47.4
+        ],
+        "mixamorigLeftFoot": [
+          66.2,
+          6,
+          51.8
+        ],
+        "mixamorigRightFoot": [
+          35.9,
+          23.6,
+          46
+        ],
+        "mixamorigLeftToeBase": [
+          51.5,
+          6.1,
+          57.4
+        ],
+        "mixamorigRightToeBase": [
+          24.9,
+          26,
+          57
+        ],
+        "mixamorigLeftHand": [
+          141.1,
+          0.5,
+          95.3
+        ],
+        "mixamorigRightHand": [
+          71.2,
+          50.2,
+          76.1
+        ]
+      },
+      {
+        "t": 1.98,
+        "mixamorigHips": [
+          77.5,
+          43,
+          53
+        ],
+        "mixamorigLeftFoot": [
+          82.7,
+          7.1,
+          39
+        ],
+        "mixamorigRightFoot": [
+          34.8,
+          13.6,
+          59.6
+        ],
+        "mixamorigLeftToeBase": [
+          73.4,
+          3.4,
+          26.8
+        ],
+        "mixamorigRightToeBase": [
+          25.2,
+          5.6,
+          69.1
+        ],
+        "mixamorigLeftHand": [
+          117.8,
+          22.8,
+          86
+        ],
+        "mixamorigRightHand": [
+          20.4,
+          52.6,
+          59.4
+        ]
+      },
+      {
+        "t": 2.3,
+        "mixamorigHips": [
+          43.3,
+          80.7,
+          65.6
+        ],
+        "mixamorigLeftFoot": [
+          57,
+          23.8,
+          61.5
+        ],
+        "mixamorigRightFoot": [
+          8.1,
+          15.5,
+          70.9
+        ],
+        "mixamorigLeftToeBase": [
+          58.9,
+          8.9,
+          66.3
+        ],
+        "mixamorigRightToeBase": [
+          0,
+          7,
+          81.3
+        ],
+        "mixamorigLeftHand": [
+          74.1,
+          69.3,
+          86
+        ],
+        "mixamorigRightHand": [
+          4.5,
+          71.5,
+          88.5
+        ]
+      },
+      {
+        "t": 2.63,
+        "mixamorigHips": [
+          0,
+          92.4,
+          1.1
+        ],
+        "mixamorigLeftFoot": [
+          32.7,
+          10.9,
+          5
+        ],
+        "mixamorigRightFoot": [
+          -29,
+          10.8,
+          1.9
+        ],
+        "mixamorigLeftToeBase": [
+          32.9,
+          3.3,
+          18.8
+        ],
+        "mixamorigRightToeBase": [
+          -32.6,
+          3.3,
+          15.3
+        ],
+        "mixamorigLeftHand": [
+          29,
+          82,
+          39.9
+        ],
+        "mixamorigRightHand": [
+          -30.7,
+          86,
+          41.8
+        ]
+      }
+    ]
+  },
+  "Goalkeeper Catch.fbx": {
+    "duration": 2.0999999046325684,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0,
+          92.4,
+          1.1
+        ],
+        "mixamorigLeftFoot": [
+          32.6,
+          10.9,
+          5.6
+        ],
+        "mixamorigRightFoot": [
+          -29,
+          10.7,
+          1.5
+        ],
+        "mixamorigLeftToeBase": [
+          32.5,
+          3.3,
+          19.4
+        ],
+        "mixamorigRightToeBase": [
+          -32.8,
+          3.3,
+          14.8
+        ],
+        "mixamorigLeftHand": [
+          28.4,
+          82,
+          40.4
+        ],
+        "mixamorigRightHand": [
+          -31.4,
+          86,
+          41.3
+        ]
+      },
+      {
+        "t": 0.26,
+        "mixamorigHips": [
+          0.3,
+          90,
+          0.1
+        ],
+        "mixamorigLeftFoot": [
+          32.6,
+          10.9,
+          5.6
+        ],
+        "mixamorigRightFoot": [
+          -29,
+          10.7,
+          1.5
+        ],
+        "mixamorigLeftToeBase": [
+          32.5,
+          3.3,
+          19.4
+        ],
+        "mixamorigRightToeBase": [
+          -32.8,
+          3.3,
+          14.8
+        ],
+        "mixamorigLeftHand": [
+          21.6,
+          82.8,
+          46
+        ],
+        "mixamorigRightHand": [
+          -24.7,
+          82.8,
+          47.1
+        ]
+      },
+      {
+        "t": 0.52,
+        "mixamorigHips": [
+          1.8,
+          91.4,
+          -3.8
+        ],
+        "mixamorigLeftFoot": [
+          35.5,
+          12.8,
+          -1.8
+        ],
+        "mixamorigRightFoot": [
+          -34.9,
+          15,
+          13.2
+        ],
+        "mixamorigLeftToeBase": [
+          37.2,
+          3.4,
+          10.7
+        ],
+        "mixamorigRightToeBase": [
+          -40.8,
+          6.9,
+          25.3
+        ],
+        "mixamorigLeftHand": [
+          8.1,
+          79.1,
+          44.8
+        ],
+        "mixamorigRightHand": [
+          -6.8,
+          78.3,
+          46.9
+        ]
+      },
+      {
+        "t": 0.79,
+        "mixamorigHips": [
+          -11.2,
+          80.1,
+          6.7
+        ],
+        "mixamorigLeftFoot": [
+          34.1,
+          11.5,
+          -4.8
+        ],
+        "mixamorigRightFoot": [
+          -47.2,
+          10.8,
+          22.4
+        ],
+        "mixamorigLeftToeBase": [
+          37.6,
+          4.5,
+          8.9
+        ],
+        "mixamorigRightToeBase": [
+          -53.5,
+          3.6,
+          34.9
+        ],
+        "mixamorigLeftHand": [
+          -7.9,
+          46.4,
+          46
+        ],
+        "mixamorigRightHand": [
+          -27.2,
+          45,
+          40.9
+        ]
+      },
+      {
+        "t": 1.05,
+        "mixamorigHips": [
+          -37.6,
+          89.5,
+          28.3
+        ],
+        "mixamorigLeftFoot": [
+          -7.6,
+          17.3,
+          34
+        ],
+        "mixamorigRightFoot": [
+          -47.4,
+          10.7,
+          22.5
+        ],
+        "mixamorigLeftToeBase": [
+          -1.9,
+          7,
+          44.4
+        ],
+        "mixamorigRightToeBase": [
+          -53.6,
+          3.5,
+          35
+        ],
+        "mixamorigLeftHand": [
+          -33.1,
+          64.1,
+          75.2
+        ],
+        "mixamorigRightHand": [
+          -51.6,
+          67.5,
+          72.3
+        ]
+      },
+      {
+        "t": 1.31,
+        "mixamorigHips": [
+          -54,
+          85.3,
+          52.5
+        ],
+        "mixamorigLeftFoot": [
+          -38.1,
+          10.6,
+          62.6
+        ],
+        "mixamorigRightFoot": [
+          -95.7,
+          16,
+          71.3
+        ],
+        "mixamorigLeftToeBase": [
+          -38.4,
+          3.3,
+          76.5
+        ],
+        "mixamorigRightToeBase": [
+          -101.4,
+          6.4,
+          82.4
+        ],
+        "mixamorigLeftHand": [
+          -57.6,
+          76.2,
+          107.4
+        ],
+        "mixamorigRightHand": [
+          -75,
+          79.1,
+          101.2
+        ]
+      },
+      {
+        "t": 1.57,
+        "mixamorigHips": [
+          -73.4,
+          82.1,
+          73.7
+        ],
+        "mixamorigLeftFoot": [
+          -42.6,
+          15.6,
+          71.1
+        ],
+        "mixamorigRightFoot": [
+          -106.5,
+          11.1,
+          82.8
+        ],
+        "mixamorigLeftToeBase": [
+          -39.5,
+          4,
+          81.3
+        ],
+        "mixamorigRightToeBase": [
+          -111.7,
+          3.3,
+          95.4
+        ],
+        "mixamorigLeftHand": [
+          -70.2,
+          80.1,
+          117.2
+        ],
+        "mixamorigRightHand": [
+          -86,
+          82.1,
+          118.9
+        ]
+      },
+      {
+        "t": 1.84,
+        "mixamorigHips": [
+          -75.1,
+          91.9,
+          86.4
+        ],
+        "mixamorigLeftFoot": [
+          -45.6,
+          10.7,
+          87.5
+        ],
+        "mixamorigRightFoot": [
+          -105.2,
+          12.8,
+          89.9
+        ],
+        "mixamorigLeftToeBase": [
+          -44.8,
+          3.3,
+          101.4
+        ],
+        "mixamorigRightToeBase": [
+          -108.4,
+          3.5,
+          102.1
+        ],
+        "mixamorigLeftHand": [
+          -60.9,
+          93.5,
+          118.3
+        ],
+        "mixamorigRightHand": [
+          -85.5,
+          94.5,
+          116.4
+        ]
+      },
+      {
+        "t": 2.1,
+        "mixamorigHips": [
+          0,
+          92.4,
+          1.1
+        ],
+        "mixamorigLeftFoot": [
+          32.6,
+          10.9,
+          5.6
+        ],
+        "mixamorigRightFoot": [
+          -29,
+          10.7,
+          1.5
+        ],
+        "mixamorigLeftToeBase": [
+          32.5,
+          3.3,
+          19.4
+        ],
+        "mixamorigRightToeBase": [
+          -32.8,
+          3.3,
+          14.8
+        ],
+        "mixamorigLeftHand": [
+          28.4,
+          82,
+          40.4
+        ],
+        "mixamorigRightHand": [
+          -31.4,
+          86,
+          41.3
+        ]
+      }
+    ]
+  },
+  "Soccer Trip.fbx": {
+    "duration": 1.600000023841858,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0,
+          94.2,
+          0.1
+        ],
+        "mixamorigLeftFoot": [
+          2.1,
+          13.2,
+          -22.7
+        ],
+        "mixamorigRightFoot": [
+          -17.3,
+          26,
+          -16
+        ],
+        "mixamorigLeftToeBase": [
+          4.1,
+          3.2,
+          -10.7
+        ],
+        "mixamorigRightToeBase": [
+          -16.7,
+          10.4,
+          -14.4
+        ],
+        "mixamorigLeftHand": [
+          27.3,
+          88.2,
+          10.8
+        ],
+        "mixamorigRightHand": [
+          -27.9,
+          91,
+          -1.7
+        ]
+      },
+      {
+        "t": 0.2,
+        "mixamorigHips": [
+          -39.2,
+          87.8,
+          90.8
+        ],
+        "mixamorigLeftFoot": [
+          -11.5,
+          34.5,
+          32.1
+        ],
+        "mixamorigRightFoot": [
+          -50.9,
+          18.3,
+          69.8
+        ],
+        "mixamorigLeftToeBase": [
+          -9.9,
+          20.2,
+          25.8
+        ],
+        "mixamorigRightToeBase": [
+          -48.2,
+          2.9,
+          68.4
+        ],
+        "mixamorigLeftHand": [
+          -41.5,
+          177.9,
+          112.8
+        ],
+        "mixamorigRightHand": [
+          -76.4,
+          130.3,
+          20.2
+        ]
+      },
+      {
+        "t": 0.4,
+        "mixamorigHips": [
+          -64.6,
+          72.3,
+          164.4
+        ],
+        "mixamorigLeftFoot": [
+          -22.5,
+          55.6,
+          148.5
+        ],
+        "mixamorigRightFoot": [
+          -46.2,
+          31,
+          84.9
+        ],
+        "mixamorigLeftToeBase": [
+          -12.9,
+          57.5,
+          136.1
+        ],
+        "mixamorigRightToeBase": [
+          -50.3,
+          21.7,
+          72.9
+        ],
+        "mixamorigLeftHand": [
+          -112.8,
+          138.5,
+          175.7
+        ],
+        "mixamorigRightHand": [
+          -131.6,
+          114.5,
+          139.9
+        ]
+      },
+      {
+        "t": 0.6,
+        "mixamorigHips": [
+          -87.4,
+          26.3,
+          237.2
+        ],
+        "mixamorigLeftFoot": [
+          -32.5,
+          17.8,
+          223.8
+        ],
+        "mixamorigRightFoot": [
+          -32.6,
+          63.3,
+          190.9
+        ],
+        "mixamorigLeftToeBase": [
+          -18.7,
+          23.1,
+          218.8
+        ],
+        "mixamorigRightToeBase": [
+          -25.2,
+          67.7,
+          177.8
+        ],
+        "mixamorigLeftHand": [
+          -128.7,
+          18.7,
+          205.8
+        ],
+        "mixamorigRightHand": [
+          -84.7,
+          41.5,
+          206.8
+        ]
+      },
+      {
+        "t": 0.8,
+        "mixamorigHips": [
+          -97.3,
+          20.3,
+          273.3
+        ],
+        "mixamorigLeftFoot": [
+          -47.4,
+          49.9,
+          226.7
+        ],
+        "mixamorigRightFoot": [
+          -89.6,
+          68.8,
+          345.6
+        ],
+        "mixamorigLeftToeBase": [
+          -36.8,
+          58.1,
+          218.5
+        ],
+        "mixamorigRightToeBase": [
+          -100.7,
+          76.4,
+          353.6
+        ],
+        "mixamorigLeftHand": [
+          -121.3,
+          35.9,
+          263.1
+        ],
+        "mixamorigRightHand": [
+          -113.3,
+          50.6,
+          290.9
+        ]
+      },
+      {
+        "t": 1,
+        "mixamorigHips": [
+          -105.3,
+          30.3,
+          314.5
+        ],
+        "mixamorigLeftFoot": [
+          -93.3,
+          115.6,
+          333.5
+        ],
+        "mixamorigRightFoot": [
+          -91.2,
+          3.7,
+          371.1
+        ],
+        "mixamorigLeftToeBase": [
+          -98.7,
+          128.2,
+          341.4
+        ],
+        "mixamorigRightToeBase": [
+          -92.7,
+          5.3,
+          386.7
+        ],
+        "mixamorigLeftHand": [
+          -133.5,
+          35,
+          341.2
+        ],
+        "mixamorigRightHand": [
+          -132.5,
+          11.6,
+          334.9
+        ]
+      },
+      {
+        "t": 1.2,
+        "mixamorigHips": [
+          -115,
+          24.4,
+          354.8
+        ],
+        "mixamorigLeftFoot": [
+          -108.9,
+          11.2,
+          433.5
+        ],
+        "mixamorigRightFoot": [
+          -88,
+          6,
+          372.2
+        ],
+        "mixamorigLeftToeBase": [
+          -113.7,
+          10,
+          448.4
+        ],
+        "mixamorigRightToeBase": [
+          -79.6,
+          5.2,
+          385.5
+        ],
+        "mixamorigLeftHand": [
+          -160.4,
+          4.3,
+          348.3
+        ],
+        "mixamorigRightHand": [
+          -133.1,
+          4.2,
+          337.2
+        ]
+      },
+      {
+        "t": 1.4,
+        "mixamorigHips": [
+          -117.6,
+          23.7,
+          381.7
+        ],
+        "mixamorigLeftFoot": [
+          -99.2,
+          11.8,
+          441.4
+        ],
+        "mixamorigRightFoot": [
+          -93.5,
+          5.5,
+          394.1
+        ],
+        "mixamorigLeftToeBase": [
+          -96,
+          7.9,
+          456.3
+        ],
+        "mixamorigRightToeBase": [
+          -84,
+          5.6,
+          406.7
+        ],
+        "mixamorigLeftHand": [
+          -160.7,
+          3.5,
+          349.5
+        ],
+        "mixamorigRightHand": [
+          -133.3,
+          3.5,
+          338
+        ]
+      },
+      {
+        "t": 1.6,
+        "mixamorigHips": [
+          0,
+          94.2,
+          0.1
+        ],
+        "mixamorigLeftFoot": [
+          2.1,
+          13.2,
+          -22.7
+        ],
+        "mixamorigRightFoot": [
+          -17.3,
+          26,
+          -16
+        ],
+        "mixamorigLeftToeBase": [
+          4.1,
+          3.2,
+          -10.7
+        ],
+        "mixamorigRightToeBase": [
+          -16.7,
+          10.4,
+          -14.4
+        ],
+        "mixamorigLeftHand": [
+          27.3,
+          88.2,
+          10.8
+        ],
+        "mixamorigRightHand": [
+          -27.9,
+          91,
+          -1.7
+        ]
+      }
+    ]
+  },
+  "Running Slide.fbx": {
+    "duration": 1.5333333015441895,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0.1,
+          91.9,
+          0.6
+        ],
+        "mixamorigLeftFoot": [
+          3.2,
+          35.8,
+          -15.1
+        ],
+        "mixamorigRightFoot": [
+          -6.8,
+          12.5,
+          -14.4
+        ],
+        "mixamorigLeftToeBase": [
+          6.4,
+          20.6,
+          -12.5
+        ],
+        "mixamorigRightToeBase": [
+          -7.1,
+          3.2,
+          -1.7
+        ],
+        "mixamorigLeftHand": [
+          25.5,
+          101.8,
+          -0.1
+        ],
+        "mixamorigRightHand": [
+          -25.7,
+          93.5,
+          15.9
+        ]
+      },
+      {
+        "t": 0.19,
+        "mixamorigHips": [
+          1.7,
+          62.9,
+          109.9
+        ],
+        "mixamorigLeftFoot": [
+          17.9,
+          16.3,
+          183
+        ],
+        "mixamorigRightFoot": [
+          17.8,
+          13.9,
+          100.6
+        ],
+        "mixamorigLeftToeBase": [
+          14.2,
+          16.7,
+          198.3
+        ],
+        "mixamorigRightToeBase": [
+          31.9,
+          9.6,
+          95.2
+        ],
+        "mixamorigLeftHand": [
+          39,
+          72.4,
+          76
+        ],
+        "mixamorigRightHand": [
+          -36.5,
+          85.3,
+          97.1
+        ]
+      },
+      {
+        "t": 0.38,
+        "mixamorigHips": [
+          7.2,
+          24.5,
+          210
+        ],
+        "mixamorigLeftFoot": [
+          8.7,
+          11.4,
+          298.4
+        ],
+        "mixamorigRightFoot": [
+          17.2,
+          2.8,
+          250.7
+        ],
+        "mixamorigLeftToeBase": [
+          1.3,
+          8.7,
+          312
+        ],
+        "mixamorigRightToeBase": [
+          28.1,
+          8.7,
+          260.5
+        ],
+        "mixamorigLeftHand": [
+          38.3,
+          38.4,
+          221.9
+        ],
+        "mixamorigRightHand": [
+          -23.8,
+          6.6,
+          166.5
+        ]
+      },
+      {
+        "t": 0.57,
+        "mixamorigHips": [
+          11.1,
+          29.2,
+          306
+        ],
+        "mixamorigLeftFoot": [
+          17.2,
+          10.9,
+          394.2
+        ],
+        "mixamorigRightFoot": [
+          18.7,
+          5.7,
+          335.2
+        ],
+        "mixamorigLeftToeBase": [
+          7.8,
+          7.9,
+          406.4
+        ],
+        "mixamorigRightToeBase": [
+          28.1,
+          10.4,
+          346.9
+        ],
+        "mixamorigLeftHand": [
+          35.2,
+          55.9,
+          325.7
+        ],
+        "mixamorigRightHand": [
+          -19.1,
+          13.2,
+          234.4
+        ]
+      },
+      {
+        "t": 0.77,
+        "mixamorigHips": [
+          13.5,
+          38.3,
+          390.1
+        ],
+        "mixamorigLeftFoot": [
+          16.4,
+          12.7,
+          475.7
+        ],
+        "mixamorigRightFoot": [
+          20.9,
+          4.4,
+          401.6
+        ],
+        "mixamorigLeftToeBase": [
+          3.5,
+          7,
+          482.9
+        ],
+        "mixamorigRightToeBase": [
+          30.7,
+          4.7,
+          413.9
+        ],
+        "mixamorigLeftHand": [
+          38.6,
+          65.7,
+          396.2
+        ],
+        "mixamorigRightHand": [
+          -14.3,
+          26,
+          315.8
+        ]
+      },
+      {
+        "t": 0.96,
+        "mixamorigHips": [
+          4.8,
+          54.4,
+          456.9
+        ],
+        "mixamorigLeftFoot": [
+          4.3,
+          10.8,
+          498.2
+        ],
+        "mixamorigRightFoot": [
+          24.2,
+          4.5,
+          434.6
+        ],
+        "mixamorigLeftToeBase": [
+          -0.7,
+          3.8,
+          511.4
+        ],
+        "mixamorigRightToeBase": [
+          37,
+          2.2,
+          443.4
+        ],
+        "mixamorigLeftHand": [
+          54.1,
+          75.6,
+          491.7
+        ],
+        "mixamorigRightHand": [
+          -16.9,
+          55.9,
+          438.3
+        ]
+      },
+      {
+        "t": 1.15,
+        "mixamorigHips": [
+          -1.4,
+          71.1,
+          511.7
+        ],
+        "mixamorigLeftFoot": [
+          3.1,
+          10.3,
+          500.2
+        ],
+        "mixamorigRightFoot": [
+          1.7,
+          20,
+          466.5
+        ],
+        "mixamorigLeftToeBase": [
+          -0.7,
+          3.1,
+          513.6
+        ],
+        "mixamorigRightToeBase": [
+          8.6,
+          6.6,
+          461.8
+        ],
+        "mixamorigLeftHand": [
+          -27.4,
+          76.3,
+          548.1
+        ],
+        "mixamorigRightHand": [
+          -29.7,
+          77.6,
+          520.3
+        ]
+      },
+      {
+        "t": 1.34,
+        "mixamorigHips": [
+          -3.1,
+          86.7,
+          566.9
+        ],
+        "mixamorigLeftFoot": [
+          1.7,
+          21,
+          517.8
+        ],
+        "mixamorigRightFoot": [
+          -10.6,
+          12.6,
+          605.6
+        ],
+        "mixamorigLeftToeBase": [
+          0.1,
+          5.4,
+          518.1
+        ],
+        "mixamorigRightToeBase": [
+          -11.2,
+          10.8,
+          621.2
+        ],
+        "mixamorigLeftHand": [
+          8.2,
+          103.2,
+          606.7
+        ],
+        "mixamorigRightHand": [
+          -39.3,
+          98.7,
+          541.4
+        ]
+      },
+      {
+        "t": 1.53,
+        "mixamorigHips": [
+          0.1,
+          91.9,
+          0.6
+        ],
+        "mixamorigLeftFoot": [
+          3.2,
+          35.8,
+          -15.1
+        ],
+        "mixamorigRightFoot": [
+          -6.8,
+          12.5,
+          -14.4
+        ],
+        "mixamorigLeftToeBase": [
+          6.4,
+          20.6,
+          -12.5
+        ],
+        "mixamorigRightToeBase": [
+          -7.1,
+          3.2,
+          -1.7
+        ],
+        "mixamorigLeftHand": [
+          25.5,
+          101.8,
+          -0.1
+        ],
+        "mixamorigRightHand": [
+          -25.7,
+          93.5,
+          15.9
+        ]
+      }
+    ]
+  },
+  "Sprint.fbx": {
+    "duration": 0.5333333611488342,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          2.7,
+          88.1,
+          0.8
+        ],
+        "mixamorigLeftFoot": [
+          11.5,
+          44.6,
+          -8.1
+        ],
+        "mixamorigRightFoot": [
+          2.1,
+          12.9,
+          -26.6
+        ],
+        "mixamorigLeftToeBase": [
+          12.3,
+          30.5,
+          -1.1
+        ],
+        "mixamorigRightToeBase": [
+          -2.5,
+          3.2,
+          -15.2
+        ],
+        "mixamorigLeftHand": [
+          31.8,
+          117.1,
+          -0.9
+        ],
+        "mixamorigRightHand": [
+          -5.5,
+          112.2,
+          47.5
+        ]
+      },
+      {
+        "t": 0.07,
+        "mixamorigHips": [
+          -0.1,
+          93.7,
+          42
+        ],
+        "mixamorigLeftFoot": [
+          5.7,
+          33.7,
+          61.1
+        ],
+        "mixamorigRightFoot": [
+          -0.4,
+          21.3,
+          -7.2
+        ],
+        "mixamorigLeftToeBase": [
+          4.5,
+          22.7,
+          72.3
+        ],
+        "mixamorigRightToeBase": [
+          0.3,
+          5.7,
+          -6.1
+        ],
+        "mixamorigLeftHand": [
+          24.7,
+          110.9,
+          43.2
+        ],
+        "mixamorigRightHand": [
+          -9.4,
+          89.6,
+          72.3
+        ]
+      },
+      {
+        "t": 0.13,
+        "mixamorigHips": [
+          -0.7,
+          95.3,
+          82.1
+        ],
+        "mixamorigLeftFoot": [
+          4,
+          16.1,
+          108
+        ],
+        "mixamorigRightFoot": [
+          -1.4,
+          40.6,
+          30.4
+        ],
+        "mixamorigLeftToeBase": [
+          3.8,
+          11.6,
+          123.1
+        ],
+        "mixamorigRightToeBase": [
+          -2.2,
+          29.7,
+          19.1
+        ],
+        "mixamorigLeftHand": [
+          12.4,
+          95.1,
+          93.5
+        ],
+        "mixamorigRightHand": [
+          -24.8,
+          91.2,
+          91.3
+        ]
+      },
+      {
+        "t": 0.2,
+        "mixamorigHips": [
+          0.4,
+          89.2,
+          117.7
+        ],
+        "mixamorigLeftFoot": [
+          1.7,
+          11.4,
+          118.3
+        ],
+        "mixamorigRightFoot": [
+          -5.1,
+          56,
+          85.9
+        ],
+        "mixamorigLeftToeBase": [
+          7.3,
+          3.3,
+          130.6
+        ],
+        "mixamorigRightToeBase": [
+          -7.6,
+          43.9,
+          76.2
+        ],
+        "mixamorigLeftHand": [
+          -0.5,
+          107.4,
+          153.4
+        ],
+        "mixamorigRightHand": [
+          -35.1,
+          106.1,
+          110.9
+        ]
+      },
+      {
+        "t": 0.27,
+        "mixamorigHips": [
+          2,
+          87.7,
+          156.3
+        ],
+        "mixamorigLeftFoot": [
+          2.4,
+          14.3,
+          118.6
+        ],
+        "mixamorigRightFoot": [
+          -5.9,
+          49.5,
+          151.3
+        ],
+        "mixamorigLeftToeBase": [
+          5.4,
+          3.1,
+          129.2
+        ],
+        "mixamorigRightToeBase": [
+          -5.8,
+          34,
+          154.4
+        ],
+        "mixamorigLeftHand": [
+          -4.4,
+          112.7,
+          191.6
+        ],
+        "mixamorigRightHand": [
+          -26.7,
+          118.2,
+          145
+        ]
+      },
+      {
+        "t": 0.33,
+        "mixamorigHips": [
+          4.3,
+          91.9,
+          199.8
+        ],
+        "mixamorigLeftFoot": [
+          6.2,
+          25.2,
+          142.1
+        ],
+        "mixamorigRightFoot": [
+          -3.2,
+          31.8,
+          220.4
+        ],
+        "mixamorigLeftToeBase": [
+          4.2,
+          9.6,
+          141.5
+        ],
+        "mixamorigRightToeBase": [
+          -4.2,
+          25.8,
+          234.9
+        ],
+        "mixamorigLeftHand": [
+          -0.8,
+          105.5,
+          223.6
+        ],
+        "mixamorigRightHand": [
+          -19.7,
+          107.3,
+          189.4
+        ]
+      },
+      {
+        "t": 0.4,
+        "mixamorigHips": [
+          5,
+          91.7,
+          239.7
+        ],
+        "mixamorigLeftFoot": [
+          11.5,
+          45.6,
+          181
+        ],
+        "mixamorigRightFoot": [
+          0.2,
+          14.4,
+          273.9
+        ],
+        "mixamorigLeftToeBase": [
+          15.7,
+          33,
+          172.6
+        ],
+        "mixamorigRightToeBase": [
+          0.1,
+          11.8,
+          289.4
+        ],
+        "mixamorigLeftHand": [
+          8.9,
+          92.1,
+          255.3
+        ],
+        "mixamorigRightHand": [
+          -15.4,
+          87.3,
+          243.3
+        ]
+      },
+      {
+        "t": 0.47,
+        "mixamorigHips": [
+          4,
+          88.5,
+          276.5
+        ],
+        "mixamorigLeftFoot": [
+          13.3,
+          55.5,
+          245.3
+        ],
+        "mixamorigRightFoot": [
+          2.8,
+          10.5,
+          287
+        ],
+        "mixamorigLeftToeBase": [
+          19,
+          43.8,
+          236.5
+        ],
+        "mixamorigRightToeBase": [
+          -0.2,
+          3.3,
+          300.7
+        ],
+        "mixamorigLeftHand": [
+          28.6,
+          100.2,
+          282.2
+        ],
+        "mixamorigRightHand": [
+          -9.5,
+          94.1,
+          311.3
+        ]
+      },
+      {
+        "t": 0.53,
+        "mixamorigHips": [
+          2.7,
+          88.1,
+          0.8
+        ],
+        "mixamorigLeftFoot": [
+          11.5,
+          44.6,
+          -8.1
+        ],
+        "mixamorigRightFoot": [
+          2.1,
+          12.9,
+          -26.6
+        ],
+        "mixamorigLeftToeBase": [
+          12.3,
+          30.5,
+          -1.1
+        ],
+        "mixamorigRightToeBase": [
+          -2.5,
+          3.2,
+          -15.2
+        ],
+        "mixamorigLeftHand": [
+          31.8,
+          117.1,
+          -0.9
+        ],
+        "mixamorigRightHand": [
+          -5.5,
+          112.2,
+          47.5
+        ]
+      }
+    ]
+  },
+  "Running.fbx": {
+    "duration": 0.699999988079071,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0.1,
+          91.9,
+          0.6
+        ],
+        "mixamorigLeftFoot": [
+          3.2,
+          35.8,
+          -15.1
+        ],
+        "mixamorigRightFoot": [
+          -6.8,
+          12.5,
+          -14.4
+        ],
+        "mixamorigLeftToeBase": [
+          6.4,
+          20.6,
+          -12.5
+        ],
+        "mixamorigRightToeBase": [
+          -7.1,
+          3.2,
+          -1.7
+        ],
+        "mixamorigLeftHand": [
+          25.5,
+          101.8,
+          -0.1
+        ],
+        "mixamorigRightHand": [
+          -25.7,
+          93.5,
+          15.9
+        ]
+      },
+      {
+        "t": 0.09,
+        "mixamorigHips": [
+          0.9,
+          98.2,
+          4.3
+        ],
+        "mixamorigLeftFoot": [
+          5,
+          18.1,
+          21.5
+        ],
+        "mixamorigRightFoot": [
+          -10.4,
+          22.5,
+          -40.3
+        ],
+        "mixamorigLeftToeBase": [
+          7.9,
+          12.1,
+          35.8
+        ],
+        "mixamorigRightToeBase": [
+          -7.9,
+          7.1,
+          -38.7
+        ],
+        "mixamorigLeftHand": [
+          27.3,
+          105.4,
+          -14.2
+        ],
+        "mixamorigRightHand": [
+          -14.6,
+          108.1,
+          35.3
+        ]
+      },
+      {
+        "t": 0.17,
+        "mixamorigHips": [
+          1.4,
+          98.7,
+          7.5
+        ],
+        "mixamorigLeftFoot": [
+          4.7,
+          17.2,
+          37.6
+        ],
+        "mixamorigRightFoot": [
+          -10.7,
+          44.7,
+          -51.4
+        ],
+        "mixamorigLeftToeBase": [
+          5.2,
+          19.4,
+          53.2
+        ],
+        "mixamorigRightToeBase": [
+          -10.4,
+          31.4,
+          -59.8
+        ],
+        "mixamorigLeftHand": [
+          29.1,
+          103.8,
+          -16.8
+        ],
+        "mixamorigRightHand": [
+          -9.7,
+          114.4,
+          39.3
+        ]
+      },
+      {
+        "t": 0.26,
+        "mixamorigHips": [
+          1.1,
+          94.2,
+          5.5
+        ],
+        "mixamorigLeftFoot": [
+          2.7,
+          10.6,
+          20
+        ],
+        "mixamorigRightFoot": [
+          -10.1,
+          52,
+          -37.3
+        ],
+        "mixamorigLeftToeBase": [
+          3.1,
+          4,
+          34.3
+        ],
+        "mixamorigRightToeBase": [
+          -10.5,
+          40.6,
+          -48.1
+        ],
+        "mixamorigLeftHand": [
+          29.8,
+          95.6,
+          -3.7
+        ],
+        "mixamorigRightHand": [
+          -18.8,
+          102.7,
+          28.3
+        ]
+      },
+      {
+        "t": 0.35,
+        "mixamorigHips": [
+          0.4,
+          91.4,
+          1.3
+        ],
+        "mixamorigLeftFoot": [
+          2.7,
+          10.1,
+          -18.8
+        ],
+        "mixamorigRightFoot": [
+          -10.7,
+          37.2,
+          -11.2
+        ],
+        "mixamorigLeftToeBase": [
+          3.4,
+          2.7,
+          -4.9
+        ],
+        "mixamorigRightToeBase": [
+          -11.5,
+          21.7,
+          -13.4
+        ],
+        "mixamorigLeftHand": [
+          21.7,
+          93.6,
+          18.2
+        ],
+        "mixamorigRightHand": [
+          -32.5,
+          94.6,
+          -2.1
+        ]
+      },
+      {
+        "t": 0.44,
+        "mixamorigHips": [
+          0.4,
+          97.2,
+          2.6
+        ],
+        "mixamorigLeftFoot": [
+          3.5,
+          22.3,
+          -43.2
+        ],
+        "mixamorigRightFoot": [
+          -10.2,
+          21.8,
+          24.8
+        ],
+        "mixamorigLeftToeBase": [
+          3.4,
+          6.8,
+          -40.6
+        ],
+        "mixamorigRightToeBase": [
+          -11.8,
+          12.7,
+          37.4
+        ],
+        "mixamorigLeftHand": [
+          16.9,
+          110.4,
+          35.2
+        ],
+        "mixamorigRightHand": [
+          -30.3,
+          109.1,
+          -22.7
+        ]
+      },
+      {
+        "t": 0.52,
+        "mixamorigHips": [
+          0.4,
+          96.8,
+          3.9
+        ],
+        "mixamorigLeftFoot": [
+          4.4,
+          43.3,
+          -53.9
+        ],
+        "mixamorigRightFoot": [
+          -9.9,
+          19.6,
+          43.2
+        ],
+        "mixamorigLeftToeBase": [
+          3.6,
+          28.3,
+          -58.5
+        ],
+        "mixamorigRightToeBase": [
+          -9.5,
+          20.4,
+          58.9
+        ],
+        "mixamorigLeftHand": [
+          17,
+          116.4,
+          35.7
+        ],
+        "mixamorigRightHand": [
+          -27.5,
+          110.3,
+          -24.6
+        ]
+      },
+      {
+        "t": 0.61,
+        "mixamorigHips": [
+          0,
+          92.4,
+          2.4
+        ],
+        "mixamorigLeftFoot": [
+          3.7,
+          48.5,
+          -39.5
+        ],
+        "mixamorigRightFoot": [
+          -7.1,
+          10.7,
+          22.9
+        ],
+        "mixamorigLeftToeBase": [
+          6,
+          34.6,
+          -46.3
+        ],
+        "mixamorigRightToeBase": [
+          -7.5,
+          4.4,
+          37.3
+        ],
+        "mixamorigLeftHand": [
+          21.1,
+          107,
+          22.9
+        ],
+        "mixamorigRightHand": [
+          -31,
+          98.8,
+          -10.6
+        ]
+      },
+      {
+        "t": 0.7,
+        "mixamorigHips": [
+          0.1,
+          91.9,
+          0.6
+        ],
+        "mixamorigLeftFoot": [
+          3.2,
+          35.8,
+          -15.1
+        ],
+        "mixamorigRightFoot": [
+          -6.8,
+          12.5,
+          -14.4
+        ],
+        "mixamorigLeftToeBase": [
+          6.4,
+          20.6,
+          -12.5
+        ],
+        "mixamorigRightToeBase": [
+          -7.1,
+          3.2,
+          -1.7
+        ],
+        "mixamorigLeftHand": [
+          25.5,
+          101.8,
+          -0.1
+        ],
+        "mixamorigRightHand": [
+          -25.7,
+          93.5,
+          15.9
+        ]
+      }
+    ]
+  },
+  "Jogging.fbx": {
+    "duration": 2.566666603088379,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          -0.2,
+          93.6,
+          -0.5
+        ],
+        "mixamorigLeftFoot": [
+          12.6,
+          26.6,
+          -16.7
+        ],
+        "mixamorigRightFoot": [
+          0.5,
+          14.4,
+          -25.8
+        ],
+        "mixamorigLeftToeBase": [
+          14.3,
+          11.4,
+          -13.1
+        ],
+        "mixamorigRightToeBase": [
+          -1.7,
+          3.3,
+          -14.9
+        ],
+        "mixamorigLeftHand": [
+          20.3,
+          97.5,
+          4.8
+        ],
+        "mixamorigRightHand": [
+          -10.3,
+          104.3,
+          22.6
+        ]
+      },
+      {
+        "t": 0.32,
+        "mixamorigHips": [
+          3.2,
+          90.9,
+          -1.9
+        ],
+        "mixamorigLeftFoot": [
+          2.3,
+          10.5,
+          -6.8
+        ],
+        "mixamorigRightFoot": [
+          -9.2,
+          25.7,
+          -44.3
+        ],
+        "mixamorigLeftToeBase": [
+          3.9,
+          3.3,
+          7.1
+        ],
+        "mixamorigRightToeBase": [
+          -11.3,
+          11.8,
+          -51.3
+        ],
+        "mixamorigLeftHand": [
+          22.6,
+          99.8,
+          2.3
+        ],
+        "mixamorigRightHand": [
+          -5.2,
+          107.5,
+          22
+        ]
+      },
+      {
+        "t": 0.64,
+        "mixamorigHips": [
+          0.9,
+          97.6,
+          -3.6
+        ],
+        "mixamorigLeftFoot": [
+          9.6,
+          27.7,
+          -45.5
+        ],
+        "mixamorigRightFoot": [
+          -1.6,
+          11.5,
+          6.2
+        ],
+        "mixamorigLeftToeBase": [
+          9.9,
+          12.1,
+          -47.9
+        ],
+        "mixamorigRightToeBase": [
+          -3.2,
+          4.7,
+          20.3
+        ],
+        "mixamorigLeftHand": [
+          9.4,
+          112.6,
+          21.9
+        ],
+        "mixamorigRightHand": [
+          -23.3,
+          110.1,
+          2.9
+        ]
+      },
+      {
+        "t": 0.96,
+        "mixamorigHips": [
+          2.5,
+          99.6,
+          -4.7
+        ],
+        "mixamorigLeftFoot": [
+          10.7,
+          15.8,
+          -4.3
+        ],
+        "mixamorigRightFoot": [
+          -4,
+          18.2,
+          -38.6
+        ],
+        "mixamorigLeftToeBase": [
+          12.9,
+          7.6,
+          8.9
+        ],
+        "mixamorigRightToeBase": [
+          -4.6,
+          3.1,
+          -34.4
+        ],
+        "mixamorigLeftHand": [
+          23.8,
+          108.8,
+          -3.3
+        ],
+        "mixamorigRightHand": [
+          -3.6,
+          118.8,
+          23.6
+        ]
+      },
+      {
+        "t": 1.28,
+        "mixamorigHips": [
+          5.5,
+          93.1,
+          -5.2
+        ],
+        "mixamorigLeftFoot": [
+          6.9,
+          11,
+          -25.2
+        ],
+        "mixamorigRightFoot": [
+          -6.9,
+          24.6,
+          -26.3
+        ],
+        "mixamorigLeftToeBase": [
+          7.9,
+          3.2,
+          -11.6
+        ],
+        "mixamorigRightToeBase": [
+          -11.9,
+          9.8,
+          -27.7
+        ],
+        "mixamorigLeftHand": [
+          15.6,
+          100.9,
+          17.3
+        ],
+        "mixamorigRightHand": [
+          -12.1,
+          102.8,
+          9.5
+        ]
+      },
+      {
+        "t": 1.6,
+        "mixamorigHips": [
+          0.8,
+          90.1,
+          -2.7
+        ],
+        "mixamorigLeftFoot": [
+          15.3,
+          35.4,
+          -36.8
+        ],
+        "mixamorigRightFoot": [
+          0.9,
+          12.1,
+          -13.3
+        ],
+        "mixamorigLeftToeBase": [
+          17.2,
+          21.7,
+          -44.2
+        ],
+        "mixamorigRightToeBase": [
+          -0.8,
+          3.2,
+          -0.4
+        ],
+        "mixamorigLeftHand": [
+          13.1,
+          94.1,
+          16.8
+        ],
+        "mixamorigRightHand": [
+          -19.5,
+          98.6,
+          6.7
+        ]
+      },
+      {
+        "t": 1.92,
+        "mixamorigHips": [
+          3.6,
+          95.8,
+          0
+        ],
+        "mixamorigLeftFoot": [
+          6.9,
+          10.6,
+          13.7
+        ],
+        "mixamorigRightFoot": [
+          -8.4,
+          30.5,
+          -50.8
+        ],
+        "mixamorigLeftToeBase": [
+          6.6,
+          4,
+          28
+        ],
+        "mixamorigRightToeBase": [
+          -12.7,
+          15.9,
+          -54.9
+        ],
+        "mixamorigLeftHand": [
+          29.8,
+          101.3,
+          2.4
+        ],
+        "mixamorigRightHand": [
+          -2.5,
+          112.9,
+          26
+        ]
+      },
+      {
+        "t": 2.25,
+        "mixamorigHips": [
+          2.1,
+          99.2,
+          1.6
+        ],
+        "mixamorigLeftFoot": [
+          10.2,
+          18.5,
+          -33.6
+        ],
+        "mixamorigRightFoot": [
+          -1.6,
+          16.4,
+          1.9
+        ],
+        "mixamorigLeftToeBase": [
+          9.8,
+          3.6,
+          -28.4
+        ],
+        "mixamorigRightToeBase": [
+          -4.2,
+          9.4,
+          15.7
+        ],
+        "mixamorigLeftHand": [
+          8.1,
+          112.5,
+          31
+        ],
+        "mixamorigRightHand": [
+          -17.4,
+          108.9,
+          4
+        ]
+      },
+      {
+        "t": 2.57,
+        "mixamorigHips": [
+          -0.2,
+          93.6,
+          -0.5
+        ],
+        "mixamorigLeftFoot": [
+          12.6,
+          26.6,
+          -16.7
+        ],
+        "mixamorigRightFoot": [
+          0.5,
+          14.4,
+          -25.8
+        ],
+        "mixamorigLeftToeBase": [
+          14.3,
+          11.4,
+          -13.1
+        ],
+        "mixamorigRightToeBase": [
+          -1.7,
+          3.3,
+          -14.9
+        ],
+        "mixamorigLeftHand": [
+          20.3,
+          97.5,
+          4.8
+        ],
+        "mixamorigRightHand": [
+          -10.3,
+          104.3,
+          22.6
+        ]
+      }
+    ]
+  },
+  "Kick Soccerball.fbx": {
+    "duration": 0.5666666626930237,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          -0.2,
+          97,
+          0.5
+        ],
+        "mixamorigLeftFoot": [
+          15.7,
+          11.7,
+          -7.6
+        ],
+        "mixamorigRightFoot": [
+          -1.4,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          16.4,
+          3.3,
+          5.6
+        ],
+        "mixamorigRightToeBase": [
+          -3.8,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          35.8,
+          92.4,
+          -7.9
+        ],
+        "mixamorigRightHand": [
+          -31.3,
+          86,
+          -2.3
+        ]
+      },
+      {
+        "t": 0.07,
+        "mixamorigHips": [
+          -0.8,
+          95.4,
+          0.3
+        ],
+        "mixamorigLeftFoot": [
+          15,
+          17.5,
+          3.6
+        ],
+        "mixamorigRightFoot": [
+          -1.4,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          16.9,
+          3.6,
+          10.6
+        ],
+        "mixamorigRightToeBase": [
+          -3.8,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          35.4,
+          91.3,
+          -11.1
+        ],
+        "mixamorigRightHand": [
+          -31.2,
+          84,
+          -1.2
+        ]
+      },
+      {
+        "t": 0.14,
+        "mixamorigHips": [
+          -1.1,
+          92.1,
+          1.8
+        ],
+        "mixamorigLeftFoot": [
+          15.2,
+          19.6,
+          26.4
+        ],
+        "mixamorigRightFoot": [
+          -1.4,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          17.9,
+          8,
+          36.7
+        ],
+        "mixamorigRightToeBase": [
+          -3.7,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          34.6,
+          87.1,
+          -13.3
+        ],
+        "mixamorigRightHand": [
+          -31.1,
+          80.7,
+          3.8
+        ]
+      },
+      {
+        "t": 0.21,
+        "mixamorigHips": [
+          -1.1,
+          90.1,
+          2.3
+        ],
+        "mixamorigLeftFoot": [
+          17,
+          27.2,
+          58.4
+        ],
+        "mixamorigRightFoot": [
+          -1.4,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          20,
+          23.7,
+          73.4
+        ],
+        "mixamorigRightToeBase": [
+          -3.7,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          34,
+          84.1,
+          -14.3
+        ],
+        "mixamorigRightHand": [
+          -30.2,
+          78.4,
+          8
+        ]
+      },
+      {
+        "t": 0.28,
+        "mixamorigHips": [
+          -0.8,
+          89.9,
+          3.4
+        ],
+        "mixamorigLeftFoot": [
+          19.2,
+          43.2,
+          74.1
+        ],
+        "mixamorigRightFoot": [
+          -1.3,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          22.5,
+          46.4,
+          89.2
+        ],
+        "mixamorigRightToeBase": [
+          -3.7,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          33.4,
+          83.4,
+          -12.8
+        ],
+        "mixamorigRightHand": [
+          -29.6,
+          78.2,
+          10.5
+        ]
+      },
+      {
+        "t": 0.35,
+        "mixamorigHips": [
+          -0.5,
+          91.2,
+          4.6
+        ],
+        "mixamorigLeftFoot": [
+          17.7,
+          40.8,
+          71.3
+        ],
+        "mixamorigRightFoot": [
+          -1.3,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          19.6,
+          42.7,
+          86.7
+        ],
+        "mixamorigRightToeBase": [
+          -3.7,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          33.2,
+          84,
+          -11
+        ],
+        "mixamorigRightHand": [
+          -30.2,
+          79.9,
+          12.3
+        ]
+      },
+      {
+        "t": 0.42,
+        "mixamorigHips": [
+          -0.4,
+          93.8,
+          4.8
+        ],
+        "mixamorigLeftFoot": [
+          16.3,
+          29.1,
+          53
+        ],
+        "mixamorigRightFoot": [
+          -1.4,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          17.4,
+          23.3,
+          67.5
+        ],
+        "mixamorigRightToeBase": [
+          -3.7,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          33.9,
+          87,
+          -9.1
+        ],
+        "mixamorigRightHand": [
+          -31.9,
+          83.1,
+          9.4
+        ]
+      },
+      {
+        "t": 0.5,
+        "mixamorigHips": [
+          -0.1,
+          95.8,
+          3.2
+        ],
+        "mixamorigLeftFoot": [
+          16.1,
+          17.8,
+          21.1
+        ],
+        "mixamorigRightFoot": [
+          -1.4,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          16.1,
+          5.1,
+          30.3
+        ],
+        "mixamorigRightToeBase": [
+          -3.7,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          35,
+          90,
+          -8.3
+        ],
+        "mixamorigRightHand": [
+          -31.8,
+          85.1,
+          2.2
+        ]
+      },
+      {
+        "t": 0.57,
+        "mixamorigHips": [
+          -0.2,
+          97,
+          0.5
+        ],
+        "mixamorigLeftFoot": [
+          15.7,
+          11.7,
+          -7.6
+        ],
+        "mixamorigRightFoot": [
+          -1.4,
+          10.7,
+          -2.2
+        ],
+        "mixamorigLeftToeBase": [
+          16.4,
+          3.3,
+          5.6
+        ],
+        "mixamorigRightToeBase": [
+          -3.8,
+          3.3,
+          11.5
+        ],
+        "mixamorigLeftHand": [
+          35.8,
+          92.4,
+          -7.9
+        ],
+        "mixamorigRightHand": [
+          -31.3,
+          86,
+          -2.3
+        ]
+      }
+    ]
+  },
+  "Strike Foward Jog.fbx": {
+    "duration": 1.2999999523162842,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0,
+          94.2,
+          0
+        ],
+        "mixamorigLeftFoot": [
+          14.9,
+          26,
+          -18.2
+        ],
+        "mixamorigRightFoot": [
+          -5.2,
+          13.3,
+          -22
+        ],
+        "mixamorigLeftToeBase": [
+          14.5,
+          10.4,
+          -16.5
+        ],
+        "mixamorigRightToeBase": [
+          -5.5,
+          3.2,
+          -9.9
+        ],
+        "mixamorigLeftHand": [
+          27.6,
+          90.7,
+          -4.1
+        ],
+        "mixamorigRightHand": [
+          -25.5,
+          88.9,
+          15.8
+        ]
+      },
+      {
+        "t": 0.16,
+        "mixamorigHips": [
+          8.2,
+          93.7,
+          4.9
+        ],
+        "mixamorigLeftFoot": [
+          8.4,
+          16.7,
+          31.8
+        ],
+        "mixamorigRightFoot": [
+          -4.8,
+          24.7,
+          -47.6
+        ],
+        "mixamorigLeftToeBase": [
+          10.1,
+          10.6,
+          46.2
+        ],
+        "mixamorigRightToeBase": [
+          -3.8,
+          9.2,
+          -44.9
+        ],
+        "mixamorigLeftHand": [
+          71.2,
+          112,
+          -5.9
+        ],
+        "mixamorigRightHand": [
+          -18.1,
+          89.4,
+          36
+        ]
+      },
+      {
+        "t": 0.32,
+        "mixamorigHips": [
+          17.3,
+          87.6,
+          30.1
+        ],
+        "mixamorigLeftFoot": [
+          6.5,
+          11.6,
+          64.8
+        ],
+        "mixamorigRightFoot": [
+          -8.5,
+          44.3,
+          -14.2
+        ],
+        "mixamorigLeftToeBase": [
+          10.1,
+          5.3,
+          78.8
+        ],
+        "mixamorigRightToeBase": [
+          -13.1,
+          42.5,
+          -29.1
+        ],
+        "mixamorigLeftHand": [
+          84.3,
+          117.3,
+          49.6
+        ],
+        "mixamorigRightHand": [
+          -38.6,
+          96.2,
+          11.7
+        ]
+      },
+      {
+        "t": 0.49,
+        "mixamorigHips": [
+          11.7,
+          96.4,
+          29
+        ],
+        "mixamorigLeftFoot": [
+          6.8,
+          11.8,
+          29.1
+        ],
+        "mixamorigRightFoot": [
+          9,
+          75.9,
+          114.3
+        ],
+        "mixamorigLeftToeBase": [
+          10,
+          4.2,
+          42.5
+        ],
+        "mixamorigRightToeBase": [
+          9.9,
+          73.2,
+          129.7
+        ],
+        "mixamorigLeftHand": [
+          20.3,
+          110.2,
+          73.4
+        ],
+        "mixamorigRightHand": [
+          -17.8,
+          120.5,
+          -36.5
+        ]
+      },
+      {
+        "t": 0.65,
+        "mixamorigHips": [
+          8.6,
+          112.4,
+          21
+        ],
+        "mixamorigLeftFoot": [
+          4.2,
+          26.4,
+          25.2
+        ],
+        "mixamorigRightFoot": [
+          12.3,
+          116,
+          106.7
+        ],
+        "mixamorigLeftToeBase": [
+          7.3,
+          11.9,
+          30.5
+        ],
+        "mixamorigRightToeBase": [
+          20.5,
+          119,
+          119.8
+        ],
+        "mixamorigLeftHand": [
+          34.9,
+          146.9,
+          77
+        ],
+        "mixamorigRightHand": [
+          -24.7,
+          129.8,
+          -31.8
+        ]
+      },
+      {
+        "t": 0.81,
+        "mixamorigHips": [
+          4.4,
+          114.1,
+          19.5
+        ],
+        "mixamorigLeftFoot": [
+          16.5,
+          32.9,
+          40.4
+        ],
+        "mixamorigRightFoot": [
+          1.6,
+          69.6,
+          78.4
+        ],
+        "mixamorigLeftToeBase": [
+          15.8,
+          21.3,
+          51
+        ],
+        "mixamorigRightToeBase": [
+          5.1,
+          59.3,
+          89.8
+        ],
+        "mixamorigLeftHand": [
+          72.7,
+          176,
+          25.5
+        ],
+        "mixamorigRightHand": [
+          -55,
+          119.8,
+          6.9
+        ]
+      },
+      {
+        "t": 0.97,
+        "mixamorigHips": [
+          -0.8,
+          98.2,
+          20.7
+        ],
+        "mixamorigLeftFoot": [
+          15.8,
+          16.3,
+          19.1
+        ],
+        "mixamorigRightFoot": [
+          -4.6,
+          20.9,
+          52.6
+        ],
+        "mixamorigLeftToeBase": [
+          17.2,
+          4.2,
+          29
+        ],
+        "mixamorigRightToeBase": [
+          -4,
+          11.3,
+          65
+        ],
+        "mixamorigLeftHand": [
+          43.3,
+          132.6,
+          -31
+        ],
+        "mixamorigRightHand": [
+          -54.6,
+          103,
+          27.3
+        ]
+      },
+      {
+        "t": 1.14,
+        "mixamorigHips": [
+          -0.7,
+          91.2,
+          12.7
+        ],
+        "mixamorigLeftFoot": [
+          15.3,
+          18,
+          -4.1
+        ],
+        "mixamorigRightFoot": [
+          -5.3,
+          13.2,
+          15.3
+        ],
+        "mixamorigLeftToeBase": [
+          17,
+          4.8,
+          4.4
+        ],
+        "mixamorigRightToeBase": [
+          -5.6,
+          3.2,
+          27.5
+        ],
+        "mixamorigLeftHand": [
+          28.6,
+          88.1,
+          -11.1
+        ],
+        "mixamorigRightHand": [
+          -35.6,
+          83.8,
+          9.3
+        ]
+      },
+      {
+        "t": 1.3,
+        "mixamorigHips": [
+          0,
+          94.2,
+          0
+        ],
+        "mixamorigLeftFoot": [
+          14.9,
+          26,
+          -18.2
+        ],
+        "mixamorigRightFoot": [
+          -5.2,
+          13.3,
+          -22
+        ],
+        "mixamorigLeftToeBase": [
+          14.5,
+          10.4,
+          -16.5
+        ],
+        "mixamorigRightToeBase": [
+          -5.5,
+          3.2,
+          -9.9
+        ],
+        "mixamorigLeftHand": [
+          27.6,
+          90.7,
+          -4.1
+        ],
+        "mixamorigRightHand": [
+          -25.5,
+          88.9,
+          15.8
+        ]
+      }
+    ]
+  },
+  "Standing Up.fbx": {
+    "duration": 1.6666666269302368,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          -0.8,
+          21.1,
+          0.5
+        ],
+        "mixamorigLeftFoot": [
+          54.2,
+          11.9,
+          -7
+        ],
+        "mixamorigRightFoot": [
+          21.7,
+          6.7,
+          -12.1
+        ],
+        "mixamorigLeftToeBase": [
+          69.4,
+          7.9,
+          -7.5
+        ],
+        "mixamorigRightToeBase": [
+          35.4,
+          6.6,
+          -19.7
+        ],
+        "mixamorigLeftHand": [
+          -50.1,
+          3.2,
+          38
+        ],
+        "mixamorigRightHand": [
+          -56.1,
+          2.7,
+          9.3
+        ]
+      },
+      {
+        "t": 0.21,
+        "mixamorigHips": [
+          2.3,
+          21.5,
+          0.8
+        ],
+        "mixamorigLeftFoot": [
+          51.1,
+          11.8,
+          -6.8
+        ],
+        "mixamorigRightFoot": [
+          18.9,
+          7.4,
+          -6.5
+        ],
+        "mixamorigLeftToeBase": [
+          66.4,
+          7.9,
+          -7.3
+        ],
+        "mixamorigRightToeBase": [
+          34.3,
+          8.2,
+          -9.2
+        ],
+        "mixamorigLeftHand": [
+          -50.4,
+          2.9,
+          39
+        ],
+        "mixamorigRightHand": [
+          -56.2,
+          2.3,
+          9.8
+        ]
+      },
+      {
+        "t": 0.42,
+        "mixamorigHips": [
+          5,
+          30.3,
+          8.4
+        ],
+        "mixamorigLeftFoot": [
+          53.9,
+          12.3,
+          -8.8
+        ],
+        "mixamorigRightFoot": [
+          19.4,
+          9.4,
+          -7.3
+        ],
+        "mixamorigLeftToeBase": [
+          69,
+          7.9,
+          -8.3
+        ],
+        "mixamorigRightToeBase": [
+          34.8,
+          7.1,
+          -9.3
+        ],
+        "mixamorigLeftHand": [
+          -50.5,
+          2.5,
+          38.7
+        ],
+        "mixamorigRightHand": [
+          -56,
+          1.8,
+          9.5
+        ]
+      },
+      {
+        "t": 0.62,
+        "mixamorigHips": [
+          -13.2,
+          55.6,
+          14.6
+        ],
+        "mixamorigLeftFoot": [
+          46.3,
+          21.5,
+          6.7
+        ],
+        "mixamorigRightFoot": [
+          27,
+          15.9,
+          -19.8
+        ],
+        "mixamorigLeftToeBase": [
+          57,
+          12.1,
+          0
+        ],
+        "mixamorigRightToeBase": [
+          36.8,
+          6,
+          -12.6
+        ],
+        "mixamorigLeftHand": [
+          -51,
+          4,
+          39.2
+        ],
+        "mixamorigRightHand": [
+          -56.4,
+          3.7,
+          9.7
+        ]
+      },
+      {
+        "t": 0.83,
+        "mixamorigHips": [
+          -38.1,
+          74.5,
+          9.4
+        ],
+        "mixamorigLeftFoot": [
+          -22.7,
+          24.8,
+          12
+        ],
+        "mixamorigRightFoot": [
+          12.2,
+          19.1,
+          -24.5
+        ],
+        "mixamorigLeftToeBase": [
+          -25.7,
+          11.2,
+          19.1
+        ],
+        "mixamorigRightToeBase": [
+          19,
+          7.8,
+          -16
+        ],
+        "mixamorigLeftHand": [
+          -51.3,
+          5.6,
+          39.4
+        ],
+        "mixamorigRightHand": [
+          -60.6,
+          10,
+          11.5
+        ]
+      },
+      {
+        "t": 1.04,
+        "mixamorigHips": [
+          -49.3,
+          78.4,
+          2.6
+        ],
+        "mixamorigLeftFoot": [
+          -51.2,
+          11.8,
+          4.3
+        ],
+        "mixamorigRightFoot": [
+          -64,
+          24.4,
+          -27.1
+        ],
+        "mixamorigLeftToeBase": [
+          -48.9,
+          3.3,
+          17.3
+        ],
+        "mixamorigRightToeBase": [
+          -73.2,
+          11.7,
+          -28
+        ],
+        "mixamorigLeftHand": [
+          -52.8,
+          14.2,
+          40.5
+        ],
+        "mixamorigRightHand": [
+          -66.6,
+          22.7,
+          15.7
+        ]
+      },
+      {
+        "t": 1.25,
+        "mixamorigHips": [
+          -64.5,
+          80.8,
+          -5.8
+        ],
+        "mixamorigLeftFoot": [
+          -51.5,
+          10.8,
+          3.4
+        ],
+        "mixamorigRightFoot": [
+          -113.2,
+          13.4,
+          -3.2
+        ],
+        "mixamorigLeftToeBase": [
+          -48.8,
+          3.3,
+          16.9
+        ],
+        "mixamorigRightToeBase": [
+          -119.7,
+          7.3,
+          9.8
+        ],
+        "mixamorigLeftHand": [
+          -60.4,
+          33.3,
+          40.9
+        ],
+        "mixamorigRightHand": [
+          -81.4,
+          37.8,
+          23.4
+        ]
+      },
+      {
+        "t": 1.46,
+        "mixamorigHips": [
+          -81,
+          88.6,
+          -5.4
+        ],
+        "mixamorigLeftFoot": [
+          -52.2,
+          11,
+          2.3
+        ],
+        "mixamorigRightFoot": [
+          -116.7,
+          11.3,
+          -4.1
+        ],
+        "mixamorigLeftToeBase": [
+          -48.4,
+          3.8,
+          15.8
+        ],
+        "mixamorigRightToeBase": [
+          -121.2,
+          4.2,
+          9.2
+        ],
+        "mixamorigLeftHand": [
+          -61.9,
+          63.1,
+          36.7
+        ],
+        "mixamorigRightHand": [
+          -104.8,
+          67.1,
+          28.7
+        ]
+      },
+      {
+        "t": 1.67,
+        "mixamorigHips": [
+          -0.8,
+          21.1,
+          0.5
+        ],
+        "mixamorigLeftFoot": [
+          54.2,
+          11.9,
+          -7
+        ],
+        "mixamorigRightFoot": [
+          21.7,
+          6.7,
+          -12.1
+        ],
+        "mixamorigLeftToeBase": [
+          69.4,
+          7.9,
+          -7.5
+        ],
+        "mixamorigRightToeBase": [
+          35.4,
+          6.6,
+          -19.7
+        ],
+        "mixamorigLeftHand": [
+          -50.1,
+          3.2,
+          38
+        ],
+        "mixamorigRightHand": [
+          -56.1,
+          2.7,
+          9.3
+        ]
+      }
+    ]
+  },
+  "Jump.fbx": {
+    "duration": 0.9333333373069763,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0,
+          89.2,
+          0.1
+        ],
+        "mixamorigLeftFoot": [
+          16.5,
+          21.7,
+          1.9
+        ],
+        "mixamorigRightFoot": [
+          -14.6,
+          12.8,
+          2.5
+        ],
+        "mixamorigLeftToeBase": [
+          21.3,
+          8.5,
+          8.9
+        ],
+        "mixamorigRightToeBase": [
+          -14.8,
+          3.3,
+          15.1
+        ],
+        "mixamorigLeftHand": [
+          22.1,
+          86.4,
+          -18
+        ],
+        "mixamorigRightHand": [
+          -28.9,
+          77.3,
+          3.6
+        ]
+      },
+      {
+        "t": 0.12,
+        "mixamorigHips": [
+          -9.5,
+          100.1,
+          1
+        ],
+        "mixamorigLeftFoot": [
+          12.9,
+          59.7,
+          -25.1
+        ],
+        "mixamorigRightFoot": [
+          -15.1,
+          18.5,
+          32.1
+        ],
+        "mixamorigLeftToeBase": [
+          16.3,
+          44.4,
+          -25.1
+        ],
+        "mixamorigRightToeBase": [
+          -14.9,
+          8.2,
+          44
+        ],
+        "mixamorigLeftHand": [
+          18.4,
+          95.6,
+          24
+        ],
+        "mixamorigRightHand": [
+          -48.1,
+          103.4,
+          2.1
+        ]
+      },
+      {
+        "t": 0.23,
+        "mixamorigHips": [
+          -9.9,
+          133.2,
+          9
+        ],
+        "mixamorigLeftFoot": [
+          16.4,
+          114,
+          -26.2
+        ],
+        "mixamorigRightFoot": [
+          -13.2,
+          57.2,
+          54.5
+        ],
+        "mixamorigLeftToeBase": [
+          21.6,
+          106.1,
+          -38.7
+        ],
+        "mixamorigRightToeBase": [
+          -12.9,
+          49.4,
+          68.1
+        ],
+        "mixamorigLeftHand": [
+          23.9,
+          133.5,
+          53.5
+        ],
+        "mixamorigRightHand": [
+          -48.5,
+          164.5,
+          -28.6
+        ]
+      },
+      {
+        "t": 0.35,
+        "mixamorigHips": [
+          -2,
+          141.7,
+          -4.6
+        ],
+        "mixamorigLeftFoot": [
+          18.3,
+          106.2,
+          -52.7
+        ],
+        "mixamorigRightFoot": [
+          -13.5,
+          103.9,
+          59.9
+        ],
+        "mixamorigLeftToeBase": [
+          18.2,
+          91.6,
+          -58.4
+        ],
+        "mixamorigRightToeBase": [
+          -16,
+          104.5,
+          75.4
+        ],
+        "mixamorigLeftHand": [
+          52.7,
+          141.9,
+          19.4
+        ],
+        "mixamorigRightHand": [
+          -58,
+          181.5,
+          -33.8
+        ]
+      },
+      {
+        "t": 0.47,
+        "mixamorigHips": [
+          4.1,
+          119.5,
+          -22.9
+        ],
+        "mixamorigLeftFoot": [
+          14.5,
+          43.1,
+          -56.5
+        ],
+        "mixamorigRightFoot": [
+          -15.2,
+          119.8,
+          47.5
+        ],
+        "mixamorigLeftToeBase": [
+          17.5,
+          28.1,
+          -52.9
+        ],
+        "mixamorigRightToeBase": [
+          -15.4,
+          129.1,
+          60.1
+        ],
+        "mixamorigLeftHand": [
+          68.9,
+          159.6,
+          -0.4
+        ],
+        "mixamorigRightHand": [
+          -63.6,
+          138.3,
+          -17.1
+        ]
+      },
+      {
+        "t": 0.58,
+        "mixamorigHips": [
+          0.8,
+          87.9,
+          -24.4
+        ],
+        "mixamorigLeftFoot": [
+          11.6,
+          11.3,
+          -35.1
+        ],
+        "mixamorigRightFoot": [
+          -19.8,
+          65.4,
+          30.5
+        ],
+        "mixamorigLeftToeBase": [
+          18.5,
+          3.3,
+          -23.5
+        ],
+        "mixamorigRightToeBase": [
+          -23.2,
+          65.6,
+          45.8
+        ],
+        "mixamorigLeftHand": [
+          68.1,
+          125.2,
+          -39.6
+        ],
+        "mixamorigRightHand": [
+          -46,
+          100.1,
+          12
+        ]
+      },
+      {
+        "t": 0.7,
+        "mixamorigHips": [
+          -5.2,
+          80.5,
+          -12.1
+        ],
+        "mixamorigLeftFoot": [
+          12.3,
+          11.6,
+          -6.1
+        ],
+        "mixamorigRightFoot": [
+          -18.5,
+          20.8,
+          -12.1
+        ],
+        "mixamorigLeftToeBase": [
+          19.5,
+          4.7,
+          6.1
+        ],
+        "mixamorigRightToeBase": [
+          -19.3,
+          6.4,
+          -6
+        ],
+        "mixamorigLeftHand": [
+          18.7,
+          84.9,
+          -45.8
+        ],
+        "mixamorigRightHand": [
+          -43.8,
+          69,
+          11.7
+        ]
+      },
+      {
+        "t": 0.82,
+        "mixamorigHips": [
+          -4,
+          91.2,
+          -2.7
+        ],
+        "mixamorigLeftFoot": [
+          20.3,
+          17,
+          12
+        ],
+        "mixamorigRightFoot": [
+          -14.3,
+          12.1,
+          -28.1
+        ],
+        "mixamorigLeftToeBase": [
+          27.7,
+          13.2,
+          25.3
+        ],
+        "mixamorigRightToeBase": [
+          -15,
+          3.2,
+          -15.1
+        ],
+        "mixamorigLeftHand": [
+          11.5,
+          91.4,
+          -27.3
+        ],
+        "mixamorigRightHand": [
+          -32.6,
+          73.2,
+          18.3
+        ]
+      },
+      {
+        "t": 0.93,
+        "mixamorigHips": [
+          0,
+          89.2,
+          0.1
+        ],
+        "mixamorigLeftFoot": [
+          16.5,
+          21.7,
+          1.9
+        ],
+        "mixamorigRightFoot": [
+          -14.6,
+          12.8,
+          2.5
+        ],
+        "mixamorigLeftToeBase": [
+          21.3,
+          8.5,
+          8.9
+        ],
+        "mixamorigRightToeBase": [
+          -14.8,
+          3.3,
+          15.1
+        ],
+        "mixamorigLeftHand": [
+          22.1,
+          86.4,
+          -18
+        ],
+        "mixamorigRightHand": [
+          -28.9,
+          77.3,
+          3.6
+        ]
+      }
+    ]
+  },
+  "Victory.fbx": {
+    "duration": 4.5,
+    "samples": [
+      {
+        "t": 0,
+        "mixamorigHips": [
+          0.1,
+          96.1,
+          -0.3
+        ],
+        "mixamorigLeftFoot": [
+          21.2,
+          10.5,
+          -6.5
+        ],
+        "mixamorigRightFoot": [
+          -20.1,
+          10.5,
+          -6.3
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.3,
+          6
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.3,
+          6.3
+        ],
+        "mixamorigLeftHand": [
+          27.9,
+          88.1,
+          10.1
+        ],
+        "mixamorigRightHand": [
+          -31.1,
+          87.7,
+          9
+        ]
+      },
+      {
+        "t": 0.56,
+        "mixamorigHips": [
+          0.3,
+          92.9,
+          0.4
+        ],
+        "mixamorigLeftFoot": [
+          21.1,
+          10.5,
+          -6.5
+        ],
+        "mixamorigRightFoot": [
+          -20.1,
+          10.5,
+          -6.4
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.3,
+          6
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.3,
+          6.2
+        ],
+        "mixamorigLeftHand": [
+          53.6,
+          130.7,
+          26.7
+        ],
+        "mixamorigRightHand": [
+          -58,
+          135.5,
+          9.6
+        ]
+      },
+      {
+        "t": 1.13,
+        "mixamorigHips": [
+          0.2,
+          95.9,
+          1.6
+        ],
+        "mixamorigLeftFoot": [
+          21.2,
+          10.5,
+          -6.5
+        ],
+        "mixamorigRightFoot": [
+          -20.1,
+          10.5,
+          -6.4
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.3,
+          6
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.3,
+          6.3
+        ],
+        "mixamorigLeftHand": [
+          16.1,
+          195.5,
+          18.8
+        ],
+        "mixamorigRightHand": [
+          -17.2,
+          196,
+          16.2
+        ]
+      },
+      {
+        "t": 1.69,
+        "mixamorigHips": [
+          0.8,
+          96.4,
+          4.6
+        ],
+        "mixamorigLeftFoot": [
+          20.6,
+          10.7,
+          -6.2
+        ],
+        "mixamorigRightFoot": [
+          -20,
+          10.5,
+          -6.3
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.5,
+          6
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.3,
+          6.2
+        ],
+        "mixamorigLeftHand": [
+          21.4,
+          194.6,
+          25.5
+        ],
+        "mixamorigRightHand": [
+          -16.1,
+          196.6,
+          26.3
+        ]
+      },
+      {
+        "t": 2.25,
+        "mixamorigHips": [
+          0.2,
+          96.3,
+          4.9
+        ],
+        "mixamorigLeftFoot": [
+          20.5,
+          11.1,
+          -5.9
+        ],
+        "mixamorigRightFoot": [
+          -19.8,
+          10.6,
+          -6.2
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.7,
+          6.1
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.4,
+          6.2
+        ],
+        "mixamorigLeftHand": [
+          21.1,
+          195.7,
+          28.9
+        ],
+        "mixamorigRightHand": [
+          -17.2,
+          196.8,
+          24.6
+        ]
+      },
+      {
+        "t": 2.81,
+        "mixamorigHips": [
+          0.7,
+          95.6,
+          3.7
+        ],
+        "mixamorigLeftFoot": [
+          20.6,
+          11.1,
+          -6
+        ],
+        "mixamorigRightFoot": [
+          -19.8,
+          10.6,
+          -6.2
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.6,
+          6.1
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.4,
+          6.2
+        ],
+        "mixamorigLeftHand": [
+          18.3,
+          194.2,
+          21.6
+        ],
+        "mixamorigRightHand": [
+          -10.2,
+          196.8,
+          18.6
+        ]
+      },
+      {
+        "t": 3.38,
+        "mixamorigHips": [
+          1,
+          96,
+          -0.9
+        ],
+        "mixamorigLeftFoot": [
+          21.1,
+          10.5,
+          -6.5
+        ],
+        "mixamorigRightFoot": [
+          -20.1,
+          10.5,
+          -6.3
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.3,
+          6
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.3,
+          6.2
+        ],
+        "mixamorigLeftHand": [
+          38.9,
+          130.2,
+          32.1
+        ],
+        "mixamorigRightHand": [
+          -37.2,
+          133.9,
+          29.3
+        ]
+      },
+      {
+        "t": 3.94,
+        "mixamorigHips": [
+          -0.1,
+          96.2,
+          -0.7
+        ],
+        "mixamorigLeftFoot": [
+          21.2,
+          10.5,
+          -6.5
+        ],
+        "mixamorigRightFoot": [
+          -20.2,
+          10.5,
+          -6.4
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.3,
+          6
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.3,
+          6.3
+        ],
+        "mixamorigLeftHand": [
+          28.2,
+          88.5,
+          9.4
+        ],
+        "mixamorigRightHand": [
+          -30.6,
+          86.6,
+          6.1
+        ]
+      },
+      {
+        "t": 4.5,
+        "mixamorigHips": [
+          0.1,
+          96.1,
+          -0.3
+        ],
+        "mixamorigLeftFoot": [
+          21.2,
+          10.5,
+          -6.5
+        ],
+        "mixamorigRightFoot": [
+          -20.1,
+          10.5,
+          -6.3
+        ],
+        "mixamorigLeftToeBase": [
+          27.3,
+          3.3,
+          6
+        ],
+        "mixamorigRightToeBase": [
+          -26.2,
+          3.3,
+          6.3
+        ],
+        "mixamorigLeftHand": [
+          27.9,
+          88.1,
+          10.1
+        ],
+        "mixamorigRightHand": [
+          -31.1,
+          87.7,
+          9
+        ]
+      }
+    ]
+  }
+}

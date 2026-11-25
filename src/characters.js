@@ -107,7 +107,7 @@ export function createHumanoid(options) {
     knee.add(shin, sock, boot);
     hip.add(thigh, knee);
     root.add(hip);
-    return { hip, knee };
+    return { hip, knee, boot };
   };
 
   const createArm = (x) => {
@@ -179,6 +179,7 @@ export function createHumanoid(options) {
       leftShoulder: leftArm.shoulder, leftElbow: leftArm.elbow,
       rightShoulder: rightArm.shoulder, rightElbow: rightArm.elbow
     },
+    feet: { left: leftLeg.boot, right: rightLeg.boot },
     materials: { torso: torsoMaterial, sleeve: sleeveMaterial, shorts: shortsMaterial, sock: sockMaterial }
   };
   applyKit(humanoid, options);

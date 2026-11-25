@@ -1,13 +1,22 @@
 import * as THREE from 'three';
 import {
   GOAL_WIDTH, GOAL_HEIGHT, GOAL_DEPTH, GOAL_SPAWN_Z, GOAL_DISTANCE,
-  KEEPER_DIVE_SPEED, KEEPER_BASE_Y, KEEPER_SAVE_RADIUS, KEEPER_Z_OFFSET,
-  POST_TOLERANCE, RETICLE_X_RANGE, SHOT_SPEED
+  KEEPER_BASE_Y, KEEPER_Z_OFFSET, POST_RADIUS, CROSSBAR_RADIUS,
+  RETICLE_X_RANGE, RETICLE_SIZE, RETICLE_SPEED_BASE, RETICLE_SPEED_PER_LEVEL,
+  RETICLE_SPEED_MAX, RETICLE_CENTER_Y, RETICLE_Y_AMPLITUDE,
+  SHOT_SPEED, BALL_RADIUS, NET_IMPACT_RADIUS
 } from './config.js';
-import { createHumanoid, poseKeeperReady, poseDive } from './characters.js';
+import { createActor, setActorState, updateActor } from './actor.js';
+import {
+  classifyGoalPoint, SHOT_RESULT, predictBallAtZ, planKeeperSave, clamp
+} from './goalMath.js';
 import { createBoardTexture } from './world.js';
 
 const NET_CELL = 0.12;
+const NET_SEGMENTS_X = 40;
+const NET_SEGMENTS_Y = 16;
+const NET_FREQUENCY = 15;
+const NET_DAMPING = 3.4;
 
 function createNetTexture() {
   const canvas = document.createElement('canvas');
@@ -15,7 +24,7 @@ function createNetTexture() {
   canvas.height = 64;
   const context = canvas.getContext('2d');
   context.strokeStyle = 'rgba(255, 255, 255, 0.95)';
-  context.lineWidth = 5;
+  context.lineWidth = 4;
   context.beginPath();
   context.moveTo(0, 0); context.lineTo(64, 0);
   context.moveTo(0, 0); context.lineTo(0, 64);
@@ -32,7 +41,8 @@ function createNetMaterial(baseTexture, width, height) {
   texture.repeat.set(width / NET_CELL, height / NET_CELL);
   texture.needsUpdate = true;
   return new THREE.MeshBasicMaterial({
-    map: texture, color: 0xb8b8b8, transparent: true, side: THREE.DoubleSide, depthWrite: false
+    map: texture, color: 0xd8d8d8, transparent: true, opacity: 0.9,
+    side: THREE.DoubleSide, depthWrite: false
   });
 }
 
@@ -66,6 +76,20 @@ function createReticleTexture() {
   canvas.width = 128;
   canvas.height = 128;
   const context = canvas.getContext('2d');
+  // Dark outline first: the reticle stays readable over the white goal frame,
+  // the crowd and the floodlight beams.
+  context.strokeStyle = 'rgba(0, 0, 0, 0.55)';
+  context.lineWidth = 13;
+  context.beginPath();
+  context.arc(64, 64, 40, 0, Math.PI * 2);
+  context.stroke();
+  context.lineWidth = 12;
+  context.beginPath();
+  [[64, 8, 64, 28], [64, 100, 64, 120], [8, 64, 28, 64], [100, 64, 120, 64]].forEach((line) => {
+    context.moveTo(line[0], line[1]);
+    context.lineTo(line[2], line[3]);
+  });
+  context.stroke();
   context.strokeStyle = '#ffffff';
   context.lineWidth = 7;
   context.beginPath();
@@ -108,9 +132,10 @@ export function createGoal(scene) {
 
   const half = GOAL_WIDTH / 2;
   const frameMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35, metalness: 0.1 });
-  addPipe(group, frameMaterial, 0.06, GOAL_HEIGHT, -half, GOAL_HEIGHT / 2, 0);
-  addPipe(group, frameMaterial, 0.06, GOAL_HEIGHT, half, GOAL_HEIGHT / 2, 0);
-  addPipe(group, frameMaterial, 0.06, GOAL_WIDTH + 0.12, 0, GOAL_HEIGHT, 0, Math.PI / 2);
+  // Posts and crossbar use the SAME radii as classifyGoalPoint().
+  addPipe(group, frameMaterial, POST_RADIUS, GOAL_HEIGHT, -half, GOAL_HEIGHT / 2, 0);
+  addPipe(group, frameMaterial, POST_RADIUS, GOAL_HEIGHT, half, GOAL_HEIGHT / 2, 0);
+  addPipe(group, frameMaterial, CROSSBAR_RADIUS, GOAL_WIDTH + POST_RADIUS * 2, 0, GOAL_HEIGHT, 0, Math.PI / 2);
   addPipe(group, frameMaterial, 0.04, GOAL_HEIGHT, -half, GOAL_HEIGHT / 2, -GOAL_DEPTH);
   addPipe(group, frameMaterial, 0.04, GOAL_HEIGHT, half, GOAL_HEIGHT / 2, -GOAL_DEPTH);
   addPipe(group, frameMaterial, 0.04, GOAL_WIDTH, 0, GOAL_HEIGHT, -GOAL_DEPTH, Math.PI / 2);
@@ -119,19 +144,21 @@ export function createGoal(scene) {
 
   // Nets: the back panel is a subdivided grid so it can bulge on impact.
   const netTexture = createNetTexture();
-  const netGeometry = new THREE.PlaneGeometry(GOAL_WIDTH, GOAL_HEIGHT, 30, 12);
+  const netGeometry = new THREE.PlaneGeometry(GOAL_WIDTH, GOAL_HEIGHT, NET_SEGMENTS_X, NET_SEGMENTS_Y);
   const backNet = new THREE.Mesh(netGeometry, createNetMaterial(netTexture, GOAL_WIDTH, GOAL_HEIGHT));
   backNet.position.set(0, GOAL_HEIGHT / 2, -GOAL_DEPTH);
   group.add(backNet);
   const topNet = new THREE.Mesh(
-    new THREE.PlaneGeometry(GOAL_WIDTH, GOAL_DEPTH), createNetMaterial(netTexture, GOAL_WIDTH, GOAL_DEPTH)
+    new THREE.PlaneGeometry(GOAL_WIDTH, GOAL_DEPTH, NET_SEGMENTS_X, 8),
+    createNetMaterial(netTexture, GOAL_WIDTH, GOAL_DEPTH)
   );
   topNet.rotation.x = -Math.PI / 2;
   topNet.position.set(0, GOAL_HEIGHT, -GOAL_DEPTH / 2);
   group.add(topNet);
   [-1, 1].forEach((side) => {
     const sideNet = new THREE.Mesh(
-      new THREE.PlaneGeometry(GOAL_DEPTH, GOAL_HEIGHT), createNetMaterial(netTexture, GOAL_DEPTH, GOAL_HEIGHT)
+      new THREE.PlaneGeometry(GOAL_DEPTH, GOAL_HEIGHT, 8, NET_SEGMENTS_Y),
+      createNetMaterial(netTexture, GOAL_DEPTH, GOAL_HEIGHT)
     );
     sideNet.rotation.y = Math.PI / 2;
     sideNet.position.set(side * half, GOAL_HEIGHT / 2, -GOAL_DEPTH / 2);
@@ -151,11 +178,12 @@ export function createGoal(scene) {
   group.add(spot);
 
   // Backdrop: advertising boards and a crowd behind the goal.
+  const standTexture = createStandTexture();
   const stand = new THREE.Mesh(
     new THREE.PlaneGeometry(64, 10),
     new THREE.MeshStandardMaterial({
-      map: createStandTexture(), roughness: 1, emissive: 0x222233,
-      emissiveMap: createStandTexture(), emissiveIntensity: 0.5
+      map: standTexture, roughness: 1, emissive: 0x222233,
+      emissiveMap: standTexture, emissiveIntensity: 0.45
     })
   );
   stand.position.set(0, 6, -7.4);
@@ -172,22 +200,26 @@ export function createGoal(scene) {
     group.add(boardMesh);
   });
 
-  // Keeper.
-  const keeper = createHumanoid({
-    jerseyColor: 0xc6ff00, accentColor: 0x76b900, pattern: 'plain',
-    shortsColor: 0x111111, sockColor: 0xc6ff00, skinColor: 0xf1c27d,
-    hairColor: 0x4e342e, gloveColor: 0xff6d00, facing: 1, number: 1
+  // Keeper: same rigged character as the outfield players, with keeper clips.
+  const keeper = createActor({
+    kit: {
+      jerseyColor: 0xc6ff00, accentColor: 0x76b900, pattern: 'plain',
+      shortsColor: 0x111111, sockColor: 0xc6ff00, skinColor: 0xf1c27d,
+      hairColor: 0x4e342e, bootColor: 0xff6d00, gloveColor: 0xff6d00
+    },
+    facing: 1,
+    number: 1
   });
   keeper.group.position.set(0, 0, KEEPER_Z_OFFSET);
-  keeper.group.scale.setScalar(1.06);
   group.add(keeper.group);
+  setActorState(keeper, 'keeperIdle', { fade: 0 });
 
   // Aiming reticle (a sprite drawn on top of everything, in the goal plane).
   const reticle = new THREE.Sprite(new THREE.SpriteMaterial({
     map: createReticleTexture(), color: 0x00e5ff, depthTest: false,
-    transparent: true, blending: THREE.AdditiveBlending
+    transparent: true, opacity: 1, blending: THREE.NormalBlending
   }));
-  reticle.scale.set(0.95, 0.95, 1);
+  reticle.scale.set(RETICLE_SIZE, RETICLE_SIZE, 1);
   reticle.renderOrder = 999;
   reticle.visible = false;
   group.add(reticle);
@@ -208,6 +240,7 @@ export function showGoal(goal) {
   goal.keeperDive = null;
   goal.keeper.group.position.set(0, 0, KEEPER_Z_OFFSET);
   goal.keeper.group.rotation.set(0, 0, 0);
+  setActorState(goal.keeper, 'keeperIdle', { fade: 0.1, force: true });
   goal.netImpact = null;
   goal.netGeometry.attributes.position.array.set(goal.netRest);
   goal.netGeometry.attributes.position.needsUpdate = true;
@@ -228,19 +261,18 @@ function updateKeeper(goal, delta) {
   const keeper = goal.keeper;
   const dive = goal.keeperDive;
   if (!dive) {
-    keeper.group.position.x = Math.sin(goal.time * 0.9) * 0.4;
-    poseKeeperReady(keeper, goal.time);
+    keeper.group.position.x = Math.sin(goal.time * 0.9) * 0.35;
+    keeper.group.position.y = 0;
+    setActorState(keeper, 'keeperIdle', { fade: 0.2 });
+    updateActor(keeper, delta);
     return;
   }
   dive.elapsed += delta;
-  const progress = Math.min(1, Math.max(0, (dive.elapsed - dive.reaction) / dive.duration));
+  const progress = clamp((dive.elapsed - dive.reaction) / Math.max(0.08, dive.duration), 0, 1);
   const eased = 1 - (1 - progress) * (1 - progress);
   keeper.group.position.x = dive.fromX + (dive.toX - dive.fromX) * eased;
-  keeper.group.position.y = Math.max(0, dive.toY - KEEPER_BASE_Y) * 0.7 * eased;
-  const sideways = dive.toX - dive.fromX;
-  keeper.group.rotation.z = -Math.sign(sideways) * Math.min(1, Math.abs(sideways) / 1.8) * 1.15 * eased;
-  if (eased > 0.05) poseDive(keeper);
-  else poseKeeperReady(keeper, goal.time);
+  keeper.group.position.y = Math.max(0, dive.toY - KEEPER_BASE_Y) * 0.55 * eased;
+  updateActor(keeper, delta);
 }
 
 function updateNet(goal, delta) {
@@ -250,16 +282,23 @@ function updateNet(goal, delta) {
   const positions = goal.netGeometry.attributes.position;
   const array = positions.array;
   const rest = goal.netRest;
-  const amplitude = impact.amp * Math.exp(-3 * impact.t) * Math.cos(16 * impact.t);
+  const amplitude = impact.amp * Math.exp(-NET_DAMPING * impact.t) * Math.cos(NET_FREQUENCY * impact.t);
   const centerY = impact.y - GOAL_HEIGHT / 2;
+  const radiusSq = NET_IMPACT_RADIUS * NET_IMPACT_RADIUS;
+  // Only the vertices in the impact neighbourhood are touched: no full-mesh
+  // rebuild and no permanent deformation.
   for (let i = 0; i < array.length; i += 3) {
     const dx = rest[i] - impact.x;
     const dy = rest[i + 1] - centerY;
-    array[i + 2] = -amplitude * Math.exp(-(dx * dx + dy * dy) / 2.2);
+    const distanceSq = dx * dx + dy * dy;
+    array[i + 2] = distanceSq > radiusSq
+      ? 0
+      : -amplitude * Math.exp(-distanceSq / 1.6) * (1 - distanceSq / radiusSq);
   }
   positions.needsUpdate = true;
-  if (impact.t > 3) {
+  if (impact.t > 2.2) {
     array.set(rest);
+    positions.needsUpdate = true;
     goal.netImpact = null;
   }
 }
@@ -279,90 +318,119 @@ export function updateGoal(goal, delta, scrollSpeed) {
   updateNet(goal, delta);
 }
 
-// The reticle sweeps across the goal; it is red when outside the frame.
+// The reticle sweeps across the goal. Its size is constant; difficulty only
+// changes the speed/pattern. Its colour uses the exact scoring function.
 export function updateReticle(goal, aimTime, level) {
-  const speed = Math.min(2, 1 + level * 0.06);
-  goal.reticle.position.set(
-    Math.sin(aimTime * 1.9 * speed + 0.7) * RETICLE_X_RANGE,
-    1.25 + Math.sin(aimTime * 2.9 * speed) * 1.55,
-    0.05
+  const speed = Math.min(
+    RETICLE_SPEED_MAX,
+    RETICLE_SPEED_BASE + (level - 1) * RETICLE_SPEED_PER_LEVEL
   );
-  const x = goal.reticle.position.x;
-  const y = goal.reticle.position.y;
-  const isInside = Math.abs(x) < GOAL_WIDTH / 2 - 0.06 && y > 0.05 && y < GOAL_HEIGHT - 0.06;
-  goal.reticle.material.color.setHex(isInside ? 0x00e5ff : 0xff5252);
+  const pattern = level % 2;
+  let x;
+  let y;
+  if (pattern === 0) {
+    x = Math.sin(aimTime * 1.9 * speed + 0.7) * RETICLE_X_RANGE;
+    y = RETICLE_CENTER_Y + Math.sin(aimTime * 2.9 * speed) * RETICLE_Y_AMPLITUDE;
+  } else {
+    x = Math.sin(aimTime * 2.35 * speed + 1.2) * RETICLE_X_RANGE;
+    y = RETICLE_CENTER_Y + Math.sin(aimTime * 1.7 * speed + 0.55) * RETICLE_Y_AMPLITUDE;
+  }
+  goal.reticle.position.set(x, y, 0.06);
+  const inside = classifyGoalPoint(x, y) === SHOT_RESULT.GOAL;
+  goal.reticle.material.color.setHex(inside ? 0x00e5ff : 0xff5252);
 }
 
-// Decides the result of the shot (post, miss, save or goal) and the keeper's dive.
+// Decides the result of the shot and the keeper's action from the real
+// trajectory. The keeper predicts the crossing point at its own plane, then
+// moves only as far as reaction time + speed allow:
+//  - central shot -> no lateral dive (catch or body block),
+//  - lateral shot -> dive on the correct side,
+//  - unreachable shot -> goal even if the keeper dives the right way.
 export function planShot(goal, from, level) {
-  const half = GOAL_WIDTH / 2;
-  const target = { x: goal.reticle.position.x, y: goal.reticle.position.y };
+  const aimX = goal.reticle.position.x;
+  const aimY = goal.reticle.position.y;
   const goalZ = goal.group.position.z;
-  const world = new THREE.Vector3(target.x, Math.max(0.15, target.y), goalZ);
-  const flightTime = from.distanceTo(world) / SHOT_SPEED;
+  const target = new THREE.Vector3(aimX, aimY, goalZ);
+  const shotDistance = from.distanceTo(target);
+  const flightTime = Math.max(0.12, shotDistance / SHOT_SPEED);
 
-  // Keeper decision: sometimes he reads the shot, sometimes he guesses.
-  const readProbability = Math.min(0.8, 0.28 + level * 0.035);
-  const noise = Math.max(0.3, 0.9 - level * 0.04);
-  const roll = Math.random();
-  let guessX;
-  let guessY;
-  if (roll < readProbability) {
-    guessX = target.x + (Math.random() - 0.5) * 2 * noise;
-    guessY = target.y + (Math.random() - 0.5) * 2 * noise * 0.8;
-  } else if (roll < readProbability + 0.12) {
-    guessX = (Math.random() - 0.5);
-    guessY = KEEPER_BASE_Y;
-  } else {
-    const side = Math.random() < 0.5 ? -1 : 1;
-    guessX = side * (1.2 + Math.random() * 2.2);
-    guessY = 0.5 + Math.random() * 1.6;
-  }
-  guessX = Math.max(-half + 0.3, Math.min(half - 0.3, guessX));
-  guessY = Math.max(0.4, Math.min(GOAL_HEIGHT - 0.2, guessY));
+  const boundary = classifyGoalPoint(aimX, aimY);
 
+  const keeperPlaneZ = goalZ + KEEPER_Z_OFFSET;
+  const predicted = predictBallAtZ(from, target, keeperPlaneZ, flightTime, {
+    x: 0, y: 0, time: 0
+  });
   const fromX = goal.keeper.group.position.x;
-  const reaction = Math.max(0.14, 0.3 - level * 0.012);
-  const distance = Math.hypot(guessX - fromX, guessY - KEEPER_BASE_Y);
-  const duration = Math.max(0.2, distance / KEEPER_DIVE_SPEED);
-  const progress = Math.min(1, Math.max(0, flightTime - reaction) / duration);
-  const eased = 1 - (1 - progress) * (1 - progress);
-  const reachX = fromX + (guessX - fromX) * eased;
-  const reachY = KEEPER_BASE_Y + (guessY - KEEPER_BASE_Y) * eased;
-  const isSaved = Math.hypot(target.x - reachX, target.y - reachY) < KEEPER_SAVE_RADIUS;
+  const errorFactor = Math.random();
+  const keeper = planKeeperSave({
+    fromX,
+    fromY: KEEPER_BASE_Y,
+    crossingX: predicted.x,
+    crossingY: predicted.y,
+    time: predicted.time,
+    level,
+    errorFactor
+  });
 
-  const nearPost = Math.abs(Math.abs(target.x) - half) < POST_TOLERANCE && target.y > -0.05 && target.y < GOAL_HEIGHT + 0.1;
-  const nearBar = Math.abs(target.y - GOAL_HEIGHT) < POST_TOLERANCE && Math.abs(target.x) < half + POST_TOLERANCE;
-  const isInside = Math.abs(target.x) < half && target.y > 0 && target.y < GOAL_HEIGHT;
-  let outcome;
-  if (nearPost || nearBar) outcome = 'POST';
-  else if (!isInside) outcome = 'MISS';
-  else outcome = isSaved ? 'SAVE' : 'GOAL';
+  let outcome = boundary;
+  let ballTarget = target;
+  let ballFlightTime = flightTime;
+  if (boundary === SHOT_RESULT.GOAL && keeper.save) {
+    outcome = SHOT_RESULT.SAVE;
+    ballTarget = new THREE.Vector3(predicted.x, predicted.y, keeperPlaneZ);
+    ballFlightTime = Math.max(0.1, predicted.time);
+  }
 
-  return {
+  const plan = {
     outcome,
-    target: world,
-    targetLocal: target,
-    flightTime,
+    boundary,
+    target: ballTarget,
+    targetLocal: { x: aimX, y: aimY },
+    flightTime: ballFlightTime,
     goalZ,
-    sideSign: guessX >= fromX ? 1 : -1,
-    keeper: { fromX, toX: guessX, toY: guessY, reaction, duration },
+    sideSign: keeper.direction || 1,
+    keeper,
     launched: false,
     resolved: false
   };
+  goal.lastPlan = plan;
+  return plan;
 }
 
 export function startKeeperDive(goal, plan) {
+  // A shot that is going clearly wide/high does not deserve a dive animation:
+  // the keeper would look like he guessed the wrong way. He simply stays ready.
+  if (plan.boundary === SHOT_RESULT.MISS) {
+    goal.keeperDive = null;
+    setActorState(goal.keeper, 'keeperIdle', { fade: 0.15, force: true });
+    return;
+  }
+  const keeper = plan.keeper;
   goal.keeperDive = {
     elapsed: 0,
-    reaction: plan.keeper.reaction,
-    duration: plan.keeper.duration,
-    fromX: plan.keeper.fromX,
-    toX: plan.keeper.toX,
-    toY: plan.keeper.toY
+    reaction: keeper.reaction,
+    duration: keeper.duration,
+    fromX: goal.keeper.group.position.x,
+    toX: keeper.endX,
+    toY: keeper.endY
   };
+  const direction = keeper.direction;
+  if (keeper.mode === 'CATCH') {
+    setActorState(goal.keeper, 'keeperCatch', { fade: 0.05, force: true });
+  } else if (keeper.mode === 'BLOCK') {
+    setActorState(goal.keeper, 'keeperBlock', {
+      direction: direction || 1, fade: 0.05, force: true, speed: 1.35
+    });
+  } else {
+    const playback = Math.min(2.2, Math.max(1, 1.0 / Math.max(0.25, keeper.duration)));
+    setActorState(goal.keeper, 'keeperDive', {
+      direction: direction || 1, fade: 0.04, force: true, speed: playback
+    });
+  }
 }
 
-export function triggerNetImpact(goal, x, y) {
-  goal.netImpact = { x, y, t: 0, amp: 0.85 };
+export function triggerNetImpact(goal, x, y, strength) {
+  goal.netImpact = { x, y, t: 0, amp: 0.85 * (strength === undefined ? 1 : strength) };
 }
+
+export { BALL_RADIUS };

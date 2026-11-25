@@ -68,6 +68,14 @@ const STYLE = `
 .dd-stat small{font-size:10px;letter-spacing:.12em;opacity:.7}
 .dd-stars{font-size:30px;letter-spacing:.2em;color:#ffd600;margin:4px 0 16px}
 .dd-record{display:none;margin:6px 0;font-weight:900;letter-spacing:.2em;color:#ffd600;text-shadow:0 0 18px rgba(255,200,0,.8)}
+.dd-env{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 18px}
+.dd-env button{pointer-events:auto;cursor:pointer;font:inherit;font-weight:800;font-size:12px;letter-spacing:.12em;padding:9px 15px;border-radius:999px;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.24);transition:transform .15s,box-shadow .15s,background .15s}
+.dd-env button:hover{transform:translateY(-1px);background:rgba(255,255,255,.16)}
+.dd-env button.dd-active{color:#201300;border-color:transparent;background:linear-gradient(90deg,#ffd600,#ff9100);box-shadow:0 6px 20px rgba(255,160,0,.45)}
+.dd-env-label{margin:0 0 8px;font-size:11px;letter-spacing:.28em;font-weight:700;opacity:.7}
+#dd-loading{position:absolute;left:50%;bottom:46px;transform:translateX(-50%);width:min(86vw,320px);padding:9px 14px;opacity:0;transition:opacity .3s;pointer-events:none}
+#dd-loading.dd-on{opacity:1}
+#dd-loading-label{font-size:10px;letter-spacing:.18em;font-weight:700;opacity:.8;margin-bottom:6px;text-align:center}
 `;
 
 const TEMPLATE = `
@@ -97,6 +105,10 @@ const TEMPLATE = `
   <div>← → / Q D : couloir &nbsp;·&nbsp; ESPACE / ↑ / CLIC : sauter ou tirer</div>
   <div>P pause &nbsp;·&nbsp; H hitbox &nbsp;·&nbsp; M <span id="dd-sound">🔊</span></div>
 </div>
+<div id="dd-loading" class="dd-card">
+  <div id="dd-loading-label">CHARGEMENT DES JOUEURS</div>
+  <div class="dd-bar"><div id="dd-loading-fill"></div></div>
+</div>
 <div class="dd-screen dd-visible" id="dd-menu">
   <div class="dd-panel">
     <div class="dd-kicker">PROJET WEBGL · THREE.JS</div>
@@ -108,6 +120,8 @@ const TEMPLATE = `
       <div><b>Face au but</b> : vise avec le réticule, <b>ESPACE</b> ou <b>CLIC</b> pour tirer</div>
       <div><b>3 buts encaissés</b> = match perdu</div>
     </div>
+    <div class="dd-env-label">AMBIANCE DU MATCH (FIXE PENDANT 90 MINUTES)</div>
+    <div class="dd-env" id="dd-env"></div>
     <div class="dd-button">COUP D'ENVOI <span>ENTRÉE</span></div>
     <div class="dd-best">Record : <b id="dd-menu-best">0</b></div>
   </div>
@@ -140,8 +154,10 @@ let rootElement = null;
 let hudElement = null;
 let popupLayer = null;
 let currentScreen = null;
+let uiCallbacks = {};
 const screens = {};
 const refs = {};
+let envButtons = [];
 
 function readBestScore() {
   try {
@@ -168,6 +184,7 @@ function showScreen(name) {
 
 // Builds every HTML element. callbacks: onStart, onResume.
 export function createUI(callbacks) {
+  uiCallbacks = callbacks || {};
   const styleElement = document.createElement('style');
   styleElement.textContent = STYLE;
   document.head.appendChild(styleElement);
@@ -185,6 +202,10 @@ export function createUI(callbacks) {
   refs.aimText = find('#dd-aim-text');
   refs.aimFill = find('#dd-aim-fill');
   refs.menuBest = find('#dd-menu-best');
+  refs.loading = find('#dd-loading');
+  refs.loadingFill = find('#dd-loading-fill');
+  refs.loadingLabel = find('#dd-loading-label');
+  refs.env = find('#dd-env');
   ['reason', 'result', 'score', 'goals', 'duels', 'best', 'stars'].forEach((name) => {
     refs['go' + name] = find('#dd-go-' + name);
   });
@@ -302,4 +323,43 @@ export function showGameOver(stats) {
 
 export function setMuteIndicator(isMutedNow) {
   refs.sound.textContent = isMutedNow ? '🔇' : '🔊';
+}
+
+// Pre-match environment selector. The selection is applied before kick-off and
+// never changes during the match.
+export function setEnvironment(index, names) {
+  if (!refs.env || !Array.isArray(names)) return;
+  if (envButtons.length !== names.length) {
+    refs.env.textContent = '';
+    envButtons = names.map((name, buttonIndex) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = name;
+      // The menu screen itself is clickable (start): do not start a match here.
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        if (typeof uiCallbacks.onEnvironmentSelect === 'function') {
+          uiCallbacks.onEnvironmentSelect(buttonIndex);
+        }
+      });
+      refs.env.appendChild(button);
+      return button;
+    });
+  }
+  envButtons.forEach((button, buttonIndex) => {
+    button.classList.toggle('dd-active', buttonIndex === index);
+  });
+}
+
+// fraction: null hides the bar, a number fills it and updates the label.
+export function setLoadingProgress(fraction, label) {
+  if (!refs.loading) return;
+  if (fraction === null || fraction === undefined) {
+    refs.loading.classList.remove('dd-on');
+    return;
+  }
+  refs.loading.classList.add('dd-on');
+  const clamped = Math.max(0, Math.min(1, fraction));
+  refs.loadingFill.style.transform = 'scaleX(' + clamped + ')';
+  if (label) refs.loadingLabel.textContent = label.toUpperCase();
 }

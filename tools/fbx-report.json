@@ -1,0 +1,1129 @@
+{
+  "character": {
+    "file": "public\\assets\\characters\\ybot-character.fbx",
+    "bones": [
+      "mixamorigHips",
+      "mixamorigHips",
+      "mixamorigSpine",
+      "mixamorigSpine",
+      "mixamorigSpine1",
+      "mixamorigSpine1",
+      "mixamorigSpine2",
+      "mixamorigSpine2",
+      "mixamorigNeck",
+      "mixamorigNeck",
+      "mixamorigHead",
+      "mixamorigHead",
+      "mixamorigHeadTop_End",
+      "mixamorigRightShoulder",
+      "mixamorigRightShoulder",
+      "mixamorigRightArm",
+      "mixamorigRightArm",
+      "mixamorigRightForeArm",
+      "mixamorigRightForeArm",
+      "mixamorigRightHand",
+      "mixamorigRightHand",
+      "mixamorigRightHandThumb1",
+      "mixamorigRightHandThumb1",
+      "mixamorigRightHandThumb2",
+      "mixamorigRightHandThumb2",
+      "mixamorigRightHandThumb3",
+      "mixamorigRightHandThumb3",
+      "mixamorigRightHandThumb4",
+      "mixamorigRightHandIndex1",
+      "mixamorigRightHandIndex1",
+      "mixamorigRightHandIndex2",
+      "mixamorigRightHandIndex2",
+      "mixamorigRightHandIndex3",
+      "mixamorigRightHandIndex3",
+      "mixamorigRightHandIndex4",
+      "mixamorigRightHandMiddle1",
+      "mixamorigRightHandMiddle1",
+      "mixamorigRightHandMiddle2",
+      "mixamorigRightHandMiddle2",
+      "mixamorigRightHandMiddle3",
+      "mixamorigRightHandMiddle3",
+      "mixamorigRightHandMiddle4",
+      "mixamorigRightHandRing1",
+      "mixamorigRightHandRing1",
+      "mixamorigRightHandRing2",
+      "mixamorigRightHandRing2",
+      "mixamorigRightHandRing3",
+      "mixamorigRightHandRing3",
+      "mixamorigRightHandRing4",
+      "mixamorigRightHandPinky1",
+      "mixamorigRightHandPinky1",
+      "mixamorigRightHandPinky2",
+      "mixamorigRightHandPinky2",
+      "mixamorigRightHandPinky3",
+      "mixamorigRightHandPinky3",
+      "mixamorigRightHandPinky4",
+      "mixamorigLeftShoulder",
+      "mixamorigLeftShoulder",
+      "mixamorigLeftArm",
+      "mixamorigLeftArm",
+      "mixamorigLeftForeArm",
+      "mixamorigLeftForeArm",
+      "mixamorigLeftHand",
+      "mixamorigLeftHand",
+      "mixamorigLeftHandThumb1",
+      "mixamorigLeftHandThumb1",
+      "mixamorigLeftHandThumb2",
+      "mixamorigLeftHandThumb2",
+      "mixamorigLeftHandThumb3",
+      "mixamorigLeftHandThumb3",
+      "mixamorigLeftHandThumb4",
+      "mixamorigLeftHandMiddle1",
+      "mixamorigLeftHandMiddle1",
+      "mixamorigLeftHandMiddle2",
+      "mixamorigLeftHandMiddle2",
+      "mixamorigLeftHandMiddle3",
+      "mixamorigLeftHandMiddle3",
+      "mixamorigLeftHandMiddle4",
+      "mixamorigLeftHandRing1",
+      "mixamorigLeftHandRing1",
+      "mixamorigLeftHandRing2",
+      "mixamorigLeftHandRing2",
+      "mixamorigLeftHandRing3",
+      "mixamorigLeftHandRing3",
+      "mixamorigLeftHandRing4",
+      "mixamorigLeftHandIndex1",
+      "mixamorigLeftHandIndex1",
+      "mixamorigLeftHandIndex2",
+      "mixamorigLeftHandIndex2",
+      "mixamorigLeftHandIndex3",
+      "mixamorigLeftHandIndex3",
+      "mixamorigLeftHandIndex4",
+      "mixamorigLeftHandPinky1",
+      "mixamorigLeftHandPinky1",
+      "mixamorigLeftHandPinky2",
+      "mixamorigLeftHandPinky2",
+      "mixamorigLeftHandPinky3",
+      "mixamorigLeftHandPinky3",
+      "mixamorigLeftHandPinky4",
+      "mixamorigLeftUpLeg",
+      "mixamorigLeftUpLeg",
+      "mixamorigLeftLeg",
+      "mixamorigLeftLeg",
+      "mixamorigLeftFoot",
+      "mixamorigLeftFoot",
+      "mixamorigLeftToeBase",
+      "mixamorigLeftToeBase",
+      "mixamorigLeftToe_End",
+      "mixamorigRightUpLeg",
+      "mixamorigRightUpLeg",
+      "mixamorigRightLeg",
+      "mixamorigRightLeg",
+      "mixamorigRightFoot",
+      "mixamorigRightFoot",
+      "mixamorigRightToeBase",
+      "mixamorigRightToeBase",
+      "mixamorigRightToe_End"
+    ],
+    "boneCount": 117,
+    "skinnedMeshes": 2,
+    "meshes": 2,
+    "bbox": {
+      "min": [
+        -97.343,
+        -0.01,
+        -16.051
+      ],
+      "max": [
+        97.342,
+        180.463,
+        20.376
+      ]
+    },
+    "animations": [
+      {
+        "name": "mixamo.com",
+        "duration": 0.033,
+        "trackCount": 53,
+        "hipsTravel": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "hipsPath": {
+          "first": [
+            0,
+            99.79,
+            0
+          ],
+          "last": [
+            0,
+            99.79,
+            0
+          ],
+          "deltaX": 0,
+          "deltaZ": 0
+        },
+        "sampleTracks": [
+          "mixamorigHips.position",
+          "mixamorigHips.quaternion",
+          "mixamorigSpine.quaternion"
+        ],
+        "sampleLeft": [
+          "mixamorigLeftShoulder.quaternion",
+          "mixamorigLeftArm.quaternion",
+          "mixamorigLeftFoot.quaternion"
+        ],
+        "sampleRight": [
+          "mixamorigRightShoulder.quaternion",
+          "mixamorigRightArm.quaternion",
+          "mixamorigRightFoot.quaternion"
+        ],
+        "unmatchedBones": []
+      },
+      {
+        "name": "Take 001",
+        "duration": 0,
+        "trackCount": 0,
+        "hipsTravel": null,
+        "hipsPath": null,
+        "sampleTracks": [],
+        "sampleLeft": [],
+        "sampleRight": [],
+        "unmatchedBones": []
+      }
+    ]
+  },
+  "animations": [
+    {
+      "file": "Goalkeeper Body Block.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 2.633,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 124.772,
+            "y": 77.083,
+            "z": 66.357
+          },
+          "hipsPath": {
+            "first": [
+              0.02,
+              92.39,
+              1.13
+            ],
+            "last": [
+              24.65,
+              92.39,
+              67.12
+            ],
+            "deltaX": 24.63,
+            "deltaZ": 65.99
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Goalkeeper Catch.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 2.1,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 77.535,
+            "y": 15.172,
+            "z": 95.1
+          },
+          "hipsPath": {
+            "first": [
+              0,
+              92.39,
+              1.13
+            ],
+            "last": [
+              -75.05,
+              88.7,
+              91.03
+            ],
+            "deltaX": -75.05,
+            "deltaZ": 89.9
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Goalkeeper Diving Save.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 3.233,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 332.38,
+            "y": 83.976,
+            "z": 102.149
+          },
+          "hipsPath": {
+            "first": [
+              0,
+              92.39,
+              1.13
+            ],
+            "last": [
+              -269.12,
+              88.71,
+              102.8
+            ],
+            "deltaX": -269.13,
+            "deltaZ": 101.66
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Goalkeeper Idle.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 4.633,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 22.511,
+            "y": 4.667,
+            "z": 4.361
+          },
+          "hipsPath": {
+            "first": [
+              0,
+              92.39,
+              1.13
+            ],
+            "last": [
+              0,
+              92.39,
+              1.13
+            ],
+            "deltaX": 0,
+            "deltaZ": -0.01
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Goalkeeper Sidestep.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 0.5,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 150.249,
+            "y": 7.616,
+            "z": 4.043
+          },
+          "hipsPath": {
+            "first": [
+              0.01,
+              79.09,
+              1.61
+            ],
+            "last": [
+              -150.24,
+              79.09,
+              1.61
+            ],
+            "deltaX": -150.25,
+            "deltaZ": 0
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigRightShoulder"
+      ]
+    },
+    {
+      "file": "Idle.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 1.967,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 0.137,
+            "y": 0.439,
+            "z": 0.919
+          },
+          "hipsPath": {
+            "first": [
+              0.23,
+              92.86,
+              -1.04
+            ],
+            "last": [
+              0.23,
+              92.86,
+              -1.04
+            ],
+            "deltaX": 0,
+            "deltaZ": 0
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Jogging.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 2.567,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 6.659,
+            "y": 11.931,
+            "z": 10.375
+          },
+          "hipsPath": {
+            "first": [
+              -0.19,
+              93.63,
+              -0.53
+            ],
+            "last": [
+              -0.19,
+              93.63,
+              -0.53
+            ],
+            "deltaX": 0,
+            "deltaZ": 0
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Jump.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 0.933,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 16.469,
+            "y": 64.119,
+            "z": 35.639
+          },
+          "hipsPath": {
+            "first": [
+              0.01,
+              89.2,
+              0.14
+            ],
+            "last": [
+              0.01,
+              89.2,
+              0.14
+            ],
+            "deltaX": 0,
+            "deltaZ": 0
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Kick Soccerball.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 0.567,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 1.05,
+            "y": 7.154,
+            "z": 4.75
+          },
+          "hipsPath": {
+            "first": [
+              -0.17,
+              97,
+              0.49
+            ],
+            "last": [
+              -0.17,
+              97,
+              0.49
+            ],
+            "deltaX": 0,
+            "deltaZ": 0
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigLeftShoulder"
+      ]
+    },
+    {
+      "file": "Running Slide.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 1.533,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 16.655,
+            "y": 70.32,
+            "z": 642.266
+          },
+          "hipsPath": {
+            "first": [
+              0.14,
+              91.89,
+              0.61
+            ],
+            "last": [
+              0.14,
+              91.89,
+              642.88
+            ],
+            "deltaX": 0,
+            "deltaZ": 642.27
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Running.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 0.7,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 1.711,
+            "y": 8.967,
+            "z": 7.469
+          },
+          "hipsPath": {
+            "first": [
+              0.14,
+              91.89,
+              0.61
+            ],
+            "last": [
+              0.14,
+              91.89,
+              0.61
+            ],
+            "deltaX": 0,
+            "deltaZ": 0
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Side Step.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 1.467,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 20.902,
+            "y": 14.166,
+            "z": 3.629
+          },
+          "hipsPath": {
+            "first": [
+              -0.4,
+              83.48,
+              0.42
+            ],
+            "last": [
+              -0.46,
+              83.45,
+              4.05
+            ],
+            "deltaX": -0.06,
+            "deltaZ": 3.63
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Soccer Trip.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 1.6,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 118.248,
+            "y": 77.867,
+            "z": 391.177
+          },
+          "hipsPath": {
+            "first": [
+              0.01,
+              94.17,
+              0.13
+            ],
+            "last": [
+              -115.29,
+              21.11,
+              391.3
+            ],
+            "deltaX": -115.3,
+            "deltaZ": 391.18
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Sprint.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 0.533,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 5.896,
+            "y": 8.248,
+            "z": 315.516
+          },
+          "hipsPath": {
+            "first": [
+              2.65,
+              88.12,
+              0.76
+            ],
+            "last": [
+              2.65,
+              88.12,
+              316.27
+            ],
+            "deltaX": 0,
+            "deltaZ": 315.52
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigLeftShoulder"
+      ]
+    },
+    {
+      "file": "Standing Up.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 1.667,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 94.701,
+            "y": 71.956,
+            "z": 20.877
+          },
+          "hipsPath": {
+            "first": [
+              -0.77,
+              21.11,
+              0.53
+            ],
+            "last": [
+              -89.34,
+              92.39,
+              -4.5
+            ],
+            "deltaX": -88.57,
+            "deltaZ": -5.04
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    },
+    {
+      "file": "Strike Foward Jog.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 1.3,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 18.775,
+            "y": 29.952,
+            "z": 30.295
+          },
+          "hipsPath": {
+            "first": [
+              0,
+              94.2,
+              0.01
+            ],
+            "last": [
+              -0.01,
+              94.2,
+              0.02
+            ],
+            "deltaX": 0,
+            "deltaZ": 0
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigLeftShoulder"
+      ]
+    },
+    {
+      "file": "Victory.fbx",
+      "boneCount": 65,
+      "skinnedMeshes": 0,
+      "meshes": 0,
+      "animations": [
+        {
+          "name": "mixamo.com",
+          "duration": 4.5,
+          "trackCount": 53,
+          "hipsTravel": {
+            "x": 2.622,
+            "y": 11.291,
+            "z": 9.004
+          },
+          "hipsPath": {
+            "first": [
+              0.07,
+              96.1,
+              -0.26
+            ],
+            "last": [
+              0.07,
+              96.1,
+              -0.26
+            ],
+            "deltaX": 0,
+            "deltaZ": 0
+          },
+          "sampleTracks": [
+            "mixamorigHips.position",
+            "mixamorigHips.quaternion",
+            "mixamorigSpine.quaternion"
+          ],
+          "sampleLeft": [
+            "mixamorigLeftShoulder.quaternion",
+            "mixamorigLeftArm.quaternion",
+            "mixamorigLeftFoot.quaternion"
+          ],
+          "sampleRight": [
+            "mixamorigRightShoulder.quaternion",
+            "mixamorigRightArm.quaternion",
+            "mixamorigRightFoot.quaternion"
+          ],
+          "unmatchedBones": []
+        }
+      ],
+      "boneSample": [
+        "mixamorigHips",
+        "mixamorigSpine",
+        "mixamorigSpine1",
+        "mixamorigSpine2",
+        "mixamorigNeck"
+      ]
+    }
+  ]
+}
