@@ -3,6 +3,30 @@
 Mis à jour automatiquement après chaque section terminée.  
 Toujours lire ce fichier EN PREMIER lors d'une reprise.
 
+## HANDOFF
+
+- **État actuel :** Tier 1 (1a + 1b) terminé ; démarrage du Tier 2 (performance et robustesse).
+- **Vérifié par Tier 0 :**
+  - `goalMath.js`, `mirrorClip`, `SkeletonUtils`, `AnimationMixer` : vérifiés dans le code.
+- **Décisions Tier 1a :**
+  - `Strike Foward Jog.fbx` mappé sur `strikeJog` (`src/assets.js`), utilisé pour les tirs en course (`aimTime <= 1.0s`).
+  - Mesure `FBXLoader` (`mixamorigRightFoot`) : pic à `t = 0.42s` (`vz = 1038.9 cm/s`), `startTime: 0.14s`, `speed: 1.30` → `0.215s` via `getClipContactDelay()`.
+  - `Kick Soccerball.fbx` (`kick`, `contactTime: 0.28s`) utilisé pour les frappes à l'arrêt (`aimTime > 1.0s`). `EXTRA_CLIP_FILES` vide.
+- **Décisions Tier 1b :**
+  - `src/commentaryData.js` : phrases françaises, priorités, cooldowns, expiration, manifeste optionnel `assets/audio/commentary/manifest.json`.
+  - `src/commentary.js` : `createCommentaryManager()`, Web Speech API (`fr-FR` préféré), file de priorité, interruption par événements critiques (but), ducking foule (`setCrowdDuck` dans `src/audio.js`), réglages persistés (`dribbleDashAudioSettings`).
+  - `src/ui.js` : panneau `AUDIO & COMMENTAIRES` dans menu principal et pause. Test unitaire Node passé.
+- **Checklist des Tiers :**
+  - [x] **Tier 0** : Audit et vérification réelle.
+  - [x] **Tier 1a** : Tir avec `Strike Foward Jog.fbx` + mesure contact (`0.42s`) + synchro balle + décision `Kick Soccerball`.
+  - [x] **Tier 1b** : Commentateur vocal français (`CommentaryManager` + Web Speech API + mix audio `audio.js` + réglages).
+  - [ ] **Tier 2** : Performance et robustesse (bundle splitting >500KB, qualité adaptative, allocations, fuites mémoire).
+  - [ ] **Tier 3** : Qualité d'animation et gameplay feel (vitesse de course synchronisée, buffering d'entrée, transitions).
+  - [ ] **Tier 4** : Polish graphique (pelouse, ballon, stade, particules, caméra).
+  - [ ] **Tier 5** : UX/UI, réglages/pause, mobile, finitions audio.
+- **Prochaine action exacte :** Configurer `vite.config.js` pour supprimer l'avertissement >500KB (`manualChunks` pour `three`), ajouter le moniteur de qualité adaptative dans `main.js`/`world.js`, et vérifier les allocations/fuites.
+- **Comment reprendre :** Lire ce `HANDOFF`, lancer `npm run build`, puis exécuter le prochain élément non coché.
+
 ---
 
 ## ✅ TERMINÉ — Session précédente (agent inconnu)

@@ -96,6 +96,7 @@ export function createPlayer(scene) {
     runTime: 0,
     dribblePhase: 0,
     kickProgress: 0,
+    shotState: 'strikeJog',
     isKnockedDown: false,
     fallProgress: 0,
     stepTimer: 0,
@@ -106,10 +107,11 @@ export function createPlayer(scene) {
   return player;
 }
 
-export function setPlayerMode(player, mode) {
+export function setPlayerMode(player, mode, shotState) {
   player.mode = mode;
   player.modeTime = 0;
   player.kickProgress = 0;
+  if (shotState) player.shotState = shotState;
 }
 
 function applyPendingInputs(player) {
@@ -172,7 +174,7 @@ function updateAnimation(player, delta) {
   if (player.isKnockedDown) {
     setActorState(player.actor, 'trip', TRIP_OPTIONS);
   } else if (player.mode === 'KICK') {
-    setActorState(player.actor, 'kick', KICK_OPTIONS);
+    setActorState(player.actor, player.shotState || 'strikeJog', KICK_OPTIONS);
   } else if (player.mode === 'CELEBRATE') {
     setActorState(player.actor, 'celebrate', CELEBRATE_OPTIONS);
   } else if (player.mode === 'AIM' || player.mode === 'IDLE') {
@@ -229,7 +231,11 @@ export function getPlayerLane(player) {
 
 // Point where the ball leaves the foot when shooting (reused vector).
 export function getPlayerKickOrigin(player) {
-  return kickOrigin.set(player.group.position.x + 0.08, 0.24, PLAYER_Z - 0.58);
+  return kickOrigin.set(
+    player.group.position.x + 0.08,
+    Math.max(0.24, player.group.position.y + 0.24),
+    PLAYER_Z - 0.58
+  );
 }
 
 // Ball anchor driven by the REAL foot bones (rigged) or boot meshes (procedural).

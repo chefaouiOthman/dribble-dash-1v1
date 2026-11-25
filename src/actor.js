@@ -23,6 +23,7 @@ const STATE_CLIPS = {
   sprint: 'sprint',
   jump: 'jump',
   kick: 'kick',
+  strikeJog: 'strikeJog',
   sideStep: 'sideStep',
   trip: 'trip',
   getUp: 'getUp',
@@ -268,6 +269,9 @@ export function setActorState(actor, state, options) {
 
   const previous = actor.currentAction;
   action.reset();
+  if (definition && definition.startTime) {
+    action.time = definition.startTime;
+  }
   action.setLoop(once ? THREE.LoopOnce : THREE.LoopRepeat, once ? 1 : Infinity);
   action.clampWhenFinished = once;
   action.setEffectiveTimeScale(speed);
@@ -302,6 +306,7 @@ function updateProcedural(actor, delta) {
       poseJump(humanoid);
       break;
     case 'kick':
+    case 'strikeJog':
       actor.kickProgress = Math.min(1, actor.kickProgress + delta * 3.4);
       poseKick(humanoid, actor.kickProgress);
       break;

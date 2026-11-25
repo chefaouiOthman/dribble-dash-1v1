@@ -21,7 +21,16 @@ export const CLIP_DEFINITIONS = {
   run: { file: 'Running.fbx', loop: true, speed: 1.1, fade: 0.16 },
   sprint: { file: 'Sprint.fbx', loop: true, speed: 1.0, fade: 0.16 },
   jump: { file: 'Jump.fbx', once: true, speed: 1.15, fade: 0.1, trimEnd: 0.93 },
-  kick: { file: 'Kick Soccerball.fbx', once: true, speed: 1.35, fade: 0.08, trimEnd: 0.57 },
+  // Standing strike (used when the player has stopped to aim > 1s).
+  kick: { file: 'Kick Soccerball.fbx', once: true, speed: 1.35, fade: 0.08, contactTime: 0.28, trimEnd: 0.57 },
+  // Running strike (used when shooting in stride).
+  // Measured via tools/analyze-clips.mjs: RightFoot peak forward velocity
+  // (vz = 1038.9 cm/s, y = 22.9 cm, z = 70.1 cm) occurs at t = 0.42s.
+  // Starting at 0.14s at 1.30x gives (0.42 - 0.14) / 1.30 = 0.215s release latency.
+  strikeJog: {
+    file: 'Strike Foward Jog.fbx', once: true, speed: 1.30, fade: 0.08,
+    startTime: 0.14, contactTime: 0.42, trimEnd: 0.98
+  },
   sideStep: { file: 'Side Step.fbx', once: true, directional: true, speed: 1.25, fade: 0.12, trimEnd: 1.32 },
   trip: { file: 'Soccer Trip.fbx', once: true, speed: 1.0, fade: 0.1, trimEnd: 1.42 },
   getUp: { file: 'Standing Up.fbx', once: true, speed: 1.0, fade: 0.2, trimEnd: 1.55 },
@@ -52,8 +61,8 @@ export const CLIP_DEFINITIONS = {
   }
 };
 
-// Clips that are loaded but not mapped yet (kept in the manifest for the viewer).
-export const EXTRA_CLIP_FILES = ['Strike Foward Jog.fbx'];
+// All clips in the manifest are now mapped to active gameplay states.
+export const EXTRA_CLIP_FILES = [];
 
 const HIPS_NAME = 'mixamorigHips';
 const RAW_CLIP_NAME = 'mixamo.com';
@@ -305,4 +314,13 @@ export function getClip(assets, semantic, mirrored) {
 
 export function getClipDefinition(assets, semantic) {
   return (assets && assets.definitions[semantic]) || CLIP_DEFINITIONS[semantic] || null;
+}
+
+// Computes the exact real-time delay (seconds) from clip start to foot-ball contact.
+export function getClipContactDelay(assets, semantic, fallback) {
+  const definition = getClipDefinition(assets, semantic);
+  if (!definition || definition.contactTime === undefined) return fallback;
+  const start = definition.startTime || 0;
+  const speed = definition.speed || 1;
+  return Math.max(0.04, (definition.contactTime - start) / speed);
 }

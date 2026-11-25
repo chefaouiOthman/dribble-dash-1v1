@@ -23,10 +23,11 @@ import {
 import {
   createUI, updateHUD, showPopup, showBanner, flashScreen, setAimHint,
   hideOverlay, showPause, showGameOver, setMuteIndicator, setEnvironment,
-  setLoadingProgress
+  setLoadingProgress, initAudioSettingsUI, syncAudioSettingsUI
 } from './ui.js';
-import { playSound, toggleMute, isMuted } from './audio.js';
-import { loadCharacterAssets } from './assets.js';
+import { playSound, toggleMute, isMuted, setSfxVolume, setCrowdDuck } from './audio.js';
+import { createCommentaryManager } from './commentary.js';
+import { loadCharacterAssets, getClipContactDelay } from './assets.js';
 import { attachRig, isRigReady } from './actor.js';
 import {
   GAME_STATE, PLAYER_Z, PLAYER_WIDTH, DEFENDER_WIDTH, TACKLE_HEIGHT,
@@ -35,7 +36,7 @@ import {
   SCORE_PER_DUEL, BONUS_CLOSE_CALL, BONUS_JUMP, GOAL_POINTS, COMBO_STEP, MAX_COMBO_STEPS,
   CLOSE_CALL_GAP, SLOW_MO_DURATION, SLOW_MO_SCALE, GAME_OVER_DELAY,
   MATCH_SECONDS, MATCH_MINUTES, MAX_CONCEDED, DUELS_PER_ATTACK,
-  KICK_DELAY, AIM_TIME_LIMIT, GOAL_DISTANCE, DEFAULT_ENVIRONMENT
+  KICK_DELAY, AIM_TIME_LIMIT, GOAL_DISTANCE, DEFAULT_ENVIRONMENT, STORAGE_KEY_BEST_SCORE
 } from './config.js';
 
 const DEV_STATS = new URLSearchParams(window.location.search).get('stats') === '1';
@@ -105,6 +106,11 @@ let elapsed = 0;
 let selectedEnvironment = DEFAULT_ENVIRONMENT;
 let matchEnvironment = DEFAULT_ENVIRONMENT;
 let gameAssets = null;
+let lastMinuteCommented = false;
+const commentary = createCommentaryManager({
+  onSpeakingChange: (speaking) => setCrowdDuck(speaking)
+});
+setSfxVolume(commentary.getSettings().sfxVolume);
 const cameraLookTarget = new THREE.Vector3(CAMERA_LOOK_AT.x, CAMERA_LOOK_AT.y, CAMERA_LOOK_AT.z);
 const contactPoint = new THREE.Vector3();
 
@@ -156,18 +162,24 @@ function startGame() {
   hitFx = 0;
   // The environment is chosen BEFORE the match and stays fixed for 90 minutes.
   matchEnvironment = selectedEnvironment;
+  lastMinuteCommented = false;
   setTheme(matchEnvironment, true);
   setAimHint(false, 0, '');
   refreshHUD();
   hideOverlay();
+  commentary.cancel();
+  commentary.unlock();
   playSound('whistle');
   showBanner("COUP D'ENVOI !", 'info');
+  commentary.trigger('kickoff', { env: getThemeName(matchEnvironment) });
   gameState = GAME_STATE.PLAYING;
 }
 
 function pauseGame() {
   if (gameState !== GAME_STATE.PLAYING) return;
   gameState = GAME_STATE.PAUSED;
+  commentary.cancel();
+  syncAudioSettingsUI(commentary.getSettings(), commentary.getStatus());
   showPause();
 }
 
@@ -194,12 +206,25 @@ function kickoff() {
 function finishMatch(reason) {
   gameState = GAME_STATE.GAME_OVER;
   finalReason = reason;
+  commentary.cancel();
   setAimHint(false, 0, '');
   setReticleVisible(goal, false);
   if (!player.isKnockedDown) {
     setPlayerMode(player, goals > conceded ? 'CELEBRATE' : 'IDLE');
   }
   playSound('final');
+  let prevBest = 0;
+  try { prevBest = Number(window.localStorage.getItem(STORAGE_KEY_BEST_SCORE)) || 0; } catch (e) {}
+  if (score > prevBest && score > 0) {
+    commentary.trigger('recordBroken');
+  } else {
+    const scoreText = goals > conceded
+      ? `Victoire ${goals} buts à ${conceded} !`
+      : goals === conceded
+        ? `Match nul, ${goals} partout.`
+        : `Défaite ${conceded} buts à ${goals}.`;
+    commentary.trigger('finalWhistle', { scoreText });
+  }
   gameOverTimer = GAME_OVER_DELAY;
 }
 
@@ -220,6 +245,7 @@ function concede() {
   flashScreen('hit');
   showBanner('BALLE PERDUE !', 'danger');
   showPopup('CONTRE-ATTAQUE... BUT ADVERSE', 'danger');
+  commentary.trigger('fall');
   phaseTimer = 2.2;
   refreshHUD();
 }
@@ -265,6 +291,11 @@ function awardDuel() {
   showPopup(label + ' +' + points, kind);
   if (level > previousLevel) showPopup('NIVEAU ' + level + ' · DÉFENSEURS PLUS RAPIDES', 'level');
   playSound(dodge === 'clean' ? 'win' : 'perfect');
+  if (dodge === 'close') commentary.trigger('perfectDribble');
+  else if (dodge === 'jump') commentary.trigger('jumpDodge');
+  else if (combo >= 3) commentary.trigger('combo', { combo: getMultiplier() });
+  else if (level > previousLevel && level % 3 === 0) commentary.trigger('levelUp', { level });
+  else commentary.trigger('dribble');
   playWinEffect();
   if (dodge !== 'clean') {
     slowMoTimer = SLOW_MO_DURATION;
@@ -293,8 +324,12 @@ function takeShot() {
   shot = planShot(goal, getPlayerKickOrigin(player), level);
   setReticleVisible(goal, false);
   setAimHint(false, 0, '');
-  setPlayerMode(player, 'KICK');
-  launchTimer = KICK_DELAY;
+  // Running strike when shooting in stride (quick aim <= 1.0s); standing kick after a pause.
+  const shotState = aimTime <= 1.0 ? 'strikeJog' : 'kick';
+  setPlayerMode(player, 'KICK', shotState);
+  launchTimer = isRigReady(player.actor)
+    ? getClipContactDelay(gameAssets, shotState, KICK_DELAY)
+    : KICK_DELAY;
   phase = PHASE.SHOT;
 }
 
@@ -303,6 +338,7 @@ function launchShot() {
     shot.outcome, shot.goalZ, shot.sideSign);
   startKeeperDive(goal, shot);
   playSound('kick');
+  commentary.trigger('shot');
   shot.launched = true;
 }
 
@@ -319,6 +355,7 @@ function resolveShot(outcome) {
     flashScreen('win');
     showBanner('BUUUUT !', 'goal');
     showPopup('+' + points, 'perfect');
+    commentary.trigger('goal');
     slowMoTimer = 1.1;
     shakeAmount = 0.35;
     setPlayerMode(player, 'CELEBRATE');
@@ -328,12 +365,14 @@ function resolveShot(outcome) {
     playSound('save');
     const caught = shot.keeper && shot.keeper.mode === 'CATCH';
     showBanner(caught ? 'CAPTURE DU GARDIEN !' : 'ARRÊT DU GARDIEN !', 'save');
+    commentary.trigger('save');
     setPlayerMode(player, 'IDLE');
     phaseTimer = 2.0;
   } else if (outcome === 'POST') {
     combo = 0;
     playSound('post');
     showBanner('POTEAU !', 'save');
+    commentary.trigger('post');
     shakeAmount = 0.25;
     setPlayerMode(player, 'IDLE');
     phaseTimer = 2.0;
@@ -341,12 +380,15 @@ function resolveShot(outcome) {
     combo = 0;
     playSound('post');
     showBanner('BARRE TRANSVERSALE !', 'save');
+    commentary.trigger('crossbar');
     shakeAmount = 0.25;
     setPlayerMode(player, 'IDLE');
     phaseTimer = 2.0;
   } else {
     combo = 0;
+    playSound('murmur');
     showBanner('HORS CADRE', 'miss');
+    commentary.trigger('miss');
     setPlayerMode(player, 'IDLE');
     phaseTimer = 1.8;
   }
@@ -374,6 +416,10 @@ function updatePlaying(delta, realDelta) {
   matchTime += delta;
   const minute = getMinute();
   if (minute !== lastHudMinute) refreshHUD();
+  if (!lastMinuteCommented && minute >= MATCH_MINUTES - 5) {
+    lastMinuteCommented = true;
+    commentary.trigger(goals === conceded ? 'closeScore' : 'lastMinute');
+  }
 
   const baseScroll = Math.min(WORLD_SCROLL_SPEED + (level - 1) * SCROLL_SPEED_PER_LEVEL, MAX_SCROLL_SPEED);
   let scrollTarget = baseScroll;
@@ -402,6 +448,7 @@ function updatePlaying(delta, realDelta) {
     if (defenderEvents.attackStarted) {
       playSound('tackle');
       showPopup(defender.attackType === 'SLIDE' ? 'TACLE !' : 'BLOCAGE !', 'danger');
+      commentary.trigger(defender.attackType === 'SLIDE' ? 'tackle' : 'block');
     }
     if (previousZ < PLAYER_Z && defender.group.position.z >= PLAYER_Z) {
       lastDodge = classifyDodge();
@@ -550,6 +597,16 @@ setEnvironment(selectedEnvironment, getEnvironmentNames());
 setTheme(selectedEnvironment, true);
 refreshHUD();
 setMuteIndicator(isMuted());
+initAudioSettingsUI(commentary.getSettings(), commentary.getStatus(), (patch) => {
+  const next = commentary.updateSettings(patch);
+  setSfxVolume(next.sfxVolume);
+  return next;
+});
+if (typeof window !== 'undefined' && window.speechSynthesis && typeof window.speechSynthesis.addEventListener === 'function') {
+  window.speechSynthesis.addEventListener('voiceschanged', () => {
+    syncAudioSettingsUI(commentary.getSettings(), commentary.getStatus());
+  });
+}
 
 // Assets load in the background: the game is playable immediately with the
 // procedural bodies, then swaps to the rigged Mixamo characters when ready.
@@ -581,12 +638,19 @@ window.addEventListener('keydown', (event) => {
     if (gameState === GAME_STATE.PLAYING) pauseGame();
     else if (gameState === GAME_STATE.PAUSED) resumeGame();
   }
-  if (key === 'm') setMuteIndicator(toggleMute());
+  if (key === 'm') {
+    const nowMuted = toggleMute();
+    setMuteIndicator(nowMuted);
+    if (nowMuted) commentary.cancel();
+  }
   if (key === 'h') hitboxHelpers.forEach((helper) => { helper.visible = !helper.visible; });
 });
 
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) pauseGame();
+  if (document.hidden) {
+    commentary.cancel();
+    pauseGame();
+  }
 });
 
 // ---------- Dev diagnostics (URL params only) ----------

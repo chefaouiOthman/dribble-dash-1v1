@@ -76,6 +76,13 @@ const STYLE = `
 #dd-loading{position:absolute;left:50%;bottom:46px;transform:translateX(-50%);width:min(86vw,320px);padding:9px 14px;opacity:0;transition:opacity .3s;pointer-events:none}
 #dd-loading.dd-on{opacity:1}
 #dd-loading-label{font-size:10px;letter-spacing:.18em;font-weight:700;opacity:.8;margin-bottom:6px;text-align:center}
+.dd-settings{margin:14px auto 16px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);text-align:left;max-width:400px}
+.dd-settings-title{font-size:11px;letter-spacing:.2em;font-weight:800;opacity:.75;margin-bottom:8px;text-align:center}
+.dd-setting-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:7px 0;font-size:13px}
+.dd-setting-row input[type=range]{width:130px;accent-color:#ffd600;cursor:pointer}
+.dd-toggle{cursor:pointer;font:inherit;font-weight:800;font-size:11px;letter-spacing:.1em;padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff}
+.dd-toggle.dd-on{background:linear-gradient(90deg,#ffd600,#ff9100);color:#201300;border-color:transparent}
+.dd-voice-note{font-size:11px;opacity:.7;margin-top:6px;text-align:center}
 `;
 
 const TEMPLATE = `
@@ -122,6 +129,7 @@ const TEMPLATE = `
     </div>
     <div class="dd-env-label">AMBIANCE DU MATCH (FIXE PENDANT 90 MINUTES)</div>
     <div class="dd-env" id="dd-env"></div>
+    <div class="dd-settings" id="dd-menu-settings"></div>
     <div class="dd-button">COUP D'ENVOI <span>ENTRÉE</span></div>
     <div class="dd-best">Record : <b id="dd-menu-best">0</b></div>
   </div>
@@ -145,6 +153,7 @@ const TEMPLATE = `
   <div class="dd-panel">
     <h2 class="dd-title">PAUSE</h2>
     <p class="dd-tagline">Appuie sur P, Échap ou ENTRÉE pour reprendre.</p>
+    <div class="dd-settings" id="dd-pause-settings"></div>
     <div class="dd-button">REPRENDRE</div>
   </div>
 </div>
@@ -206,6 +215,8 @@ export function createUI(callbacks) {
   refs.loadingFill = find('#dd-loading-fill');
   refs.loadingLabel = find('#dd-loading-label');
   refs.env = find('#dd-env');
+  refs.menuSettings = find('#dd-menu-settings');
+  refs.pauseSettings = find('#dd-pause-settings');
   ['reason', 'result', 'score', 'goals', 'duels', 'best', 'stars'].forEach((name) => {
     refs['go' + name] = find('#dd-go-' + name);
   });
@@ -362,4 +373,77 @@ export function setLoadingProgress(fraction, label) {
   const clamped = Math.max(0, Math.min(1, fraction));
   refs.loadingFill.style.transform = 'scaleX(' + clamped + ')';
   if (label) refs.loadingLabel.textContent = label.toUpperCase();
+}
+
+const audioControls = [];
+
+export function initAudioSettingsUI(initialSettings, voiceStatus, onChange) {
+  const containers = [refs.menuSettings, refs.pauseSettings].filter(Boolean);
+  audioControls.length = 0;
+
+  const statusText = !voiceStatus.supported
+    ? 'Synthèse vocale non supportée par ce navigateur.'
+    : !voiceStatus.hasFrenchVoice
+      ? 'Aucune voix française détectée (effets sonores actifs).'
+      : 'Voix : ' + voiceStatus.voiceName;
+
+  containers.forEach((container) => {
+    container.innerHTML = `
+      <div class="dd-settings-title">AUDIO & COMMENTAIRES</div>
+      <div class="dd-setting-row">
+        <span>Commentateur français</span>
+        <button type="button" class="dd-toggle" data-role="toggle"></button>
+      </div>
+      <div class="dd-setting-row">
+        <span>Volume commentaires</span>
+        <input type="range" min="0" max="1" step="0.05" data-role="commVol">
+      </div>
+      <div class="dd-setting-row">
+        <span>Volume effets & foule</span>
+        <input type="range" min="0" max="1" step="0.05" data-role="sfxVol">
+      </div>
+      <div class="dd-voice-note" data-role="note"></div>
+    `;
+    // Prevent clicking inside settings from starting/resuming the match.
+    container.addEventListener('click', (event) => event.stopPropagation());
+
+    const toggle = container.querySelector('[data-role="toggle"]');
+    const commVol = container.querySelector('[data-role="commVol"]');
+    const sfxVol = container.querySelector('[data-role="sfxVol"]');
+    const note = container.querySelector('[data-role="note"]');
+    note.textContent = statusText;
+
+    toggle.addEventListener('click', () => {
+      const next = onChange({ enabled: !toggle.classList.contains('dd-on') });
+      syncAudioSettingsUI(next);
+    });
+    commVol.addEventListener('input', () => {
+      const next = onChange({ volume: Number(commVol.value) });
+      syncAudioSettingsUI(next);
+    });
+    sfxVol.addEventListener('input', () => {
+      const next = onChange({ sfxVolume: Number(sfxVol.value) });
+      syncAudioSettingsUI(next);
+    });
+
+    audioControls.push({ toggle, commVol, sfxVol, note });
+  });
+
+  syncAudioSettingsUI(initialSettings);
+}
+
+export function syncAudioSettingsUI(settings, voiceStatus) {
+  audioControls.forEach((ctrl) => {
+    ctrl.toggle.classList.toggle('dd-on', settings.enabled);
+    ctrl.toggle.textContent = settings.enabled ? 'ACTIVÉ' : 'COUPÉ';
+    ctrl.commVol.value = String(settings.volume);
+    ctrl.sfxVol.value = String(settings.sfxVolume);
+    if (voiceStatus) {
+      ctrl.note.textContent = !voiceStatus.supported
+        ? 'Synthèse vocale non supportée par ce navigateur.'
+        : !voiceStatus.hasFrenchVoice
+          ? 'Aucune voix française détectée (effets sonores actifs).'
+          : 'Voix : ' + voiceStatus.voiceName;
+    }
+  });
 }
