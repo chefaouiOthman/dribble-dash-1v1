@@ -22,7 +22,7 @@ const STATE_CLIPS = {
   run: 'run',
   sprint: 'sprint',
   jump: 'jump',
-  kick: 'kick',
+  kick: 'strikeJog',
   strikeJog: 'strikeJog',
   sideStep: 'sideStep',
   trip: 'trip',

@@ -21,15 +21,14 @@ export const CLIP_DEFINITIONS = {
   run: { file: 'Running.fbx', loop: true, speed: 1.1, fade: 0.16 },
   sprint: { file: 'Sprint.fbx', loop: true, speed: 1.0, fade: 0.16 },
   jump: { file: 'Jump.fbx', once: true, speed: 1.15, fade: 0.1, trimEnd: 0.93 },
-  // Standing strike (used when the player has stopped to aim > 1s).
-  kick: { file: 'Kick Soccerball.fbx', once: true, speed: 1.35, fade: 0.08, contactTime: 0.28, trimEnd: 0.57 },
-  // Running strike (used when shooting in stride).
-  // Measured via tools/analyze-clips.mjs: RightFoot peak forward velocity
-  // (vz = 1038.9 cm/s, y = 22.9 cm, z = 70.1 cm) occurs at t = 0.42s.
-  // Starting at 0.14s at 1.30x gives (0.42 - 0.14) / 1.30 = 0.215s release latency.
+  // Running strike (used for every player shot so the full wind-up and strike
+  // are clearly visible). Measured via tools/analyze-clips.mjs: RightFoot peak
+  // forward velocity (vz = 1038.9 cm/s, y = 22.9 cm, z = 70.1 cm) occurs at t = 0.42s.
+  // Starting at 0.04s at 1.15x preserves the wind-up and gives 0.33s release latency,
+  // with full follow-through up to 1.25s.
   strikeJog: {
-    file: 'Strike Foward Jog.fbx', once: true, speed: 1.30, fade: 0.08,
-    startTime: 0.14, contactTime: 0.42, trimEnd: 0.98
+    file: 'Strike Foward Jog.fbx', once: true, speed: 1.15, fade: 0.08,
+    startTime: 0.04, contactTime: 0.42, trimEnd: 1.25
   },
   sideStep: { file: 'Side Step.fbx', once: true, directional: true, speed: 1.25, fade: 0.12, trimEnd: 1.32 },
   trip: { file: 'Soccer Trip.fbx', once: true, speed: 1.0, fade: 0.1, trimEnd: 1.42 },

@@ -49,10 +49,22 @@ export const CAMERA_LOOK_AT = { x: 0, y: 1, z: -8 };
 export const BASE_FOV = 60;
 
 // ----- Match -----
-export const MATCH_SECONDS = 180;       // real seconds for 90 minutes
+export const MATCH_SECONDS = 180;       // real seconds for 90 minutes (default)
 export const MATCH_MINUTES = 90;
 export const MAX_CONCEDED = 3;
 export const DUELS_PER_ATTACK = 2;
+export const MATCH_DURATION_PRESETS = [
+  { id: 'fast', label: "1'30 RAPIDE", seconds: 90 },
+  { id: 'standard', label: "3'00 STANDARD", seconds: 180 },
+  { id: 'long', label: "5'00 PROLONG.", seconds: 300 }
+];
+export const DIFFICULTY_PRESETS = [
+  { id: 'amateur', label: 'AMATEUR', speedScale: 0.85, reticleScale: 0.85, scoreScale: 0.9 },
+  { id: 'pro', label: 'PRO', speedScale: 1.0, reticleScale: 1.0, scoreScale: 1.0 },
+  { id: 'legend', label: 'LÉGENDE', speedScale: 1.18, reticleScale: 1.15, scoreScale: 1.25 }
+];
+export const TOP_CORNER_BONUS = 200;
+export const ON_FIRE_COMBO = 4;
 
 // ----- Goal (real dimensions, 1 unit = 1 meter) -----
 export const GOAL_WIDTH = 7.32;

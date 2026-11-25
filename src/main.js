@@ -9,7 +9,8 @@ import {
   setPlayerMode, resetPlayer, knockDownPlayer, consumePlayerEvents
 } from './player.js';
 import {
-  createBall, updateBall, launchBall, releaseBall, attachBall, consumeBallArrival
+  createBall, updateBall, launchBall, releaseBall, attachBall, consumeBallArrival,
+  setBallOnFire
 } from './ball.js';
 import {
   createGoal, showGoal, hideGoal, updateGoal, updateReticle, setReticleVisible,
@@ -22,8 +23,8 @@ import {
 } from './defender.js';
 import {
   createUI, updateHUD, showPopup, showBanner, flashScreen, setAimHint,
-  hideOverlay, showPause, showGameOver, setMuteIndicator, setEnvironment,
-  setLoadingProgress, initAudioSettingsUI, syncAudioSettingsUI
+  hideOverlay, showPause, showGameOver, showMenu, setMuteIndicator, setEnvironment,
+  setMatchOptions, setLoadingProgress, initAudioSettingsUI, syncAudioSettingsUI
 } from './ui.js';
 import { playSound, toggleMute, isMuted, setSfxVolume, setCrowdDuck } from './audio.js';
 import { createCommentaryManager } from './commentary.js';
@@ -37,7 +38,9 @@ import {
   SCORE_PER_DUEL, BONUS_CLOSE_CALL, BONUS_JUMP, GOAL_POINTS, COMBO_STEP, MAX_COMBO_STEPS,
   CLOSE_CALL_GAP, SLOW_MO_DURATION, SLOW_MO_SCALE, GAME_OVER_DELAY,
   MATCH_SECONDS, MATCH_MINUTES, MAX_CONCEDED, DUELS_PER_ATTACK,
-  KICK_DELAY, AIM_TIME_LIMIT, GOAL_DISTANCE, DEFAULT_ENVIRONMENT, STORAGE_KEY_BEST_SCORE
+  KICK_DELAY, AIM_TIME_LIMIT, GOAL_DISTANCE, GOAL_WIDTH, GOAL_HEIGHT,
+  DEFAULT_ENVIRONMENT, STORAGE_KEY_BEST_SCORE,
+  MATCH_DURATION_PRESETS, DIFFICULTY_PRESETS, TOP_CORNER_BONUS, ON_FIRE_COMBO
 } from './config.js';
 
 const DEV_STATS = new URLSearchParams(window.location.search).get('stats') === '1';
@@ -109,6 +112,13 @@ let finalReason = 'time';
 let elapsed = 0;
 let selectedEnvironment = DEFAULT_ENVIRONMENT;
 let matchEnvironment = DEFAULT_ENVIRONMENT;
+let selectedDurationIndex = 1;
+let selectedDifficultyIndex = 1;
+let matchDurationSeconds = MATCH_SECONDS;
+let shots = 0;
+let shotsOnTarget = 0;
+let topCorners = 0;
+let bestMultiplier = 1;
 let gameAssets = null;
 let lastMinuteCommented = false;
 const commentary = createCommentaryManager({
@@ -123,12 +133,26 @@ function getMultiplier() {
 }
 
 function getMinute() {
-  return Math.min(MATCH_MINUTES, Math.floor((matchTime / MATCH_SECONDS) * MATCH_MINUTES));
+  return Math.min(MATCH_MINUTES, Math.floor((matchTime / matchDurationSeconds) * MATCH_MINUTES));
+}
+
+function getDifficulty() {
+  return DIFFICULTY_PRESETS[selectedDifficultyIndex] || DIFFICULTY_PRESETS[1];
+}
+
+function getPhaseHUDLabel() {
+  if (phase === PHASE.GOAL_APPROACH) return 'APPROCHE DU BUT';
+  if (phase === PHASE.AIM || phase === PHASE.SHOT) return '🎯 FACE-À-FACE';
+  if (phase === PHASE.CONCEDED) return '⚠️ CONTRE-ATTAQUE';
+  return 'DUEL ' + Math.min(DUELS_PER_ATTACK, attackDuels + 1) + ' / ' + DUELS_PER_ATTACK;
 }
 
 function refreshHUD() {
   const minute = getMinute();
   lastHudMinute = minute;
+  const multiplier = getMultiplier();
+  if (multiplier > bestMultiplier) bestMultiplier = multiplier;
+  setBallOnFire(ball, combo >= ON_FIRE_COMBO);
   // In the menu the HUD previews the environment that is about to be played;
   // during and after a match it shows the fixed theme chosen at kick-off.
   const isLive = gameState === GAME_STATE.PLAYING
@@ -136,18 +160,22 @@ function refreshHUD() {
     || gameState === GAME_STATE.GAME_OVER;
   updateHUD({
     score, goals, conceded, minute, combo,
-    multiplier: getMultiplier(),
+    multiplier,
     level,
-    themeName: getThemeName(isLive ? matchEnvironment : selectedEnvironment)
+    themeName: getThemeName(isLive ? matchEnvironment : selectedEnvironment),
+    phaseLabel: getPhaseHUDLabel(),
+    isShotPhase: phase === PHASE.GOAL_APPROACH || phase === PHASE.AIM || phase === PHASE.SHOT
   });
 }
 
 // ---------- Match flow ----------
 function startGame() {
   if (gameState === GAME_STATE.PLAYING || gameState === GAME_STATE.PAUSED) return;
+  const diff = getDifficulty();
+  matchDurationSeconds = (MATCH_DURATION_PRESETS[selectedDurationIndex] || MATCH_DURATION_PRESETS[1]).seconds;
   resetPlayer(player);
   attachBall(ball);
-  resetDefender(defender);
+  resetDefender(defender, diff.speedScale);
   hideGoal(goal);
   defender.group.visible = true;
   matchTime = 0;
@@ -156,6 +184,10 @@ function startGame() {
   conceded = 0;
   duels = 0;
   combo = 0;
+  shots = 0;
+  shotsOnTarget = 0;
+  topCorners = 0;
+  bestMultiplier = 1;
   level = 1;
   attackDuels = 0;
   phase = PHASE.DUEL;
@@ -193,13 +225,28 @@ function resumeGame() {
   gameState = GAME_STATE.PLAYING;
 }
 
+function returnToMenu() {
+  commentary.cancel();
+  hideGoal(goal);
+  defender.group.visible = false;
+  resetPlayer(player);
+  attachBall(ball);
+  setAimHint(false, 0, '');
+  setReticleVisible(goal, false);
+  setBallOnFire(ball, false);
+  gameState = GAME_STATE.MENU;
+  setTheme(selectedEnvironment, true);
+  refreshHUD();
+  showMenu();
+}
+
 // New attack: everything is back to its starting position.
 function kickoff() {
   hideGoal(goal);
   attachBall(ball);
   resetPlayer(player);
   attackDuels = 0;
-  nextDefender(defender, level);
+  nextDefender(defender, level, getDifficulty().speedScale);
   defender.group.visible = true;
   lastDodge = null;
   shot = null;
@@ -286,7 +333,7 @@ function awardDuel() {
   }
 
   const previousLevel = level;
-  const points = Math.round((SCORE_PER_DUEL + bonus) * getMultiplier());
+  const points = Math.round((SCORE_PER_DUEL + bonus) * getMultiplier() * getDifficulty().scoreScale);
   score += points;
   duels += 1;
   attackDuels += 1;
@@ -326,13 +373,14 @@ function startAim() {
 
 function takeShot() {
   shot = planShot(goal, getPlayerKickOrigin(player), level);
+  shots += 1;
   setReticleVisible(goal, false);
   setAimHint(false, 0, '');
-  // Running strike when shooting in stride (quick aim <= 1.0s); standing kick after a pause.
-  const shotState = aimTime <= 1.0 ? 'strikeJog' : 'kick';
-  setPlayerMode(player, 'KICK', shotState);
+  // Always use Strike Foward Jog so the running strike wind-up and follow-through
+  // are clearly visible on every shot.
+  setPlayerMode(player, 'KICK', 'strikeJog');
   launchTimer = isRigReady(player.actor)
-    ? getClipContactDelay(gameAssets, shotState, KICK_DELAY)
+    ? getClipContactDelay(gameAssets, 'strikeJog', KICK_DELAY)
     : KICK_DELAY;
   phase = PHASE.SHOT;
 }
@@ -352,22 +400,28 @@ function resolveShot(outcome) {
   if (outcome === 'GOAL') {
     combo += 1;
     goals += 1;
-    const points = Math.round(GOAL_POINTS * getMultiplier());
+    shotsOnTarget += 1;
+    const isTopCorner = Math.abs(shot.targetLocal.x) >= GOAL_WIDTH * 0.30
+      && shot.targetLocal.y >= GOAL_HEIGHT * 0.62;
+    const basePoints = GOAL_POINTS + (isTopCorner ? TOP_CORNER_BONUS : 0);
+    const points = Math.round(basePoints * getMultiplier() * getDifficulty().scoreScale);
     score += points;
-    triggerNetImpact(goal, shot.targetLocal.x, shot.targetLocal.y, 1.15);
+    if (isTopCorner) topCorners += 1;
+    triggerNetImpact(goal, shot.targetLocal.x, shot.targetLocal.y, isTopCorner ? 1.35 : 1.15);
     playSound('net');
     playSound('goal');
     playGoalEffect();
     flashScreen('win');
-    showBanner('BUUUUT !', 'goal');
-    showPopup('+' + points, 'perfect');
+    showBanner(isTopCorner ? 'LUCARNE !!' : 'BUUUUT !', 'goal');
+    showPopup((isTopCorner ? 'LUCARNE ! +' : '+') + points, 'perfect');
     commentary.trigger('goal');
-    slowMoTimer = 1.1;
-    shakeAmount = 0.35;
+    slowMoTimer = isTopCorner ? 1.35 : 1.1;
+    shakeAmount = isTopCorner ? 0.5 : 0.35;
     setPlayerMode(player, 'CELEBRATE');
     phaseTimer = 3.0;
   } else if (outcome === 'SAVE') {
     combo = 0;
+    shotsOnTarget += 1;
     playSound('save');
     const caught = shot.keeper && shot.keeper.mode === 'CATCH';
     showBanner(caught ? 'CAPTURE DU GARDIEN !' : 'ARRÊT DU GARDIEN !', 'save');
@@ -403,7 +457,7 @@ function resolveShot(outcome) {
 }
 
 function finishAttack() {
-  if (matchTime >= MATCH_SECONDS) {
+  if (matchTime >= matchDurationSeconds) {
     finishMatch('time');
     return;
   }
@@ -472,13 +526,13 @@ function updatePlaying(delta, realDelta) {
     if (defenderEvents.passed) awardDuel();
     if (isDefenderOffscreen(defender)) {
       if (attackDuels >= DUELS_PER_ATTACK) beginGoalApproach();
-      else nextDefender(defender, level);
+      else nextDefender(defender, level, getDifficulty().speedScale);
     }
   } else if (phase === PHASE.GOAL_APPROACH) {
     if (goal.arrived) startAim();
   } else if (phase === PHASE.AIM) {
     aimTime += realDelta;
-    updateReticle(goal, aimTime, level);
+    updateReticle(goal, aimTime, level, getDifficulty().reticleScale);
     setAimHint(true, 1 - aimTime / AIM_TIME_LIMIT, 'ESPACE / CLIC : TIRER');
     if (playerEvents.shoot || aimTime >= AIM_TIME_LIMIT) takeShot();
   } else if (phase === PHASE.SHOT) {
@@ -497,12 +551,12 @@ function updatePlaying(delta, realDelta) {
     phaseTimer -= realDelta;
     if (phaseTimer <= 0) {
       if (conceded >= MAX_CONCEDED) finishMatch('crush');
-      else if (matchTime >= MATCH_SECONDS) finishMatch('time');
+      else if (matchTime >= matchDurationSeconds) finishMatch('time');
       else kickoff();
     }
   }
 
-  if (matchTime >= MATCH_SECONDS && (phase === PHASE.DUEL || phase === PHASE.GOAL_APPROACH)) {
+  if (matchTime >= matchDurationSeconds && (phase === PHASE.DUEL || phase === PHASE.GOAL_APPROACH)) {
     finishMatch('time');
   }
 }
@@ -521,6 +575,7 @@ function updateGameOver(delta, realDelta) {
       const result = goals > conceded ? 'win' : goals === conceded ? 'draw' : 'loss';
       showGameOver({
         score, goals, conceded, duels, result,
+        shots, shotsOnTarget, topCorners, bestMultiplier,
         reasonText: finalReason === 'crush' ? '3 BUTS ENCAISSÉS' : 'COUP DE SIFFLET FINAL'
       });
     }
@@ -553,18 +608,29 @@ function updateCamera(realDelta) {
     lookZ = -6;
     desiredFov = BASE_FOV;
   } else if (isShotCamera) {
-    desiredX = playerX * 0.4;
-    desiredY = 2.3;
-    desiredZ = 5.6;
-    if (phase === PHASE.SHOT && ball.mode !== 'DRIBBLE') {
-      const weight = 0.7;
-      lookX = ball.mesh.position.x * weight;
-      lookY = 1.3 * (1 - weight) + ball.mesh.position.y * weight;
-      lookZ = goalZ * (1 - weight) + ball.mesh.position.z * weight;
+    if (phase === PHASE.SHOT && shot && !shot.launched) {
+      // 3/4 side broadcast angle during the strike wind-up so Strike Foward Jog
+      // and foot-ball contact are framed clearly.
+      desiredX = playerX * 0.6 + 1.85;
+      desiredY = 1.75;
+      desiredZ = 4.35;
+      lookX = playerX * 0.5;
+      lookY = 0.95;
+      lookZ = -6;
     } else {
-      lookX = 0;
-      lookY = 1.3;
-      lookZ = goalZ;
+      desiredX = playerX * 0.4;
+      desiredY = 2.3;
+      desiredZ = 5.6;
+      if (phase === PHASE.SHOT && ball.mode !== 'DRIBBLE') {
+        const weight = 0.7;
+        lookX = ball.mesh.position.x * weight;
+        lookY = 1.3 * (1 - weight) + ball.mesh.position.y * weight;
+        lookZ = goalZ * (1 - weight) + ball.mesh.position.z * weight;
+      } else {
+        lookX = 0;
+        lookY = 1.3;
+        lookZ = goalZ;
+      }
     }
     desiredFov = 48 + (isSlow ? 6 : 0);
   } else {
@@ -598,6 +664,7 @@ function updateCamera(realDelta) {
 createUI({
   onStart: startGame,
   onResume: resumeGame,
+  onMenu: returnToMenu,
   onEnvironmentSelect: (index) => {
     selectedEnvironment = index;
     setTheme(index);
@@ -606,6 +673,18 @@ createUI({
   }
 });
 setEnvironment(selectedEnvironment, getEnvironmentNames());
+setMatchOptions(
+  selectedDurationIndex,
+  selectedDifficultyIndex,
+  (idx) => {
+    selectedDurationIndex = idx;
+    setMatchOptions(selectedDurationIndex, selectedDifficultyIndex);
+  },
+  (idx) => {
+    selectedDifficultyIndex = idx;
+    setMatchOptions(selectedDurationIndex, selectedDifficultyIndex);
+  }
+);
 setTheme(selectedEnvironment, true);
 refreshHUD();
 setMuteIndicator(isMuted());

@@ -1,27 +1,33 @@
-import { STORAGE_KEY_BEST_SCORE } from './config.js';
+import {
+  STORAGE_KEY_BEST_SCORE, MATCH_DURATION_PRESETS, DIFFICULTY_PRESETS, ON_FIRE_COMBO
+} from './config.js';
 
 const STYLE = `
 #dd-root{position:fixed;inset:0;pointer-events:none;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#fff;user-select:none;-webkit-user-select:none;overflow:hidden}
 #dd-root *{box-sizing:border-box}
-.dd-card{background:linear-gradient(180deg,rgba(14,24,52,.72),rgba(6,12,30,.72));border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 16px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12)}
+.dd-card{background:linear-gradient(180deg,rgba(14,24,52,.78),rgba(6,12,30,.78));border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 12px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12)}
 #dd-hud{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:14px 18px;transition:opacity .3s}
 #dd-hud.dd-hidden{opacity:0}
 .dd-label{font-size:11px;letter-spacing:.2em;opacity:.7;font-weight:700}
 .dd-big{font-size:34px;font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums}
 .dd-mid{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
 .dd-small{font-size:12px;opacity:.8;margin-top:2px}
-.dd-chip{margin-top:6px;font-size:11px;font-weight:700;letter-spacing:.12em;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.14);display:inline-block}
+.dd-chip{margin-top:6px;font-size:11px;font-weight:700;letter-spacing:.12em;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.14);display:inline-block}
 .dd-right{text-align:right}
-#dd-board{position:absolute;left:50%;top:12px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:6px 14px}
+#dd-board-wrap{position:absolute;left:50%;top:12px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+#dd-board{display:flex;align-items:center;gap:12px;padding:6px 14px}
 .dd-team{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.12em;font-size:13px}
 .dd-team i{width:10px;height:26px;border-radius:3px;display:block}
 .dd-home i{background:#e53935}.dd-away i{background:#1e88e5}
 .dd-goals{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;display:flex;gap:10px;align-items:center}
 .dd-goals em{opacity:.5;font-style:normal}
 .dd-clock{font-size:14px;font-weight:800;background:rgba(255,255,255,.14);border-radius:8px;padding:3px 9px;min-width:50px;text-align:center}
-#dd-combo-wrap{position:absolute;left:50%;top:76px;transform:translateX(-50%)}
-#dd-combo{padding:5px 16px;border-radius:999px;font-weight:900;letter-spacing:.1em;font-size:15px;background:linear-gradient(90deg,#ff9100,#ffd600);color:#2b1a00;opacity:0;transform:scale(.8);transition:opacity .2s,transform .2s;box-shadow:0 0 24px rgba(255,200,0,.55);white-space:nowrap}
+#dd-phase-pill{font-size:10px;font-weight:800;letter-spacing:.18em;padding:3px 12px;border-radius:999px;background:rgba(6,12,30,.72);border:1px solid rgba(255,255,255,.16);color:#cfd8dc;backdrop-filter:blur(8px)}
+#dd-phase-pill.dd-shot-ready{color:#ffd600;border-color:rgba(255,214,0,.45)}
+#dd-combo-wrap{position:absolute;left:50%;top:102px;transform:translateX(-50%)}
+#dd-combo{padding:5px 16px;border-radius:999px;font-weight:900;letter-spacing:.1em;font-size:14px;background:linear-gradient(90deg,#ff9100,#ffd600);color:#2b1a00;opacity:0;transform:scale(.8);transition:opacity .2s,transform .2s;box-shadow:0 0 24px rgba(255,200,0,.55);white-space:nowrap}
 #dd-combo.dd-active{opacity:1;transform:scale(1)}
+#dd-combo.dd-fire{background:linear-gradient(90deg,#ff1744,#ff9100,#ffd600);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5);box-shadow:0 0 30px rgba(255,61,0,.75)}
 #dd-bottom{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;font-size:12px;opacity:.75}
 #dd-aim{position:absolute;left:50%;bottom:50px;transform:translateX(-50%);text-align:center;opacity:0;transition:opacity .25s}
 #dd-aim.dd-on{opacity:1}
@@ -45,53 +51,73 @@ const STYLE = `
 .dd-flash-hit{background:radial-gradient(ellipse at center,rgba(255,0,0,0) 30%,rgba(255,0,0,.65))}
 .dd-flash-win{background:radial-gradient(ellipse at center,rgba(255,230,120,0) 35%,rgba(255,220,100,.5))}
 @keyframes dd-flash{0%{opacity:1}100%{opacity:0}}
-.dd-screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(5,10,25,.35),rgba(5,10,25,.82));opacity:0;pointer-events:none;transition:opacity .35s;cursor:pointer}
+.dd-screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;background:radial-gradient(ellipse at center,rgba(6,14,34,.42),rgba(3,8,20,.88));opacity:0;pointer-events:none;transition:opacity .35s;overflow-y:auto}
 .dd-screen.dd-visible{opacity:1;pointer-events:auto}
-.dd-panel{text-align:center;padding:30px 40px;max-width:min(92vw,600px)}
-.dd-kicker{font-size:12px;letter-spacing:.35em;opacity:.75;font-weight:700}
-.dd-title{margin:8px 0 6px;font-size:clamp(40px,9vw,84px);line-height:.95;font-weight:900;font-style:italic;letter-spacing:.02em;text-shadow:0 6px 30px rgba(0,0,0,.5)}
+.dd-lobby{width:min(94vw,920px);padding:26px 28px;border-radius:22px;background:linear-gradient(160deg,rgba(14,26,58,.86),rgba(6,12,30,.92));border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 24px 70px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.14)}
+.dd-lobby-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.dd-kicker{font-size:11px;letter-spacing:.28em;color:#ffd600;font-weight:800}
+.dd-title{margin:4px 0 0;font-size:clamp(30px,5vw,52px);line-height:.96;font-weight:900;font-style:italic;letter-spacing:.02em;text-shadow:0 6px 24px rgba(0,0,0,.5)}
 .dd-title span{background:linear-gradient(90deg,#ffd600,#ff6d00);-webkit-background-clip:text;background-clip:text;color:transparent}
-.dd-title small{display:block;font-size:.38em;letter-spacing:.5em;font-style:normal;opacity:.9}
-.dd-result{font-size:clamp(34px,7vw,64px)}
-.dd-win{color:#00e676}.dd-draw{color:#ffd600}.dd-loss{color:#ff5252}
-.dd-tagline{opacity:.85;margin:10px 0 18px;line-height:1.4}
-.dd-controls{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 0 20px;text-align:left}
-.dd-controls div{background:rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;font-size:13px}
+.dd-record-pill{padding:10px 16px;border-radius:14px;background:rgba(255,214,0,.1);border:1px solid rgba(255,214,0,.35);text-align:right;flex-shrink:0}
+.dd-record-pill small{display:block;font-size:10px;letter-spacing:.2em;color:#ffd600;font-weight:800}
+.dd-record-pill b{font-size:26px;font-weight:900;font-variant-numeric:tabular-nums}
+.dd-lobby-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:18px;margin-top:18px}
+.dd-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px}
+.dd-box-title{font-size:11px;letter-spacing:.22em;font-weight:800;opacity:.72;margin-bottom:10px}
+.dd-seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.dd-seg:last-child{margin-bottom:0}
+.dd-seg button{pointer-events:auto;cursor:pointer;flex:1;min-width:92px;font:inherit;font-weight:800;font-size:12px;letter-spacing:.08em;padding:9px 10px;border-radius:10px;color:#e3ecff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);transition:transform .12s,background .15s,border-color .15s}
+.dd-seg button:hover{transform:translateY(-1px);background:rgba(255,255,255,.14)}
+.dd-seg button.dd-active{color:#201300;border-color:transparent;background:linear-gradient(90deg,#ffd600,#ff9100);box-shadow:0 6px 18px rgba(255,160,0,.4)}
+.dd-controls{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.dd-controls div{background:rgba(255,255,255,.06);border-radius:9px;padding:7px 9px;font-size:12px;line-height:1.35}
 .dd-controls b{color:#ffd600}
-.dd-button{display:inline-block;padding:14px 34px;border-radius:999px;font-weight:900;letter-spacing:.12em;font-size:18px;color:#1d1200;background:linear-gradient(90deg,#ffd600,#ff9100);box-shadow:0 10px 30px rgba(255,160,0,.45);animation:dd-pulse 1.4s ease-in-out infinite}
-.dd-button span{font-size:11px;opacity:.7;margin-left:8px}
-@keyframes dd-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-.dd-best{margin-top:14px;font-size:14px;opacity:.85}
-.dd-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 14px}
-.dd-stat{background:rgba(255,255,255,.1);border-radius:12px;padding:10px 6px}
-.dd-stat b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.dd-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.dd-badge{font-size:10px;font-weight:700;letter-spacing:.08em;padding:4px 9px;border-radius:999px;background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.28);color:#80d8ff}
+.dd-lobby-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap}
+.dd-tagline{margin:0;font-size:13px;opacity:.8;max-width:460px;line-height:1.4}
+.dd-btn{pointer-events:auto;cursor:pointer;border:none;font:inherit;display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:999px;font-weight:900;letter-spacing:.12em;font-size:17px;color:#1d1200;background:linear-gradient(90deg,#ffd600,#ff9100);box-shadow:0 10px 28px rgba(255,160,0,.45);transition:transform .14s,box-shadow .14s}
+.dd-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 14px 34px rgba(255,160,0,.55)}
+.dd-btn span{font-size:11px;opacity:.7}
+.dd-btn-sec{pointer-events:auto;cursor:pointer;font:inherit;padding:13px 22px;border-radius:999px;font-weight:800;letter-spacing:.1em;font-size:14px;color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24)}
+.dd-btn-sec:hover{background:rgba(255,255,255,.18)}
+.dd-panel{text-align:center;padding:28px 34px;max-width:min(92vw,620px);border-radius:22px;background:linear-gradient(160deg,rgba(14,26,58,.88),rgba(6,12,30,.94));border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(14px);box-shadow:0 24px 64px rgba(0,0,0,.6)}
+.dd-result{font-size:clamp(32px,6.5vw,58px);margin-bottom:4px}
+.dd-win{color:#00e676}.dd-draw{color:#ffd600}.dd-loss{color:#ff5252}
+.dd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 14px}
+.dd-stat{background:rgba(255,255,255,.08);border-radius:12px;padding:10px 8px}
+.dd-stat b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
 .dd-stat small{font-size:10px;letter-spacing:.12em;opacity:.7}
-.dd-stars{font-size:30px;letter-spacing:.2em;color:#ffd600;margin:4px 0 16px}
+.dd-stars{font-size:28px;letter-spacing:.2em;color:#ffd600;margin:4px 0 16px}
 .dd-record{display:none;margin:6px 0;font-weight:900;letter-spacing:.2em;color:#ffd600;text-shadow:0 0 18px rgba(255,200,0,.8)}
-.dd-env{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 18px}
-.dd-env button{pointer-events:auto;cursor:pointer;font:inherit;font-weight:800;font-size:12px;letter-spacing:.12em;padding:9px 15px;border-radius:999px;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.24);transition:transform .15s,box-shadow .15s,background .15s}
-.dd-env button:hover{transform:translateY(-1px);background:rgba(255,255,255,.16)}
-.dd-env button.dd-active{color:#201300;border-color:transparent;background:linear-gradient(90deg,#ffd600,#ff9100);box-shadow:0 6px 20px rgba(255,160,0,.45)}
-.dd-env-label{margin:0 0 8px;font-size:11px;letter-spacing:.28em;font-weight:700;opacity:.7}
+.dd-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 #dd-loading{position:absolute;left:50%;bottom:46px;transform:translateX(-50%);width:min(86vw,320px);padding:9px 14px;opacity:0;transition:opacity .3s;pointer-events:none}
 #dd-loading.dd-on{opacity:1}
 #dd-loading-label{font-size:10px;letter-spacing:.18em;font-weight:700;opacity:.8;margin-bottom:6px;text-align:center}
-.dd-settings{margin:14px auto 16px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);text-align:left;max-width:400px}
-.dd-settings-title{font-size:11px;letter-spacing:.2em;font-weight:800;opacity:.75;margin-bottom:8px;text-align:center}
-.dd-setting-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:7px 0;font-size:13px}
+.dd-settings{text-align:left}
+.dd-setting-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:13px}
 .dd-setting-row input[type=range]{width:130px;accent-color:#ffd600;cursor:pointer}
 .dd-toggle{cursor:pointer;font:inherit;font-weight:800;font-size:11px;letter-spacing:.1em;padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff}
 .dd-toggle.dd-on{background:linear-gradient(90deg,#ffd600,#ff9100);color:#201300;border-color:transparent}
-.dd-voice-note{font-size:11px;opacity:.7;margin-top:6px;text-align:center}
+.dd-voice-note{font-size:11px;opacity:.72;margin-top:8px}
+@media (max-width: 760px) {
+  .dd-lobby{padding:18px 16px}
+  .dd-lobby-grid{grid-template-columns:1fr;gap:12px}
+  .dd-lobby-head{flex-direction:column;align-items:flex-start}
+  .dd-record-pill{text-align:left}
+  .dd-lobby-foot{flex-direction:column;align-items:stretch}
+  .dd-btn{justify-content:center}
+}
 @media (max-width: 680px) {
   #dd-hud{padding:8px 10px}
   .dd-card{padding:6px 10px;border-radius:10px}
   .dd-big{font-size:24px}
   .dd-mid{font-size:18px}
-  #dd-board{top:74px;padding:4px 10px;gap:8px}
+  #dd-board-wrap{top:74px}
+  #dd-board{padding:4px 10px;gap:8px}
   .dd-goals{font-size:22px;gap:6px}
   .dd-team{font-size:11px}
-  #dd-combo-wrap{top:118px}
+  #dd-combo-wrap{top:138px}
   .dd-panel{padding:20px 18px}
   .dd-controls{grid-template-columns:1fr;gap:6px}
   .dd-stats{grid-template-columns:repeat(2,1fr)}
@@ -106,11 +132,14 @@ const TEMPLATE = `
     <div class="dd-big" id="dd-score">0</div>
     <div class="dd-chip" id="dd-level">NIVEAU 1</div>
   </div>
-  <div id="dd-board" class="dd-card">
-    <div class="dd-team dd-home"><i></i><b>VOUS</b></div>
-    <div class="dd-goals"><span id="dd-goals">0</span><em>-</em><span id="dd-conceded">0</span></div>
-    <div class="dd-team dd-away"><b>ADV</b><i></i></div>
-    <div class="dd-clock" id="dd-clock">0'</div>
+  <div id="dd-board-wrap">
+    <div id="dd-board" class="dd-card">
+      <div class="dd-team dd-home"><i></i><b>VOUS</b></div>
+      <div class="dd-goals"><span id="dd-goals">0</span><em>-</em><span id="dd-conceded">0</span></div>
+      <div class="dd-team dd-away"><b>ADV</b><i></i></div>
+      <div class="dd-clock" id="dd-clock">0'</div>
+    </div>
+    <div id="dd-phase-pill">DUEL 1 / 2</div>
   </div>
   <div class="dd-card dd-right">
     <div class="dd-label">RECORD</div>
@@ -131,21 +160,46 @@ const TEMPLATE = `
   <div class="dd-bar"><div id="dd-loading-fill"></div></div>
 </div>
 <div class="dd-screen dd-visible" id="dd-menu">
-  <div class="dd-panel">
-    <div class="dd-kicker">PROJET WEBGL · THREE.JS</div>
-    <h1 class="dd-title">DRIBBLE <span>DASH</span><small>1 v 1</small></h1>
-    <p class="dd-tagline">Dribble les défenseurs, déjoue le gardien et marque plus de buts que l'adversaire en 90 minutes.</p>
-    <div class="dd-controls">
-      <div><b>← →</b> ou <b>Q D</b> : changer de couloir</div>
-      <div><b>ESPACE</b> / <b>↑</b> : sauter le tacle</div>
-      <div><b>Face au but</b> : vise avec le réticule, <b>ESPACE</b> ou <b>CLIC</b> pour tirer</div>
-      <div><b>3 buts encaissés</b> = match perdu</div>
+  <div class="dd-lobby">
+    <div class="dd-lobby-head">
+      <div>
+        <div class="dd-kicker">FEUILLE DE MATCH · WEBGL THREE.JS</div>
+        <h1 class="dd-title">DRIBBLE <span>DASH</span> 1v1</h1>
+      </div>
+      <div class="dd-record-pill">
+        <small>RECORD PERSONNEL</small>
+        <b id="dd-menu-best">0</b>
+      </div>
     </div>
-    <div class="dd-env-label">AMBIANCE DU MATCH (FIXE PENDANT 90 MINUTES)</div>
-    <div class="dd-env" id="dd-env"></div>
-    <div class="dd-settings" id="dd-menu-settings"></div>
-    <div class="dd-button">COUP D'ENVOI <span>ENTRÉE</span></div>
-    <div class="dd-best">Record : <b id="dd-menu-best">0</b></div>
+    <div class="dd-lobby-grid">
+      <div class="dd-box">
+        <div class="dd-box-title">AMBIANCE DU STADE (FIXE PENDANT LE MATCH)</div>
+        <div class="dd-seg" id="dd-env"></div>
+        <div class="dd-box-title">DURÉE DU MATCH</div>
+        <div class="dd-seg" id="dd-duration"></div>
+        <div class="dd-box-title">NIVEAU DE DIFFICULTÉ</div>
+        <div class="dd-seg" id="dd-difficulty"></div>
+      </div>
+      <div class="dd-box">
+        <div class="dd-box-title">STUDIO AUDIO & COMMENTATEUR</div>
+        <div class="dd-settings" id="dd-menu-settings"></div>
+        <div class="dd-controls">
+          <div><b>← → / Q D</b> : couloir</div>
+          <div><b>ESPACE / ↑</b> : saut & tir</div>
+          <div><b>Lucarne</b> : +200 bonus</div>
+          <div><b>3 buts encaissés</b> = KO</div>
+        </div>
+        <div class="dd-badges">
+          <span class="dd-badge">ANIMATIONS MIXAMO</span>
+          <span class="dd-badge">COMMENTATEUR FR</span>
+          <span class="dd-badge">MODE EN FEU</span>
+        </div>
+      </div>
+    </div>
+    <div class="dd-lobby-foot">
+      <p class="dd-tagline">Efface les deux défenseurs, ajuste la lucarne face au gardien et enflamme le stade !</p>
+      <button type="button" class="dd-btn" id="dd-start-btn">COUP D'ENVOI <span>ENTRÉE</span></button>
+    </div>
   </div>
 </div>
 <div class="dd-screen" id="dd-gameover">
@@ -155,20 +209,31 @@ const TEMPLATE = `
     <div class="dd-record" id="dd-record">★ NOUVEAU RECORD ★</div>
     <div class="dd-stats">
       <div class="dd-stat"><b id="dd-go-score">0</b><small>SCORE</small></div>
-      <div class="dd-stat"><b id="dd-go-goals">0</b><small>BUTS</small></div>
-      <div class="dd-stat"><b id="dd-go-duels">0</b><small>DUELS</small></div>
+      <div class="dd-stat"><b id="dd-go-goals">0</b><small>BUTS (LUCARNES)</small></div>
+      <div class="dd-stat"><b id="dd-go-accuracy">0%</b><small>PRÉCISION TIRS</small></div>
+      <div class="dd-stat"><b id="dd-go-duels">0</b><small>DUELS GAGNÉS</small></div>
+      <div class="dd-stat"><b id="dd-go-combo">x1.00</b><small>MEILLEUR COMBO</small></div>
       <div class="dd-stat"><b id="dd-go-best">0</b><small>RECORD</small></div>
     </div>
     <div class="dd-stars" id="dd-go-stars"></div>
-    <div class="dd-button">REJOUER <span>ENTRÉE</span></div>
+    <div class="dd-actions">
+      <button type="button" class="dd-btn" id="dd-replay-btn">REJOUER <span>ENTRÉE</span></button>
+      <button type="button" class="dd-btn-sec" id="dd-menu-btn">LOBBY MATCH</button>
+    </div>
   </div>
 </div>
 <div class="dd-screen" id="dd-pause">
   <div class="dd-panel">
     <h2 class="dd-title">PAUSE</h2>
-    <p class="dd-tagline">Appuie sur P, Échap ou ENTRÉE pour reprendre.</p>
-    <div class="dd-settings" id="dd-pause-settings"></div>
-    <div class="dd-button">REPRENDRE</div>
+    <p class="dd-tagline" style="margin:10px 0 14px">Appuie sur P, Échap ou ENTRÉE pour reprendre.</p>
+    <div class="dd-box" style="margin-bottom:18px">
+      <div class="dd-box-title">STUDIO AUDIO & COMMENTATEUR</div>
+      <div class="dd-settings" id="dd-pause-settings"></div>
+    </div>
+    <div class="dd-actions">
+      <button type="button" class="dd-btn" id="dd-resume-btn">REPRENDRE</button>
+      <button type="button" class="dd-btn-sec" id="dd-pause-menu-btn">QUITTER AU LOBBY</button>
+    </div>
   </div>
 </div>
 `;
@@ -181,6 +246,8 @@ let uiCallbacks = {};
 const screens = {};
 const refs = {};
 let envButtons = [];
+let durationButtons = [];
+let difficultyButtons = [];
 
 function readBestScore() {
   try {
@@ -205,7 +272,6 @@ function showScreen(name) {
   hudElement.classList.toggle('dd-hidden', name === 'menu');
 }
 
-// Builds every HTML element. callbacks: onStart, onResume.
 export function createUI(callbacks) {
   uiCallbacks = callbacks || {};
   const styleElement = document.createElement('style');
@@ -222,6 +288,7 @@ export function createUI(callbacks) {
   popupLayer = find('#dd-popups');
   ['score', 'level', 'goals', 'conceded', 'clock', 'best', 'theme', 'combo', 'banner', 'sound',
     'aim', 'record'].forEach((name) => { refs[name] = find('#dd-' + name); });
+  refs.phasePill = find('#dd-phase-pill');
   refs.aimText = find('#dd-aim-text');
   refs.aimFill = find('#dd-aim-fill');
   refs.menuBest = find('#dd-menu-best');
@@ -229,18 +296,28 @@ export function createUI(callbacks) {
   refs.loadingFill = find('#dd-loading-fill');
   refs.loadingLabel = find('#dd-loading-label');
   refs.env = find('#dd-env');
+  refs.duration = find('#dd-duration');
+  refs.difficulty = find('#dd-difficulty');
   refs.menuSettings = find('#dd-menu-settings');
   refs.pauseSettings = find('#dd-pause-settings');
-  ['reason', 'result', 'score', 'goals', 'duels', 'best', 'stars'].forEach((name) => {
+  ['reason', 'result', 'score', 'goals', 'accuracy', 'duels', 'combo', 'best', 'stars'].forEach((name) => {
     refs['go' + name] = find('#dd-go-' + name);
   });
   screens.menu = find('#dd-menu');
   screens.gameover = find('#dd-gameover');
   screens.pause = find('#dd-pause');
 
-  screens.menu.addEventListener('click', () => callbacks.onStart());
-  screens.gameover.addEventListener('click', () => callbacks.onStart());
-  screens.pause.addEventListener('click', () => callbacks.onResume());
+  find('#dd-start-btn').addEventListener('click', () => callbacks.onStart());
+  find('#dd-replay-btn').addEventListener('click', () => callbacks.onStart());
+  find('#dd-menu-btn').addEventListener('click', () => {
+    if (typeof callbacks.onMenu === 'function') callbacks.onMenu();
+    else showMenu();
+  });
+  find('#dd-resume-btn').addEventListener('click', () => callbacks.onResume());
+  find('#dd-pause-menu-btn').addEventListener('click', () => {
+    if (typeof callbacks.onMenu === 'function') callbacks.onMenu();
+    else showMenu();
+  });
 
   window.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter' || event.repeat) return;
@@ -259,7 +336,7 @@ export function createUI(callbacks) {
   showScreen('menu');
 }
 
-// stats: { score, goals, conceded, minute, combo, multiplier, level, themeName }
+// stats: { score, goals, conceded, minute, combo, multiplier, level, themeName, phaseLabel, isShotPhase }
 export function updateHUD(stats) {
   refs.score.textContent = String(stats.score);
   refs.goals.textContent = String(stats.goals);
@@ -267,15 +344,20 @@ export function updateHUD(stats) {
   refs.clock.textContent = stats.minute + "'";
   refs.level.textContent = 'NIVEAU ' + stats.level;
   refs.theme.textContent = stats.themeName;
+  if (refs.phasePill && stats.phaseLabel) {
+    refs.phasePill.textContent = stats.phaseLabel;
+    refs.phasePill.classList.toggle('dd-shot-ready', Boolean(stats.isShotPhase));
+  }
   if (stats.combo >= 1) {
-    refs.combo.textContent = 'COMBO x' + stats.multiplier.toFixed(2);
+    const isOnFire = stats.combo >= ON_FIRE_COMBO;
+    refs.combo.textContent = (isOnFire ? '🔥 EN FEU · ' : 'COMBO ') + 'x' + stats.multiplier.toFixed(2);
     refs.combo.classList.add('dd-active');
+    refs.combo.classList.toggle('dd-fire', isOnFire);
   } else {
-    refs.combo.classList.remove('dd-active');
+    refs.combo.classList.remove('dd-active', 'dd-fire');
   }
 }
 
-// kind: good, perfect, jump, danger, level
 export function showPopup(text, kind) {
   const element = document.createElement('div');
   element.className = 'dd-popup dd-popup-' + (kind || 'good');
@@ -284,7 +366,6 @@ export function showPopup(text, kind) {
   setTimeout(() => element.remove(), 1300);
 }
 
-// Big central banner. kind: goal, save, miss, danger, info
 export function showBanner(text, kind) {
   refs.banner.className = '';
   void refs.banner.offsetWidth;
@@ -292,7 +373,6 @@ export function showBanner(text, kind) {
   refs.banner.className = 'dd-banner-show dd-b-' + kind;
 }
 
-// kind: hit, win
 export function flashScreen(kind) {
   const element = document.createElement('div');
   element.className = 'dd-flash dd-flash-' + kind;
@@ -324,7 +404,6 @@ function getStars(score) {
   return '★'.repeat(count) + '☆'.repeat(5 - count);
 }
 
-// stats: { score, goals, conceded, duels, result ('win' | 'draw' | 'loss'), reasonText }
 export function showGameOver(stats) {
   const previousBest = readBestScore();
   const isNewRecord = stats.score > previousBest;
@@ -336,8 +415,12 @@ export function showGameOver(stats) {
   refs.goresult.textContent = titles[stats.result];
   refs.goresult.className = 'dd-title dd-result dd-' + stats.result;
   refs.goscore.textContent = String(stats.score);
-  refs.gogoals.textContent = String(stats.goals);
+  refs.gogoals.textContent = stats.topCorners > 0
+    ? stats.goals + ' (' + stats.topCorners + ')'
+    : String(stats.goals);
+  refs.goaccuracy.textContent = (stats.shots > 0 ? Math.round((stats.shotsOnTarget / stats.shots) * 100) : 0) + '%';
   refs.goduels.textContent = String(stats.duels);
+  refs.gocombo.textContent = 'x' + (stats.bestMultiplier || 1).toFixed(2);
   refs.gobest.textContent = String(best);
   refs.gostars.textContent = getStars(stats.score);
   refs.best.textContent = String(best);
@@ -350,8 +433,8 @@ export function setMuteIndicator(isMutedNow) {
   refs.sound.textContent = isMutedNow ? '🔇' : '🔊';
 }
 
-// Pre-match environment selector. The selection is applied before kick-off and
-// never changes during the match.
+const ENV_ICONS = ['☀️ ', '🌅 ', '🌙 '];
+
 export function setEnvironment(index, names) {
   if (!refs.env || !Array.isArray(names)) return;
   if (envButtons.length !== names.length) {
@@ -359,10 +442,8 @@ export function setEnvironment(index, names) {
     envButtons = names.map((name, buttonIndex) => {
       const button = document.createElement('button');
       button.type = 'button';
-      button.textContent = name;
-      // The menu screen itself is clickable (start): do not start a match here.
-      button.addEventListener('click', (event) => {
-        event.stopPropagation();
+      button.textContent = (ENV_ICONS[buttonIndex] || '') + name;
+      button.addEventListener('click', () => {
         if (typeof uiCallbacks.onEnvironmentSelect === 'function') {
           uiCallbacks.onEnvironmentSelect(buttonIndex);
         }
@@ -376,7 +457,32 @@ export function setEnvironment(index, names) {
   });
 }
 
-// fraction: null hides the bar, a number fills it and updates the label.
+export function setMatchOptions(durationIndex, difficultyIndex, onSelectDuration, onSelectDifficulty) {
+  if (refs.duration && durationButtons.length === 0) {
+    MATCH_DURATION_PRESETS.forEach((preset, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = preset.label;
+      btn.addEventListener('click', () => onSelectDuration(idx));
+      refs.duration.appendChild(btn);
+      durationButtons.push(btn);
+    });
+  }
+  durationButtons.forEach((btn, idx) => btn.classList.toggle('dd-active', idx === durationIndex));
+
+  if (refs.difficulty && difficultyButtons.length === 0) {
+    DIFFICULTY_PRESETS.forEach((preset, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = preset.label;
+      btn.addEventListener('click', () => onSelectDifficulty(idx));
+      refs.difficulty.appendChild(btn);
+      difficultyButtons.push(btn);
+    });
+  }
+  difficultyButtons.forEach((btn, idx) => btn.classList.toggle('dd-active', idx === difficultyIndex));
+}
+
 export function setLoadingProgress(fraction, label) {
   if (!refs.loading) return;
   if (fraction === null || fraction === undefined) {
@@ -403,7 +509,6 @@ export function initAudioSettingsUI(initialSettings, voiceStatus, onChange) {
 
   containers.forEach((container) => {
     container.innerHTML = `
-      <div class="dd-settings-title">AUDIO & COMMENTAIRES</div>
       <div class="dd-setting-row">
         <span>Commentateur français</span>
         <button type="button" class="dd-toggle" data-role="toggle"></button>
@@ -418,8 +523,6 @@ export function initAudioSettingsUI(initialSettings, voiceStatus, onChange) {
       </div>
       <div class="dd-voice-note" data-role="note"></div>
     `;
-    // Prevent clicking inside settings from starting/resuming the match.
-    container.addEventListener('click', (event) => event.stopPropagation());
 
     const toggle = container.querySelector('[data-role="toggle"]');
     const commVol = container.querySelector('[data-role="commVol"]');

@@ -121,6 +121,11 @@ function placeAtFeet(ball, player, delta) {
   }
 }
 
+export function setBallOnFire(ball, active) {
+  ball.trail.material.color.setHex(active ? 0xff6d00 : 0xfff59d);
+  ball.trail.material.size = active ? 0.34 : 0.24;
+}
+
 export function attachBall(ball) {
   ball.mode = 'DRIBBLE';
   ball.arrivedOutcome = null;

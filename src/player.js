@@ -186,7 +186,7 @@ function updateAnimation(player, delta, scrollSpeed) {
   if (player.isKnockedDown) {
     setActorState(player.actor, 'trip', TRIP_OPTIONS);
   } else if (player.mode === 'KICK') {
-    setActorState(player.actor, player.shotState || 'strikeJog', KICK_OPTIONS);
+    setActorState(player.actor, 'strikeJog', KICK_OPTIONS);
   } else if (player.mode === 'CELEBRATE') {
     setActorState(player.actor, 'celebrate', CELEBRATE_OPTIONS);
   } else if (player.mode === 'AIM' || player.mode === 'IDLE') {

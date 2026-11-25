@@ -324,10 +324,10 @@ export function updateGoal(goal, delta, scrollSpeed) {
 
 // The reticle sweeps across the goal. Its size is constant; difficulty only
 // changes the speed/pattern. Its colour uses the exact scoring function.
-export function updateReticle(goal, aimTime, level) {
+export function updateReticle(goal, aimTime, level, reticleScale = 1) {
   const speed = Math.min(
     RETICLE_SPEED_MAX,
-    RETICLE_SPEED_BASE + (level - 1) * RETICLE_SPEED_PER_LEVEL
+    (RETICLE_SPEED_BASE + (level - 1) * RETICLE_SPEED_PER_LEVEL) * reticleScale
   );
   const pattern = level % 2;
   let x;

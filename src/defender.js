@@ -41,7 +41,7 @@ const sweptBox = new THREE.Box3();
 
 function getSpeed(defender) {
   const base = Math.min(BASE_DEFENDER_SPEED + (defender.level - 1) * SPEED_PER_LEVEL, MAX_DEFENDER_SPEED);
-  return base * defender.kind.speedFactor;
+  return base * defender.kind.speedFactor * (defender.difficultyScale || 1);
 }
 
 function getReactionTime(defender) {
@@ -300,12 +300,14 @@ export function getDefenderContactPoint(defender, out) {
   );
 }
 
-export function nextDefender(defender, level) {
+export function nextDefender(defender, level, difficultyScale = 1) {
+  defender.difficultyScale = difficultyScale;
   spawn(defender, level);
 }
 
-export function resetDefender(defender) {
+export function resetDefender(defender, difficultyScale = 1) {
   memory.bias = 0;
+  defender.difficultyScale = difficultyScale;
   spawn(defender, 1);
 }
 
