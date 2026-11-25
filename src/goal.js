@@ -272,6 +272,10 @@ function updateKeeper(goal, delta) {
   const eased = 1 - (1 - progress) * (1 - progress);
   keeper.group.position.x = dive.fromX + (dive.toX - dive.fromX) * eased;
   keeper.group.position.y = Math.max(0, dive.toY - KEEPER_BASE_Y) * 0.55 * eased;
+  if (dive.elapsed > dive.reaction + dive.duration + 0.65 && keeper.state === 'keeperDive') {
+    setActorState(keeper, 'getUp', { fade: 0.18 });
+    keeper.group.position.y *= Math.max(0, 1 - delta * 4);
+  }
   updateActor(keeper, delta);
 }
 

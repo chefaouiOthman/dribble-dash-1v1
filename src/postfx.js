@@ -89,13 +89,16 @@ export function createPostProcessing(renderer, scene, camera) {
 // Smoothly moves the effect parameters toward fx.targets, then updates the passes.
 export function updatePostProcessing(fx, delta) {
   const smoothing = Math.min(1, delta * 6);
-  Object.keys(fx.targets).forEach((key) => {
-    fx.current[key] += (fx.targets[key] - fx.current[key]) * smoothing;
-  });
+  const c = fx.current;
+  const t = fx.targets;
+  c.aberration += (t.aberration - c.aberration) * smoothing;
+  c.vignette += (t.vignette - c.vignette) * smoothing;
+  c.saturation += (t.saturation - c.saturation) * smoothing;
+  c.bloom += (t.bloom - c.bloom) * smoothing;
   const uniforms = fx.gradePass.uniforms;
-  uniforms.uAberration.value = fx.current.aberration;
-  uniforms.uVignette.value = fx.current.vignette;
-  uniforms.uSaturation.value = fx.current.saturation;
+  uniforms.uAberration.value = c.aberration;
+  uniforms.uVignette.value = c.vignette;
+  uniforms.uSaturation.value = c.saturation;
   uniforms.uTime.value += delta;
-  fx.bloomPass.strength = fx.current.bloom;
+  fx.bloomPass.strength = c.bloom;
 }

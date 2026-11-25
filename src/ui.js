@@ -83,6 +83,20 @@ const STYLE = `
 .dd-toggle{cursor:pointer;font:inherit;font-weight:800;font-size:11px;letter-spacing:.1em;padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff}
 .dd-toggle.dd-on{background:linear-gradient(90deg,#ffd600,#ff9100);color:#201300;border-color:transparent}
 .dd-voice-note{font-size:11px;opacity:.7;margin-top:6px;text-align:center}
+@media (max-width: 680px) {
+  #dd-hud{padding:8px 10px}
+  .dd-card{padding:6px 10px;border-radius:10px}
+  .dd-big{font-size:24px}
+  .dd-mid{font-size:18px}
+  #dd-board{top:74px;padding:4px 10px;gap:8px}
+  .dd-goals{font-size:22px;gap:6px}
+  .dd-team{font-size:11px}
+  #dd-combo-wrap{top:118px}
+  .dd-panel{padding:20px 18px}
+  .dd-controls{grid-template-columns:1fr;gap:6px}
+  .dd-stats{grid-template-columns:repeat(2,1fr)}
+  #dd-bottom{display:none}
+}
 `;
 
 const TEMPLATE = `

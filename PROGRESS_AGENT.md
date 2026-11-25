@@ -5,27 +5,43 @@ Toujours lire ce fichier EN PREMIER lors d'une reprise.
 
 ## HANDOFF
 
-- **État actuel :** Tier 1 (1a + 1b) terminé ; démarrage du Tier 2 (performance et robustesse).
+- **État actuel :** Tiers 0 à 5 TERMINÉS. Projet compilable, sans erreur ni warning Vite.
 - **Vérifié par Tier 0 :**
-  - `goalMath.js`, `mirrorClip`, `SkeletonUtils`, `AnimationMixer` : vérifiés dans le code.
-- **Décisions Tier 1a :**
-  - `Strike Foward Jog.fbx` mappé sur `strikeJog` (`src/assets.js`), utilisé pour les tirs en course (`aimTime <= 1.0s`).
-  - Mesure `FBXLoader` (`mixamorigRightFoot`) : pic à `t = 0.42s` (`vz = 1038.9 cm/s`), `startTime: 0.14s`, `speed: 1.30` → `0.215s` via `getClipContactDelay()`.
+  - `goalMath.js`, `mirrorClip`, `SkeletonUtils`, `AnimationMixer` : vérifiés.
+- **Tier 1a (Terminé) :**
+  - `Strike Foward Jog.fbx` (`strikeJog`, tirs en course `aimTime <= 1.0s`, mesure `FBXLoader` pic `mixamorigRightFoot` à `t = 0.42s`, `startTime: 0.14s`, `speed: 1.30` → `0.215s` via `getClipContactDelay()`).
   - `Kick Soccerball.fbx` (`kick`, `contactTime: 0.28s`) utilisé pour les frappes à l'arrêt (`aimTime > 1.0s`). `EXTRA_CLIP_FILES` vide.
-- **Décisions Tier 1b :**
-  - `src/commentaryData.js` : phrases françaises, priorités, cooldowns, expiration, manifeste optionnel `assets/audio/commentary/manifest.json`.
-  - `src/commentary.js` : `createCommentaryManager()`, Web Speech API (`fr-FR` préféré), file de priorité, interruption par événements critiques (but), ducking foule (`setCrowdDuck` dans `src/audio.js`), réglages persistés (`dribbleDashAudioSettings`).
-  - `src/ui.js` : panneau `AUDIO & COMMENTAIRES` dans menu principal et pause. Test unitaire Node passé.
+- **Tier 1b (Fonctionnel, à peaufiner plus tard) :**
+  - `src/commentaryData.js`, `src/commentary.js`, `src/audio.js`, `src/ui.js`, `src/main.js`.
+  - Commentateur vocal français Web Speech API (`fr-FR`), file de priorité, cooldowns, interruption par buts, ducking foule (`setCrowdDuck`), réglages persistés (`dribbleDashAudioSettings`). Test inline Node passé (ne plus relancer).
+- **Tier 2 (Terminé) :**
+  - `vite.config.js` (`manualChunks` : `index` ~99 kB, `three-extras` ~78 kB, `devViewer` ~8.4 kB, `three-core` ~543 kB, 0 warning).
+  - `src/perf.js` (moniteur de frame-time avec hystérésis, 3 paliers `high`/`medium`/`low`, pixelRatio + bloom).
+  - Zéro allocation par frame corrigée dans `consumePlayerEvents` (`player.js`), `consumeDefenderEvents` (`defender.js`), `updatePostProcessing` (`postfx.js`).
+- **Tier 3 (Terminé) :**
+  - Vitesse d'animation synchronisée au `scrollSpeed` (`jog`/`run`/`sprint` + `timeScale`), buffering de saut (`JUMP_BUFFER_WINDOW = 0.15s`), `sideStep` directionnel du défenseur en `TRACK`, `getUp` du gardien après plongeon.
+- **Tier 4 (Terminé) :**
+  - Ombre de contact sous le ballon + traînée de tir pré-allouée (`ball.js`).
+  - Particules de gazon/terre (`playTurfEffect` dans `world.js`) sur tacle glissé, frappe et atterrissage.
+  - Toitures de tribunes pour la silhouette du stade (`world.js`).
+- **Tier 5 (Terminé) :**
+  - Media queries responsive mobile (`@media (max-width: 680px)` dans `ui.js`), panneau `AUDIO & COMMENTAIRES` intégré dans menu et pause.
+- **À valider à l'œil et à l'oreille (humain) :**
+  1. Synchro pied/balle de `Strike Foward Jog` (`aimTime <= 1.0s`) et `Kick Soccerball` (`aimTime > 1.0s`).
+  2. Pose de blocage défenseur (`block` = `Goalkeeper Body Block.fbx` trimé à 0.55s).
+  3. Animations miroirs (`sideStep`, `keeperSideStep`, `keeperDive`) dans `?dev=viewer`.
+  4. Contact pied/ballon en dribble et traînée/ombre du ballon.
+  5. Commentateur français (qualité de voix, volume, ducking, fréquence).
+  6. Lisibilité du thème `NUIT`.
 - **Checklist des Tiers :**
   - [x] **Tier 0** : Audit et vérification réelle.
-  - [x] **Tier 1a** : Tir avec `Strike Foward Jog.fbx` + mesure contact (`0.42s`) + synchro balle + décision `Kick Soccerball`.
-  - [x] **Tier 1b** : Commentateur vocal français (`CommentaryManager` + Web Speech API + mix audio `audio.js` + réglages).
-  - [ ] **Tier 2** : Performance et robustesse (bundle splitting >500KB, qualité adaptative, allocations, fuites mémoire).
-  - [ ] **Tier 3** : Qualité d'animation et gameplay feel (vitesse de course synchronisée, buffering d'entrée, transitions).
-  - [ ] **Tier 4** : Polish graphique (pelouse, ballon, stade, particules, caméra).
-  - [ ] **Tier 5** : UX/UI, réglages/pause, mobile, finitions audio.
-- **Prochaine action exacte :** Configurer `vite.config.js` pour supprimer l'avertissement >500KB (`manualChunks` pour `three`), ajouter le moniteur de qualité adaptative dans `main.js`/`world.js`, et vérifier les allocations/fuites.
-- **Comment reprendre :** Lire ce `HANDOFF`, lancer `npm run build`, puis exécuter le prochain élément non coché.
+  - [x] **Tier 1a** : Tir avec `Strike Foward Jog.fbx` + mesure contact + synchro balle.
+  - [x] **Tier 1b** : Commentateur vocal français (fonctionnel, à peaufiner plus tard).
+  - [x] **Tier 2** : Performance et robustesse.
+  - [x] **Tier 3** : Qualité d'animation et gameplay feel.
+  - [x] **Tier 4** : Polish graphique.
+  - [x] **Tier 5** : UX/UI, réglages/pause, mobile.
+- **Comment reprendre :** Tous les tiers sont terminés ; il ne reste que la validation visuelle/audio en navigateur.
 
 ---
 

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {
   LANE_POSITIONS, LANE_COUNT, LANE_CHANGE_SPEED, GROUND_Y, PLAYER_Z,
   PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_DEPTH, GRAVITY, JUMP_FORCE,
-  SIDE_STEP_TIME, PLAYER_FALL_DISPLACEMENT
+  SIDE_STEP_TIME, PLAYER_FALL_DISPLACEMENT, WORLD_SCROLL_SPEED
 } from './config.js';
 import { createActor, setActorState, updateActor, getActorFeet } from './actor.js';
 
@@ -21,8 +21,11 @@ const CELEBRATE_OPTIONS = { fade: 0.2 };
 const AIM_OPTIONS = { fade: 0.18 };
 const IDLE_OPTIONS = { fade: 0.18 };
 const JUMP_OPTIONS = { fade: 0.08 };
-const RUN_OPTIONS = { fade: 0.16 };
+const RUN_OPTIONS = { fade: 0.16, speed: 1.0 };
+const SPRINT_OPTIONS = { fade: 0.18, speed: 1.0 };
+const JOG_OPTIONS = { fade: 0.2, speed: 1.0 };
 const SIDE_STEP_OPTIONS = { direction: 0, fade: 0.1, speed: 1.0 };
+const JUMP_BUFFER_WINDOW = 0.15;
 const KNOCKDOWN_OPTIONS = { fade: 0.06 };
 const FORCE_TRIP_OPTIONS = { fade: 0.05, force: true };
 const RESET_RUN_OPTIONS = { fade: 0.1, force: true };
@@ -101,7 +104,9 @@ export function createPlayer(scene) {
     fallProgress: 0,
     stepTimer: 0,
     stepDirection: 0,
-    events: { jumped: false, landed: false, moved: false, shoot: false }
+    jumpBufferTimer: 0,
+    events: { jumped: false, landed: false, moved: false, shoot: false },
+    eventSnapshot: { jumped: false, landed: false, moved: false, shoot: false }
   };
   installInput(player);
   return player;
@@ -114,7 +119,7 @@ export function setPlayerMode(player, mode, shotState) {
   if (shotState) player.shotState = shotState;
 }
 
-function applyPendingInputs(player) {
+function applyPendingInputs(player, delta) {
   if (player.pendingMove !== 0) {
     const nextLane = Math.min(LANE_COUNT - 1, Math.max(0, player.laneIndex + player.pendingMove));
     if (nextLane !== player.laneIndex) {
@@ -126,12 +131,18 @@ function applyPendingInputs(player) {
     player.pendingMove = 0;
   }
   if (player.pendingJump) {
+    player.jumpBufferTimer = JUMP_BUFFER_WINDOW;
+    player.pendingJump = false;
+  }
+  if (player.jumpBufferTimer > 0) {
     if (!player.isJumping) {
       player.velocityY = JUMP_FORCE;
       player.isJumping = true;
       player.events.jumped = true;
+      player.jumpBufferTimer = 0;
+    } else {
+      player.jumpBufferTimer = Math.max(0, player.jumpBufferTimer - delta);
     }
-    player.pendingJump = false;
   }
 }
 
@@ -165,9 +176,10 @@ function updateJump(player, delta) {
   }
 }
 
-function updateAnimation(player, delta) {
-  player.runTime += delta * 11;
-  player.dribblePhase += delta * 11;
+function updateAnimation(player, delta, scrollSpeed) {
+  const speedRatio = scrollSpeed !== undefined ? scrollSpeed / WORLD_SCROLL_SPEED : 1.0;
+  player.runTime += delta * 11 * Math.max(0.6, speedRatio);
+  player.dribblePhase += delta * 11 * Math.max(0.6, speedRatio);
   player.modeTime += delta;
   if (player.stepTimer > 0) player.stepTimer -= delta;
 
@@ -185,7 +197,14 @@ function updateAnimation(player, delta) {
   } else if (player.stepTimer > 0) {
     SIDE_STEP_OPTIONS.direction = player.stepDirection;
     setActorState(player.actor, 'sideStep', SIDE_STEP_OPTIONS);
+  } else if (scrollSpeed !== undefined && scrollSpeed < 7.0) {
+    JOG_OPTIONS.speed = Math.max(0.75, speedRatio * 1.4);
+    setActorState(player.actor, 'jog', JOG_OPTIONS);
+  } else if (scrollSpeed !== undefined && scrollSpeed >= 17.5) {
+    SPRINT_OPTIONS.speed = Math.min(1.35, Math.max(0.9, speedRatio * 0.72));
+    setActorState(player.actor, 'sprint', SPRINT_OPTIONS);
   } else {
+    RUN_OPTIONS.speed = Math.min(1.45, Math.max(0.85, speedRatio));
     setActorState(player.actor, 'run', RUN_OPTIONS);
   }
   updateActor(player.actor, delta);
@@ -205,16 +224,16 @@ function updateKnockdown(player, delta) {
   updateActor(player.actor, delta);
 }
 
-export function updatePlayer(player, delta) {
+export function updatePlayer(player, delta, scrollSpeed) {
   if (player.isKnockedDown) {
     updateKnockdown(player, delta);
     return;
   }
-  if (player.mode === 'RUN') applyPendingInputs(player);
+  if (player.mode === 'RUN') applyPendingInputs(player, delta);
   else consumeIdleInputs(player);
   updateLaneMovement(player, delta);
   updateJump(player, delta);
-  updateAnimation(player, delta);
+  updateAnimation(player, delta, scrollSpeed);
 }
 
 export function getPlayerBox(player) {
@@ -280,6 +299,7 @@ export function resetPlayer(player) {
   player.kickProgress = 0;
   player.stepTimer = 0;
   player.stepDirection = 0;
+  player.jumpBufferTimer = 0;
   player.group.position.set(LANE_POSITIONS[1], GROUND_Y, PLAYER_Z);
   player.group.rotation.set(0, 0, 0);
   player.events.jumped = false;
@@ -289,14 +309,13 @@ export function resetPlayer(player) {
   setActorState(player.actor, 'run', RESET_RUN_OPTIONS);
 }
 
-// Returns what happened since the last call (for sounds and shooting), then clears it.
+// Returns what happened since the last call (reused object, zero allocation).
 export function consumePlayerEvents(player) {
-  const snapshot = {
-    jumped: player.events.jumped,
-    landed: player.events.landed,
-    moved: player.events.moved,
-    shoot: player.events.shoot
-  };
+  const snapshot = player.eventSnapshot;
+  snapshot.jumped = player.events.jumped;
+  snapshot.landed = player.events.landed;
+  snapshot.moved = player.events.moved;
+  snapshot.shoot = player.events.shoot;
   player.events.jumped = false;
   player.events.landed = false;
   player.events.moved = false;

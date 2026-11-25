@@ -117,7 +117,8 @@ export function createDefender(scene) {
     windupTimer: 0, lockDistance: 0, lastPlayerLane: -1, time: 0, runTime: 0,
     prevZ: 0, contactTimer: 0,
     box: new THREE.Box3(),
-    events: { attackStarted: false, passed: false }
+    events: { attackStarted: false, passed: false },
+    eventSnapshot: { attackStarted: false, passed: false }
   };
   spawn(defender, 1);
   return defender;
@@ -240,7 +241,11 @@ export function updateDefender(defender, delta, playerLaneIndex) {
   const isSlide = defender.attackType === 'SLIDE';
   if (defender.state === 'APPROACH' || defender.state === 'TRACK') {
     defender.runTime += delta * 10;
-    setActorState(defender.actor, 'run', { fade: 0.16 });
+    if (defender.state === 'TRACK' && Math.abs(lateral) > 0.35) {
+      setActorState(defender.actor, 'sideStep', { direction: Math.sign(lateral), fade: 0.12 });
+    } else {
+      setActorState(defender.actor, 'run', { fade: 0.16 });
+    }
     if (!defender.actor.rig) {
       group.rotation.z = Math.max(-0.3, Math.min(0.3, -lateral * 0.1));
     }
@@ -305,10 +310,9 @@ export function resetDefender(defender) {
 }
 
 export function consumeDefenderEvents(defender) {
-  const snapshot = {
-    attackStarted: defender.events.attackStarted,
-    passed: defender.events.passed
-  };
+  const snapshot = defender.eventSnapshot;
+  snapshot.attackStarted = defender.events.attackStarted;
+  snapshot.passed = defender.events.passed;
   defender.events.attackStarted = false;
   defender.events.passed = false;
   return snapshot;

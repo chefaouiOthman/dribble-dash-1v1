@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {
-  createWorld, updateWorld, playWinEffect, playGoalEffect, playHitEffect,
+  createWorld, updateWorld, playWinEffect, playGoalEffect, playHitEffect, playTurfEffect,
   setTheme, getThemeName, getBloomTarget, getEnvironmentNames
 } from './world.js';
 import { createPostProcessing, updatePostProcessing } from './postfx.js';
@@ -29,6 +29,7 @@ import { playSound, toggleMute, isMuted, setSfxVolume, setCrowdDuck } from './au
 import { createCommentaryManager } from './commentary.js';
 import { loadCharacterAssets, getClipContactDelay } from './assets.js';
 import { attachRig, isRigReady } from './actor.js';
+import { createPerfMonitor } from './perf.js';
 import {
   GAME_STATE, PLAYER_Z, PLAYER_WIDTH, DEFENDER_WIDTH, TACKLE_HEIGHT,
   WORLD_SCROLL_SPEED, MENU_SCROLL_SPEED, SCROLL_SPEED_PER_LEVEL, MAX_SCROLL_SPEED,
@@ -43,6 +44,9 @@ const DEV_STATS = new URLSearchParams(window.location.search).get('stats') === '
 const DEV_VIEWER = new URLSearchParams(window.location.search).get('dev') === 'viewer';
 const { scene, camera, renderer } = createWorld();
 const fx = createPostProcessing(renderer, scene, camera);
+const perf = createPerfMonitor(renderer, fx, () => {
+  fx.composer.setSize(window.innerWidth, window.innerHeight);
+});
 const player = createPlayer(scene);
 const ball = createBall(scene);
 const defender = createDefender(scene);
@@ -334,9 +338,11 @@ function takeShot() {
 }
 
 function launchShot() {
-  launchBall(ball, getPlayerKickOrigin(player), shot.target, shot.flightTime,
+  const origin = getPlayerKickOrigin(player);
+  launchBall(ball, origin, shot.target, shot.flightTime,
     shot.outcome, shot.goalZ, shot.sideSign);
   startKeeperDive(goal, shot);
+  playTurfEffect(origin.x, origin.z);
   playSound('kick');
   commentary.trigger('shot');
   shot.launched = true;
@@ -408,7 +414,7 @@ function finishAttack() {
 function updateMenu(delta) {
   currentScroll += (MENU_SCROLL_SPEED - currentScroll) * Math.min(1, delta * 2);
   updateWorld(delta, currentScroll);
-  updatePlayer(player, delta);
+  updatePlayer(player, delta, currentScroll);
   updateBall(ball, delta, player);
 }
 
@@ -432,13 +438,16 @@ function updatePlaying(delta, realDelta) {
   currentScroll += (scrollTarget - currentScroll) * Math.min(1, delta * 2.5);
 
   updateWorld(delta, currentScroll);
-  updatePlayer(player, delta);
+  updatePlayer(player, delta, currentScroll);
   updateBall(ball, delta, player);
   updateGoal(goal, delta, currentScroll);
 
   const playerEvents = consumePlayerEvents(player);
   if (playerEvents.jumped) playSound('jump');
-  if (playerEvents.landed) playSound('land');
+  if (playerEvents.landed) {
+    playSound('land');
+    playTurfEffect(player.group.position.x, PLAYER_Z);
+  }
   if (playerEvents.moved) playSound('lane');
 
   if (phase === PHASE.DUEL) {
@@ -447,6 +456,9 @@ function updatePlaying(delta, realDelta) {
     const defenderEvents = consumeDefenderEvents(defender);
     if (defenderEvents.attackStarted) {
       playSound('tackle');
+      if (defender.attackType === 'SLIDE') {
+        playTurfEffect(defender.group.position.x, defender.group.position.z);
+      }
       showPopup(defender.attackType === 'SLIDE' ? 'TACLE !' : 'BLOCAGE !', 'danger');
       commentary.trigger(defender.attackType === 'SLIDE' ? 'tackle' : 'block');
     }
@@ -498,7 +510,7 @@ function updatePlaying(delta, realDelta) {
 function updateGameOver(delta, realDelta) {
   currentScroll += (0 - currentScroll) * Math.min(1, delta * 3);
   updateWorld(delta, currentScroll);
-  updatePlayer(player, delta);
+  updatePlayer(player, delta, currentScroll);
   updateBall(ball, delta, player);
   updateGoal(goal, delta, 0);
   updateDefender(defender, delta, getPlayerLane(player));
@@ -680,6 +692,7 @@ function animate() {
   requestAnimationFrame(animate);
   const realDelta = Math.min(clock.getDelta(), 0.05);
   elapsed += realDelta;
+  if (gameState === GAME_STATE.PLAYING) perf.update(realDelta);
 
   if (slowMoTimer > 0) slowMoTimer -= realDelta;
   const targetScale = slowMoTimer > 0 ? SLOW_MO_SCALE : 1;
@@ -714,6 +727,7 @@ function animate() {
       statsElement.textContent = 'FPS ' + fps
         + ' | appels ' + info.render.calls
         + ' | triangles ' + info.render.triangles
+        + ' | qualité ' + perf.getTier()
         + ' | rig ' + (isRigReady(player.actor) ? 'FBX' : 'procédural');
     }
   }

@@ -33,6 +33,21 @@ function createBallTexture() {
 }
 
 const dribbleTarget = new THREE.Vector3();
+const TRAIL_COUNT = 18;
+
+function createShadowTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createRadialGradient(32, 32, 4, 32, 32, 30);
+  grad.addColorStop(0, 'rgba(0, 0, 0, 0.55)');
+  grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.22)');
+  grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(canvas);
+}
 
 export function createBall(scene) {
   const mesh = new THREE.Mesh(
@@ -41,8 +56,38 @@ export function createBall(scene) {
   );
   mesh.castShadow = true;
   scene.add(mesh);
+
+  // Soft contact shadow directly under the ball for instant height readability.
+  const shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(BALL_RADIUS * 3.0, BALL_RADIUS * 3.0),
+    new THREE.MeshBasicMaterial({
+      map: createShadowTexture(), transparent: true, depthWrite: false, opacity: 0.85
+    })
+  );
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.position.y = 0.015;
+  scene.add(shadow);
+
+  // Pre-allocated shot trail (zero per-frame allocations).
+  const trailPositions = new Float32Array(TRAIL_COUNT * 3);
+  const trailGeometry = new THREE.BufferGeometry();
+  trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+  const trail = new THREE.Points(
+    trailGeometry,
+    new THREE.PointsMaterial({
+      color: 0xfff59d, size: 0.24, transparent: true, opacity: 0.55,
+      depthWrite: false, blending: THREE.AdditiveBlending
+    })
+  );
+  trail.frustumCulled = false;
+  trail.visible = false;
+  scene.add(trail);
+
   return {
     mesh,
+    shadow,
+    trail,
+    trailPositions,
     mode: 'DRIBBLE',                 // DRIBBLE (at the feet), FLIGHT (shot), FREE (physics)
     velocity: new THREE.Vector3(),
     from: new THREE.Vector3(),
@@ -82,6 +127,7 @@ export function attachBall(ball) {
   ball.netLimitZ = null;
   ball.goalBoxZ = null;
   ball.snapToFeet = true;
+  ball.trail.visible = false;
   ball.velocity.set(0, 0, 0);
 }
 
@@ -103,6 +149,13 @@ export function launchBall(ball, from, to, flightTime, outcome, goalZ, sideSign)
   );
   ball.netLimitZ = outcome === 'GOAL' ? goalZ - GOAL_DEPTH + BALL_RADIUS : null;
   ball.backLimitZ = goalZ - 8;
+  for (let i = 0; i < TRAIL_COUNT; i++) {
+    ball.trailPositions[i * 3] = from.x;
+    ball.trailPositions[i * 3 + 1] = from.y;
+    ball.trailPositions[i * 3 + 2] = from.z;
+  }
+  ball.trail.geometry.attributes.position.needsUpdate = true;
+  ball.trail.visible = true;
 }
 
 // Lets the ball roll away on its own (ball lost).
@@ -191,9 +244,8 @@ function updateFree(ball, delta) {
 export function updateBall(ball, delta, player) {
   if (ball.mode === 'DRIBBLE') {
     placeAtFeet(ball, player, delta);
-    return;
-  }
-  if (ball.mode === 'FLIGHT') {
+    ball.trail.visible = false;
+  } else if (ball.mode === 'FLIGHT') {
     ball.elapsed += delta;
     const t = Math.min(ball.elapsed, ball.flightTime);
     ball.mesh.position.set(
@@ -202,8 +254,31 @@ export function updateBall(ball, delta, player) {
       ball.from.z + ball.launchVelocity.z * t
     );
     ball.mesh.rotation.x -= delta * 25;
-    if (ball.elapsed >= ball.flightTime) applyArrival(ball);
-    return;
+    // Shift trail history without allocating.
+    const tp = ball.trailPositions;
+    for (let i = TRAIL_COUNT - 1; i > 0; i--) {
+      tp[i * 3] = tp[(i - 1) * 3];
+      tp[i * 3 + 1] = tp[(i - 1) * 3 + 1];
+      tp[i * 3 + 2] = tp[(i - 1) * 3 + 2];
+    }
+    tp[0] = ball.mesh.position.x;
+    tp[1] = ball.mesh.position.y;
+    tp[2] = ball.mesh.position.z;
+    ball.trail.geometry.attributes.position.needsUpdate = true;
+    if (ball.elapsed >= ball.flightTime) {
+      applyArrival(ball);
+      ball.trail.visible = false;
+    }
+  } else {
+    ball.trail.visible = false;
+    updateFree(ball, delta);
   }
-  updateFree(ball, delta);
+
+  // Update ground contact shadow directly under the ball.
+  const heightAboveGround = Math.max(0, ball.mesh.position.y - BALL_RADIUS);
+  const shadowScale = Math.max(0.45, 1 - heightAboveGround * 0.14);
+  ball.shadow.position.x = ball.mesh.position.x;
+  ball.shadow.position.z = ball.mesh.position.z;
+  ball.shadow.scale.set(shadowScale, shadowScale, 1);
+  ball.shadow.material.opacity = Math.max(0.15, 0.85 - heightAboveGround * 0.22);
 }

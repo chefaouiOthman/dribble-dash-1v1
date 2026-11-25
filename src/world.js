@@ -67,6 +67,7 @@ let dust = null;
 let crowd = null;
 let confetti = null;
 let sparks = null;
+let turfBurst = null;
 let fireworks = [];
 
 const dummy = new THREE.Object3D();
@@ -287,6 +288,8 @@ function addStands(scene) {
     new THREE.MeshStandardMaterial({ color: 0x455a64, roughness: 0.9 }),
     new THREE.MeshStandardMaterial({ color: 0x37474f, roughness: 0.9 })
   ];
+  const roofMaterial = new THREE.MeshStandardMaterial({ color: 0x263238, roughness: 0.7, metalness: 0.3 });
+  const roofGeometry = new THREE.BoxGeometry(10.5, 0.35, standLength);
   [-1, 1].forEach((side) => {
     STAND_DEFS.forEach((stand, standIndex) => {
       for (let step = 0; step < 3; step++) {
@@ -298,6 +301,10 @@ function addStands(scene) {
         scene.add(stepMesh);
       }
     });
+    const roofMesh = new THREE.Mesh(roofGeometry, roofMaterial);
+    roofMesh.position.set(side * (FIELD_WIDTH / 2 + 10.2), 9.4, -100);
+    roofMesh.rotation.z = side * 0.14;
+    scene.add(roofMesh);
   });
 }
 
@@ -665,6 +672,7 @@ export function createWorld() {
   addDust(scene);
   confetti = createBurst(scene, 160, 0.3, false);
   sparks = createBurst(scene, 80, 0.2, true);
+  turfBurst = createBurst(scene, 36, 0.16, false);
   fireworks = [0, 1, 2].map(() => createBurst(scene, 90, 0.9, true));
   // The crowd is updated in slices: fill every slice once before the first frame.
   for (let i = 0; i < crowd.slices; i++) updateCrowd(0, 0);
@@ -699,6 +707,7 @@ export function updateWorld(delta, speed) {
   updateTheme(delta);
   updateBurst(confetti, delta);
   updateBurst(sparks, delta);
+  updateBurst(turfBurst, delta);
   fireworks.forEach((burst) => updateBurst(burst, delta));
 }
 
@@ -728,6 +737,12 @@ export function playGoalEffect() {
 export function playHitEffect(x, y, z) {
   emitBurst(sparks, { x, y, z }, [0xff5252, 0xff9100, 0xffd600],
     { spread: 0.6, speedX: 12, up: 9, speedZ: 12, zBias: 0, lifetime: 0.8 });
+}
+
+export function playTurfEffect(x, z) {
+  if (!turfBurst) return;
+  emitBurst(turfBurst, { x, y: 0.08, z }, [0x2e7d32, 0x43a047, 0x5d4037],
+    { spread: 0.5, speedX: 4.5, up: 4.2, speedZ: 4.5, zBias: 1.0, lifetime: 0.55 });
 }
 
 // 0 = day, 1 = sunset, 2 = night. Returns the name of the theme.
