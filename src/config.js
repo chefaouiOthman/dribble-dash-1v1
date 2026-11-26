@@ -21,7 +21,7 @@ export const DEFENDER_DEPTH = 0.9;
 export const BLOCK_WIDTH = 1.7;
 export const TACKLE_HEIGHT = 0.6;
 export const TACKLE_DEPTH = 2.2;
-export const SPAWN_DISTANCE = 55;
+export const SPAWN_DISTANCE = 48;
 export const TRACK_START_DISTANCE = 40;
 export const FEINT_DISTANCE = 30;
 export const ATTACK_DISTANCE = 20;
@@ -52,7 +52,8 @@ export const BASE_FOV = 60;
 export const MATCH_SECONDS = 180;       // real seconds for 90 minutes (default)
 export const MATCH_MINUTES = 90;
 export const MAX_CONCEDED = 3;
-export const DUELS_PER_ATTACK = 2;
+export const DUELS_PER_ATTACK = 4;
+export const CLEAN_SWEEP_BONUS = 250;
 export const MATCH_DURATION_PRESETS = [
   { id: 'fast', label: "1'30 RAPIDE", seconds: 90 },
   { id: 'standard', label: "3'00 STANDARD", seconds: 180 },

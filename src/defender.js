@@ -31,7 +31,13 @@ const KINDS = [
     jerseyColor: 0x37474f, accentColor: 0x263238, pattern: 'plain',
     shortsColor: 0x000000, sockColor: 0x90a4ae, skinColor: 0xffdbac,
     hairColor: 0x3e2723, bootColor: 0xffd600,
-    speedFactor: 0.95, reactionFactor: 0.7, scale: 1.2
+    speedFactor: 0.95, reactionFactor: 0.7, scale: 1.18
+  },
+  {
+    jerseyColor: 0x8e24aa, accentColor: 0x4a148c, pattern: 'stripes',
+    shortsColor: 0xffffff, sockColor: 0x8e24aa, skinColor: 0xf1c27d,
+    hairColor: 0x212121, bootColor: 0x00e676,
+    speedFactor: 1.06, reactionFactor: 0.78, scale: 1.08
   }
 ];
 
@@ -63,8 +69,8 @@ function updateBox(defender) {
   defender.box.max.set(x + width / 2, GROUND_Y + DEFENDER_HEIGHT, z + DEFENDER_DEPTH / 2);
 }
 
-function spawn(defender, level) {
-  const kind = KINDS[(level - 1) % KINDS.length];
+function spawn(defender, level, duelIndex = 0) {
+  const kind = KINDS[(level - 1 + duelIndex) % KINDS.length];
   defender.level = level;
   defender.kind = kind;
   setActorKit(defender.actor, kind);
@@ -84,6 +90,7 @@ function spawn(defender, level) {
   defender.contactTimer = 0;
   defender.events.attackStarted = false;
   defender.events.passed = false;
+  defender.events.feinted = false;
 
   defender.group.visible = true;
   defender.group.scale.setScalar(kind.scale);
@@ -117,8 +124,8 @@ export function createDefender(scene) {
     windupTimer: 0, lockDistance: 0, lastPlayerLane: -1, time: 0, runTime: 0,
     prevZ: 0, contactTimer: 0,
     box: new THREE.Box3(),
-    events: { attackStarted: false, passed: false },
-    eventSnapshot: { attackStarted: false, passed: false }
+    events: { attackStarted: false, passed: false, feinted: false },
+    eventSnapshot: { attackStarted: false, passed: false, feinted: false }
   };
   spawn(defender, 1);
   return defender;
@@ -212,6 +219,7 @@ export function updateDefender(defender, delta, playerLaneIndex) {
     defender.reactionTimer -= delta;
     if (defender.willFeint && !defender.feintDone && distance <= FEINT_DISTANCE) {
       defender.feintDone = true;
+      defender.events.feinted = true;
       defender.targetLaneIndex = (playerLaneIndex + 1 + Math.floor(Math.random() * 2)) % LANE_COUNT;
       defender.reactionTimer = 0.45;
     } else if (defender.reactionTimer <= 0) {
@@ -300,22 +308,24 @@ export function getDefenderContactPoint(defender, out) {
   );
 }
 
-export function nextDefender(defender, level, difficultyScale = 1) {
+export function nextDefender(defender, level, difficultyScale = 1, duelIndex = 0) {
   defender.difficultyScale = difficultyScale;
-  spawn(defender, level);
+  spawn(defender, level, duelIndex);
 }
 
 export function resetDefender(defender, difficultyScale = 1) {
   memory.bias = 0;
   defender.difficultyScale = difficultyScale;
-  spawn(defender, 1);
+  spawn(defender, 1, 0);
 }
 
 export function consumeDefenderEvents(defender) {
   const snapshot = defender.eventSnapshot;
   snapshot.attackStarted = defender.events.attackStarted;
   snapshot.passed = defender.events.passed;
+  snapshot.feinted = defender.events.feinted;
   defender.events.attackStarted = false;
   defender.events.passed = false;
+  defender.events.feinted = false;
   return snapshot;
 }

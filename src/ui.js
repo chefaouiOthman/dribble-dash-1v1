@@ -139,7 +139,7 @@ const TEMPLATE = `
       <div class="dd-team dd-away"><b>ADV</b><i></i></div>
       <div class="dd-clock" id="dd-clock">0'</div>
     </div>
-    <div id="dd-phase-pill">DUEL 1 / 2</div>
+    <div id="dd-phase-pill">● ○ ○ ○ · DUEL 1 / 4</div>
   </div>
   <div class="dd-card dd-right">
     <div class="dd-label">RECORD</div>
@@ -190,6 +190,7 @@ const TEMPLATE = `
           <div><b>3 buts encaissés</b> = KO</div>
         </div>
         <div class="dd-badges">
+          <span class="dd-badge">4 DÉFENSEURS / ATTAQUE</span>
           <span class="dd-badge">ANIMATIONS MIXAMO</span>
           <span class="dd-badge">COMMENTATEUR FR</span>
           <span class="dd-badge">MODE EN FEU</span>
@@ -197,7 +198,7 @@ const TEMPLATE = `
       </div>
     </div>
     <div class="dd-lobby-foot">
-      <p class="dd-tagline">Efface les deux défenseurs, ajuste la lucarne face au gardien et enflamme le stade !</p>
+      <p class="dd-tagline">Efface les quatre défenseurs, ajuste la lucarne face au gardien et enflamme le stade !</p>
       <button type="button" class="dd-btn" id="dd-start-btn">COUP D'ENVOI <span>ENTRÉE</span></button>
     </div>
   </div>

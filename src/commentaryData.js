@@ -24,7 +24,7 @@ export const COMMENTARY_EVENTS = {
     lines: [
       "C'est parti ! Coup d'envoi de cette rencontre sous {env} !",
       "L'arbitre siffle, le match commence ! À vous de faire la différence.",
-      "Coup d'envoi ! Deux défenseurs à effacer avant de tenter sa chance."
+      "Coup d'envoi ! Quatre défenseurs à effacer avant de tenter sa chance."
     ]
   },
   dribble: {

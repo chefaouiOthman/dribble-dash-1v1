@@ -37,7 +37,7 @@ import {
   CAMERA_POSITION, CAMERA_LOOK_AT, BASE_FOV,
   SCORE_PER_DUEL, BONUS_CLOSE_CALL, BONUS_JUMP, GOAL_POINTS, COMBO_STEP, MAX_COMBO_STEPS,
   CLOSE_CALL_GAP, SLOW_MO_DURATION, SLOW_MO_SCALE, GAME_OVER_DELAY,
-  MATCH_SECONDS, MATCH_MINUTES, MAX_CONCEDED, DUELS_PER_ATTACK,
+  MATCH_SECONDS, MATCH_MINUTES, MAX_CONCEDED, DUELS_PER_ATTACK, CLEAN_SWEEP_BONUS,
   KICK_DELAY, AIM_TIME_LIMIT, GOAL_DISTANCE, GOAL_WIDTH, GOAL_HEIGHT,
   DEFAULT_ENVIRONMENT, STORAGE_KEY_BEST_SCORE,
   MATCH_DURATION_PRESETS, DIFFICULTY_PRESETS, TOP_CORNER_BONUS, ON_FIRE_COMBO
@@ -144,7 +144,12 @@ function getPhaseHUDLabel() {
   if (phase === PHASE.GOAL_APPROACH) return 'APPROCHE DU BUT';
   if (phase === PHASE.AIM || phase === PHASE.SHOT) return '🎯 FACE-À-FACE';
   if (phase === PHASE.CONCEDED) return '⚠️ CONTRE-ATTAQUE';
-  return 'DUEL ' + Math.min(DUELS_PER_ATTACK, attackDuels + 1) + ' / ' + DUELS_PER_ATTACK;
+  const current = Math.min(DUELS_PER_ATTACK, attackDuels + 1);
+  let dots = '';
+  for (let i = 0; i < DUELS_PER_ATTACK; i++) {
+    dots += (i < attackDuels ? '● ' : '○ ');
+  }
+  return dots + '· DUEL ' + current + ' / ' + DUELS_PER_ATTACK;
 }
 
 function refreshHUD() {
@@ -337,7 +342,7 @@ function awardDuel() {
   score += points;
   duels += 1;
   attackDuels += 1;
-  level = duels + 1;
+  level = Math.floor(duels / 2) + 1;
 
   showPopup(label + ' +' + points, kind);
   if (level > previousLevel) showPopup('NIVEAU ' + level + ' · DÉFENSEURS PLUS RAPIDES', 'level');
@@ -359,6 +364,13 @@ function awardDuel() {
 function beginGoalApproach() {
   phase = PHASE.GOAL_APPROACH;
   defender.group.visible = false;
+  if (combo >= 2) {
+    const sweepPoints = Math.round(CLEAN_SWEEP_BONUS * getDifficulty().scoreScale);
+    score += sweepPoints;
+    showPopup('PERCÉE 4/4 ! +' + sweepPoints, 'perfect');
+    flashScreen('win');
+    refreshHUD();
+  }
   showGoal(goal);
   showBanner('OCCASION !', 'info');
   playSound('whistle');
@@ -508,6 +520,9 @@ function updatePlaying(delta, realDelta) {
     const previousZ = defender.group.position.z;
     updateDefender(defender, delta, getPlayerLane(player));
     const defenderEvents = consumeDefenderEvents(defender);
+    if (defenderEvents.feinted) {
+      showPopup('FEINTE !', 'level');
+    }
     if (defenderEvents.attackStarted) {
       playSound('tackle');
       if (defender.attackType === 'SLIDE') {
@@ -526,7 +541,7 @@ function updatePlaying(delta, realDelta) {
     if (defenderEvents.passed) awardDuel();
     if (isDefenderOffscreen(defender)) {
       if (attackDuels >= DUELS_PER_ATTACK) beginGoalApproach();
-      else nextDefender(defender, level, getDifficulty().speedScale);
+      else nextDefender(defender, level, getDifficulty().speedScale, attackDuels);
     }
   } else if (phase === PHASE.GOAL_APPROACH) {
     if (goal.arrived) startAim();

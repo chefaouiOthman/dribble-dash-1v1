@@ -30,6 +30,10 @@ Toujours lire ce fichier EN PREMIER lors d'une reprise.
   - **Nouveau Lobby Pré-Match (`src/ui.js`)** : Feuille de match moderne à 2 colonnes (Ambiance Jour/Coucher/Nuit, Durée `1'30` / `3'00` / `5'00`, Difficulté `AMATEUR` / `PRO` / `LÉGENDE`, Studio Audio & Commentateur FR, bouton dédié `COUP D'ENVOI`).
   - **Tir `Strike Foward Jog` garanti et lisible** : `Kick Soccerball` retiré du tir joueur (`src/assets.js`, `src/actor.js`, `src/player.js`, `src/main.js`). `strikeJog` démarre à `startTime: 0.04s` (`speed: 1.15`, `trimEnd: 1.25s`, latence `0.33s`) avec angle caméra 3/4 côté pendant l'armement du tir.
   - **Nouvelles features gameplay & HUD** : Détection **LUCARNE ! (+200)** avec ralenti/flash/bannière, mode **🔥 EN FEU** à partir de combo x4 (traînée orange du ballon + badge HUD), indicateur de phase (`DUEL 1/2` → `2/2` → `🎯 FACE-À-FACE`), statistiques fin de match enrichies (Précision tirs %, Lucarnes, Meilleur combo, bouton `LOBBY MATCH`).
+  - **Passage à 4 défenseurs par attaque (`src/config.js`, `src/defender.js`, `src/main.js`, `src/ui.js`, `src/commentaryData.js`)** :
+    - `DUELS_PER_ATTACK = 4`, `SPAWN_DISTANCE = 48` pour un rythme fluide, `level = Math.floor(duels / 2) + 1` pour préserver la courbe de difficulté.
+    - 4 archétypes distincts de défenseurs dans `KINDS` (Bleu Cercles, Orange Rayures rapide, Ardoise Uni costaud, Violet Rayures feinteur) alternés sur les 4 duels.
+    - Indicateur HUD à 4 pastilles (`● ● ○ ○ · DUEL X / 4`), alerte `FEINTE !` sur feinte du défenseur, et bonus **PERCÉE 4/4 ! (+250)** si les 4 duels sont passés avec combo ≥ 2.
 - **À valider à l'œil et à l'oreille (humain) :**
   1. Synchro pied/balle de `Strike Foward Jog` (`aimTime <= 1.0s`) et `Kick Soccerball` (`aimTime > 1.0s`).
   2. Pose de blocage défenseur (`block` = `Goalkeeper Body Block.fbx` trimé à 0.55s).
